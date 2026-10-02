@@ -12,8 +12,14 @@ export function FileName({ name, className }: { name: string; className?: string
   const tail = base.slice(base.length - tailLen) + (ext ? `.${ext}` : '')
   return (
     <span className={cn('flex min-w-0 max-w-full', className)} title={name}>
-      <span className="truncate whitespace-pre">{head}</span>
-      <span className="shrink-0 whitespace-pre">{tail}</span>
+      {/* 視覺上分成兩段；螢幕閱讀器只讀完整檔名 */}
+      <span className="sr-only">{name}</span>
+      <span aria-hidden className="truncate whitespace-pre">
+        {head}
+      </span>
+      <span aria-hidden className="shrink-0 whitespace-pre">
+        {tail}
+      </span>
     </span>
   )
 }

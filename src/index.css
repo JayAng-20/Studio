@@ -82,7 +82,8 @@
     font-family: var(--font-sans);
     font-size: 14px;
     line-height: 22px;
-    font-variant-numeric: tabular-nums;
+    /* 等寬數字只用在時間碼、大小、進度等數值顯示（.tabular／tabular-nums）；
+       全域開啟會讓 Inter 的連字號也變成等寬，檔名「a-b」看起來像「a - b」 */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;

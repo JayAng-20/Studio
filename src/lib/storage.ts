@@ -12,6 +12,7 @@ export const STORAGE_KEYS = {
   gifSettings: 'jayang:gif-settings',
   convertOptions: 'jayang:convert-options',
   convertAdvanced: 'jayang:convert-advanced-open',
+  playerPrefs: 'jayang:player-prefs',
 } as const
 
 let recStore: ReturnType<typeof createStore> | null = null

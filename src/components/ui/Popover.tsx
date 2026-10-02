@@ -11,6 +11,8 @@ interface PopoverProps {
   open?: boolean
   onOpenChange?: (o: boolean) => void
   label?: string
+  /** Portal 容器（例如全螢幕中的元素） */
+  container?: HTMLElement | null
 }
 
 /** 彈出層：進出場縮放＋淡入 */
@@ -23,11 +25,12 @@ export function Popover({
   open,
   onOpenChange,
   label,
+  container,
 }: PopoverProps) {
   return (
     <RPopover.Root open={open} onOpenChange={onOpenChange}>
       <RPopover.Trigger asChild>{trigger}</RPopover.Trigger>
-      <RPopover.Portal>
+      <RPopover.Portal container={container ?? undefined}>
         <RPopover.Content
           side={side}
           align={align}

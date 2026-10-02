@@ -1,0 +1,203 @@
+/*
+ * 播放器專屬樣式。播放畫面固定使用深色（影片的黑邊），
+ * 舞台上的顏色以深色主題 token 的值定義為局部變數，強調色仍取自 --accent。
+ */
+
+@layer components {
+  .player-stage {
+    --stage-bg: #0a0c10;
+    --stage-fg: #f3f5f9;
+    --stage-fg-2: #a6afc0;
+    --stage-glass: color-mix(in srgb, #12151b 58%, transparent);
+    --stage-glass-border: rgba(255, 255, 255, 0.1);
+    --stage-hover: rgba(255, 255, 255, 0.12);
+    --stage-track: rgba(255, 255, 255, 0.22);
+    --stage-buffer: rgba(255, 255, 255, 0.38);
+    --controls-h: 96px;
+    container-type: size;
+    container-name: stage;
+    background: var(--stage-bg);
+    color: var(--stage-fg);
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    isolation: isolate;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .player-stage[data-audio='true'] {
+    aspect-ratio: 16 / 10;
+  }
+  @media (max-width: 639px) {
+    .player-stage[data-audio='true'] {
+      aspect-ratio: 4 / 5;
+    }
+    .player-stage {
+      aspect-ratio: 16 / 11;
+    }
+  }
+  .player-stage[data-idle='true'] {
+    cursor: none;
+  }
+
+  /* 玻璃控制列（不支援 backdrop-filter 時退回實色） */
+  .stage-glass {
+    background: var(--stage-glass);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid var(--stage-glass-border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 16px 40px -12px rgba(0, 0, 0, 0.6);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .stage-glass {
+      background: #181c24;
+    }
+  }
+
+  .stage-btn {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    height: 40px;
+    min-width: 40px;
+    border-radius: var(--radius-sm);
+    color: var(--stage-fg);
+    transition:
+      background-color var(--dur-fast) var(--ease-standard),
+      opacity var(--dur-fast) var(--ease-standard);
+  }
+  .stage-btn.is-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stage-btn:disabled {
+    opacity: 0.35;
+  }
+  .stage-btn[aria-pressed='true'] {
+    color: color-mix(in srgb, var(--accent) 55%, white);
+  }
+  @media (hover: hover) {
+    .stage-btn:not(:disabled):hover {
+      background: var(--stage-hover);
+    }
+  }
+  @media (pointer: coarse) {
+    .stage-btn {
+      height: 44px;
+      min-width: 44px;
+    }
+  }
+  .stage-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 0;
+  }
+
+  /* 時間軸：hover 時軌道加粗（只動 transform） */
+  .tl-track {
+    transform: scaleY(1);
+    transform-origin: center;
+    transition: transform var(--dur-fast) var(--ease-emphasized);
+  }
+  .tl-root:hover .tl-track,
+  .tl-root[data-active='true'] .tl-track {
+    transform: scaleY(1.75);
+  }
+  .tl-thumb {
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform var(--dur-fast) var(--ease-emphasized);
+  }
+  .tl-root:hover .tl-thumb,
+  .tl-root[data-active='true'] .tl-thumb,
+  .tl-root:focus-visible .tl-thumb {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  @media (pointer: coarse) {
+    .tl-thumb {
+      transform: translate(-50%, -50%) scale(0.85);
+    }
+  }
+
+  /* 字幕 */
+  .sub-line {
+    font-size: calc(var(--sub-scale, 1) * clamp(14px, 3.4cqw, 46px));
+    line-height: 1.35;
+    font-weight: 600;
+    color: #fff;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .sub-shadow .sub-line {
+    text-shadow:
+      0 0 2px rgba(0, 0, 0, 0.9),
+      0 1px 3px rgba(0, 0, 0, 0.9),
+      0 0 12px rgba(0, 0, 0, 0.55);
+  }
+  .sub-box .sub-text {
+    background: rgba(10, 12, 16, 0.72);
+    padding: 0.08em 0.4em;
+    border-radius: 6px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* 播放中的清單項目：等化器跳動（裝飾性，精簡／關閉時停止） */
+  .eq-bar {
+    transform-origin: bottom;
+    animation: eq-bounce 900ms var(--ease-standard) infinite alternate;
+  }
+  .eq-bar:nth-child(2) {
+    animation-delay: -300ms;
+    animation-duration: 700ms;
+  }
+  .eq-bar:nth-child(3) {
+    animation-delay: -600ms;
+    animation-duration: 1100ms;
+  }
+  .eq-paused .eq-bar {
+    animation-play-state: paused;
+  }
+
+  /* 跳轉水波 */
+  .ripple-side {
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04) 70%);
+  }
+
+  /* 截圖閃光 */
+  .snap-flash {
+    background: #fff;
+  }
+}
+
+/* 無法播放的說明卡在小螢幕上比畫面高：讓畫面依內容長高（改成只限制寬度的容器） */
+@media (max-width: 1023px) {
+  .player-stage[data-error='true'] {
+    aspect-ratio: auto;
+    container-type: inline-size;
+    min-height: 240px;
+  }
+}
+
+/* 裁切而不是捲動：時間軸播放頭等以 % 位移的元素超出邊界時，畫面不會被 focus／scrollIntoView 捲走 */
+.player-stage {
+  overflow: hidden;
+  overflow: clip;
+}
+
+/* 全螢幕：不放在 layer 內，才能覆蓋圓角等工具類別 */
+.player-stage:fullscreen {
+  aspect-ratio: auto;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+}
+
+@keyframes eq-bounce {
+  from {
+    transform: scaleY(0.25);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}

@@ -17,16 +17,19 @@ export function Menu({
   items,
   label,
   align = 'end',
+  container,
 }: {
   trigger: ReactNode
   items: MenuItem[]
   label?: string
   align?: 'start' | 'center' | 'end'
+  /** Portal 容器（例如全螢幕中的元素） */
+  container?: HTMLElement | null
 }) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>{trigger}</DropdownMenu.Trigger>
-      <DropdownMenu.Portal>
+      <DropdownMenu.Portal container={container ?? undefined}>
         <DropdownMenu.Content
           align={align}
           sideOffset={6}

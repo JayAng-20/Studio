@@ -34,3 +34,4 @@
 - 圖片工具在手機版讓畫布與分頁列一起黏在頂欄下方｜調整設定時仍看得到圖｜畫布跟著捲走
 - 不做 OCR｜tesseract.js 需在執行時下載語言資料，違反不外連原則｜打包語言資料（數十 MB）
 - 共用元件樣式（ui.css）放進 `@layer components`，sonner 的覆寫留在 layer 外｜讓 Tailwind utilities（例如 sticky、padding）能正常覆蓋元件樣式｜在使用處加 !important
+- 等寬數字（tabular-nums）只套用在數值顯示，不全域開啟｜Inter 的 tnum 也會把連字號變成等寬，檔名與頁範圍（1-3）中間像多了空白｜全域 tabular-nums

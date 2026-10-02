@@ -259,7 +259,7 @@ export function AbPanel() {
         {busy && (
           <div className="flex flex-col gap-1.5" aria-live="polite">
             <ProgressBar value={progress} label={t('player.ab.exporting')} />
-            <p className="text-caption text-text-3">
+            <p className="text-caption tabular-nums text-text-3">
               {progress === null && !isFFmpegLoaded() ? t('player.ab.exportLoading') : t('player.ab.exporting')}
               {progress !== null && ` ${Math.round(progress * 100)}%`}
             </p>

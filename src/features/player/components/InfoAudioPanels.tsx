@@ -21,10 +21,10 @@ export function InfoPanel() {
   const rows = useInfoRows(item)
   return (
     <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-body">
-      {rows.map(([k, v]) => (
+      {rows.map(([k, v, numeric]) => (
         <div key={k} className="contents">
           <dt className="text-text-3">{k}</dt>
-          <dd className="break-all tabular-nums text-text">{v}</dd>
+          <dd className={numeric ? 'break-all tabular-nums text-text' : 'break-all text-text'}>{v}</dd>
         </div>
       ))}
     </dl>
@@ -173,7 +173,7 @@ export function AudioPanel() {
           description={t('player.audio.waveformDesc')}
         />
         {status && waveformOn && (
-          <p className="flex items-center gap-1.5 text-caption text-text-3" aria-live="polite">
+          <p className="flex items-center gap-1.5 text-caption tabular-nums text-text-3" aria-live="polite">
             <AudioWaveform size={14} aria-hidden />
             {status}
           </p>

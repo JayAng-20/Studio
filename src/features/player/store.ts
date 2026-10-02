@@ -9,6 +9,10 @@ import type { TextEncodingName } from './logic/encoding'
 import type { Diagnosis } from './logic/formats'
 import type { RepeatMode } from './logic/playlist'
 import { DEFAULT_FRAME } from './logic/speed'
+import { PREF_KEYS, loadPrefs, savePrefs, type SubStyle } from './logic/prefs'
+
+/** 啟動時讀回使用者偏好（壞資料自動退回預設） */
+const prefs = loadPrefs()
 
 export type ItemKind = 'video' | 'audio'
 
@@ -69,18 +73,8 @@ export interface PlayItem {
 }
 
 export type PanelTab = 'playlist' | 'subtitles' | 'ab' | 'info' | 'audio'
-export type SubBg = 'none' | 'shadow' | 'box'
-
-export interface SubStyle {
-  /** 相對大小 0.6–2 */
-  size: number
-  /** 距離底部（畫面高度 %）0–40 */
-  position: number
-  bg: SubBg
-}
-
-export const DEFAULT_SUB_STYLE: SubStyle = { size: 1, position: 6, bg: 'shadow' }
-export const EQ_FLAT = [0, 0, 0, 0, 0]
+export type { SubBg, SubStyle } from './logic/prefs'
+export { DEFAULT_SUB_STYLE, EQ_FLAT } from './logic/prefs'
 
 export interface Snapshot {
   blob: Blob
@@ -146,9 +140,9 @@ export const usePlayer = create<PlayerState>((set) => ({
   items: [],
   currentId: null,
   order: [],
-  shuffle: false,
-  repeat: 'off',
-  autoNext: true,
+  shuffle: prefs.shuffle,
+  repeat: prefs.repeat,
+  autoNext: prefs.autoNext,
 
   el: null,
   stageEl: null,
@@ -157,20 +151,20 @@ export const usePlayer = create<PlayerState>((set) => ({
   duration: 0,
   buffered: [],
   rate: 1,
-  volume: 1,
+  volume: prefs.volume,
   muted: false,
   waiting: false,
   ready: false,
   restore: null,
 
-  abLoop: true,
-  subsOn: true,
+  abLoop: prefs.abLoop,
+  subsOn: prefs.subsOn,
   subDelay: 0,
-  subStyle: DEFAULT_SUB_STYLE,
-  eqEnabled: false,
-  eqGains: EQ_FLAT,
-  waveformOn: true,
-  visualizer: 'bars',
+  subStyle: prefs.subStyle,
+  eqEnabled: prefs.eqEnabled,
+  eqGains: prefs.eqGains,
+  waveformOn: prefs.waveformOn,
+  visualizer: prefs.visualizer,
   peaks: {},
   webAudio: true,
 
@@ -195,6 +189,14 @@ export const usePlayer = create<PlayerState>((set) => ({
       ),
     })),
 }))
+
+// 偏好有變動時延遲寫回（拖曳滑桿時不會每格都寫入）
+let prefTimer: ReturnType<typeof setTimeout> | undefined
+usePlayer.subscribe((s, p) => {
+  if (!PREF_KEYS.some((k) => s[k] !== p[k])) return
+  clearTimeout(prefTimer)
+  prefTimer = setTimeout(() => savePrefs(usePlayer.getState()), 300)
+})
 
 export const selectCurrent = (s: PlayerState) =>
   s.currentId ? (s.items.find((i) => i.id === s.currentId) ?? null) : null

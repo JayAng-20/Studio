@@ -39,6 +39,7 @@ export function StageMenu({
   className,
   triggerClassName,
   title,
+  numeric,
 }: {
   label: string
   trigger: ReactNode
@@ -47,6 +48,8 @@ export function StageMenu({
   className?: string
   triggerClassName?: string
   title?: ReactNode
+  /** 選項是數值（速度）：使用等寬數字 */
+  numeric?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const id = useId()
@@ -136,7 +139,7 @@ export function StageMenu({
                 <span className="grid w-5 shrink-0 place-items-center text-text-2">
                   {it.checked ? <Check size={16} aria-hidden className="text-accent-ink" /> : it.icon}
                 </span>
-                <span className="min-w-0 flex-1 truncate">{it.label}</span>
+                <span className={cn('min-w-0 flex-1 truncate', numeric && 'tabular-nums')}>{it.label}</span>
               </button>
             ))}
           </div>
@@ -177,7 +180,7 @@ export function StageMenu({
                 <span className="grid w-4 shrink-0 place-items-center">
                   {it.checked ? <Check size={15} aria-hidden className="text-[color-mix(in_srgb,var(--accent)_55%,white)]" /> : it.icon}
                 </span>
-                <span className="min-w-0 flex-1 truncate">{it.label}</span>
+                <span className={cn('min-w-0 flex-1 truncate', numeric && 'tabular-nums')}>{it.label}</span>
                 {it.hint && (
                   <kbd className="rounded-xs border border-[var(--stage-glass-border)] px-1.5 text-[11px] text-[var(--stage-fg-2)]">
                     {it.hint}

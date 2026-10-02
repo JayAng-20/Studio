@@ -137,6 +137,7 @@ function SpeedMenu() {
     <StageMenu
       label={t('player.controls.speed')}
       radio
+      numeric
       title={t('player.controls.speed')}
       triggerClassName="px-2 text-small font-semibold tabular-nums min-w-12"
       trigger={<span>{formatSpeed(rate)}</span>}

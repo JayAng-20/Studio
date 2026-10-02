@@ -70,7 +70,7 @@ export function SnapshotCard() {
             onBlurCapture={() => setHover(false)}
           >
             <div className="flex items-center justify-between gap-2 px-1 pb-1.5">
-              <span className="truncate text-caption font-semibold">{t('player.snapshot.taken', { time: formatTime(snap.time) })}</span>
+              <span className="truncate text-caption font-semibold tabular-nums">{t('player.snapshot.taken', { time: formatTime(snap.time) })}</span>
               <button type="button" className="stage-btn h-7! min-w-7! p-0" aria-label={t('player.snapshot.close')} onClick={clearSnapshot}>
                 <X size={15} aria-hidden />
               </button>

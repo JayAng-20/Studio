@@ -193,7 +193,7 @@ export default function PlayerPage() {
   return (
     <ModulePage
       module="player"
-      status={hasItems ? <Badge tone="accent">{t('player.status.count', { count })}</Badge> : undefined}
+      status={hasItems ? <Badge tone="accent" className="tabular-nums">{t('player.status.count', { count })}</Badge> : undefined}
     >
       <TopBarActions>
         <Tooltip content={t('player.actions.openUrl')}>

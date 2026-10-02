@@ -12,18 +12,18 @@ export function useInfoRows(item: PlayItem | null) {
   if (!item) return []
   const res = item.width && item.height ? `${item.width} × ${item.height}` : t('player.info.unknown')
   const fps = item.kind === 'video' && item.frameDur ? t('player.info.fps', { value: (1 / item.frameDur).toFixed(item.frameDur > 0.03 ? 0 : 2).replace(/\.00$/, '') }) : null
-  const rows: Array<[string, string]> = [
-    [t('player.info.name'), item.name],
-    [t('player.info.size'), item.size !== undefined ? formatBytes(item.size) : t('player.info.unknown')],
-    [t('player.info.duration'), item.duration ? formatTime(item.duration) : t('player.info.unknown')],
-    [t('player.info.resolution'), item.kind === 'video' ? res : t('player.info.unknown')],
+  const rows: Array<[string, string, boolean?]> = [
+    [t('player.info.name'), item.name, false],
+    [t('player.info.size'), item.size !== undefined ? formatBytes(item.size) : t('player.info.unknown'), true],
+    [t('player.info.duration'), item.duration ? formatTime(item.duration) : t('player.info.unknown'), true],
+    [t('player.info.resolution'), item.kind === 'video' ? res : t('player.info.unknown'), true],
     [
       t('player.info.type'),
       `${item.kind === 'video' ? t('player.info.video') : t('player.info.audio')}${item.type ? `（${item.type}）` : ''}`,
     ],
     [t('player.info.source'), item.source === 'file' ? t('player.info.sourceFile') : t('player.info.sourceUrl')],
   ]
-  if (fps) rows.push([t('player.info.frameRate'), fps])
+  if (fps) rows.push([t('player.info.frameRate'), fps, true])
   if (item.meta?.title) rows.push([t('player.info.titleTag'), item.meta.title])
   if (item.meta?.artist) rows.push([t('player.info.artist'), item.meta.artist])
   if (item.meta?.album) rows.push([t('player.info.album'), item.meta.album])
@@ -57,10 +57,10 @@ export function InfoOverlay() {
             </button>
           </div>
           <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1">
-            {rows.map(([k, v]) => (
+            {rows.map(([k, v, numeric]) => (
               <div key={k} className="contents">
                 <dt className="text-[var(--stage-fg-2)]">{k}</dt>
-                <dd className="break-all tabular-nums">{v}</dd>
+                <dd className={numeric ? 'break-all tabular-nums' : 'break-all'}>{v}</dd>
               </div>
             ))}
             <dt className="text-[var(--stage-fg-2)]">{t('player.controls.speed')}</dt>

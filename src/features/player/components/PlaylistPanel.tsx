@@ -237,7 +237,7 @@ export function SavedPlaylists({ compact, hint }: { compact?: boolean; hint?: st
               <FolderOpen size={16} className="shrink-0 text-accent-ink" aria-hidden />
               <span className="flex min-w-0 flex-col">
                 <span className="truncate text-body font-medium">{p.name}</span>
-                <span className="text-caption text-text-3">
+                <span className="text-caption tabular-nums text-text-3">
                   {t('player.playlist.itemCount', { count: p.names.length })} · {t('player.playlist.savedAt', { date: fmt.format(p.savedAt) })}
                 </span>
               </span>

@@ -11,7 +11,7 @@ import { useSettings } from '@/stores/settings'
 import { t } from '@/i18n'
 import { timing } from '@/design/motion'
 import { usePlayer, selectCurrent, frameOf, type PlayItem, type SubtitleTrack } from './store'
-import { applyVolume, ensureGraph, webAudioSupported } from './audio'
+import { applyEq, applyVolume, ensureGraph, webAudioSupported } from './audio'
 import { setA, setB, emptyAB, isComplete } from './logic/ab'
 import { decodeText, decodeWith, type TextEncodingName } from './logic/encoding'
 import { parseSubtitle } from './logic/subtitles'
@@ -315,6 +315,8 @@ function primeAudio() {
   const g = ensureGraph(s.el)
   if (!g && s.webAudio) s.set({ webAudio: false })
   applyVolume(s.el, s.volume, s.muted)
+  // 套用從偏好恢復的等化器
+  applyEq(s.eqEnabled, s.eqGains)
 }
 
 /** 給等化器等需要音訊圖的功能（在使用者手勢內呼叫） */

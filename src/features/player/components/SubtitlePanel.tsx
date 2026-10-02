@@ -72,7 +72,7 @@ export function SubtitlePanel() {
                       {checked && <span className="size-2 rounded-full bg-accent" />}
                     </span>
                     <span className="min-w-0 flex-1 truncate text-body">{o.name}</span>
-                    {o.count !== null && <span className="shrink-0 text-caption text-text-3">{t('player.subtitle.cues', { count: o.count })}</span>}
+                    {o.count !== null && <span className="shrink-0 text-caption tabular-nums text-text-3">{t('player.subtitle.cues', { count: o.count })}</span>}
                   </button>
                   {o.id !== 'off' && item && (
                     <Tooltip content={t('player.subtitle.remove')}>

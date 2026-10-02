@@ -32,7 +32,7 @@ export function ThumbRail({ onCollage }: { onCollage: () => void }) {
   return (
     <nav
       aria-label={t('tools.rail.label')}
-      className="card flex min-w-0 gap-2 p-2 lg:sticky! lg:top-[calc(var(--topbar-h)+16px)] lg:h-(--tl-h) lg:flex-col lg:p-2"
+      className="card flex min-w-0 gap-2 p-2 lg:sticky lg:top-[calc(var(--topbar-h)+16px)] lg:h-(--tl-h) lg:flex-col lg:p-2"
     >
       <ul
         ref={listRef}

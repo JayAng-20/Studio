@@ -344,6 +344,7 @@ export function CropPanel() {
             value={state.geometry.angle}
             min={-45}
             max={45}
+            origin={0}
             step={0.1}
             format={(v) => `${v > 0 ? '+' : ''}${v.toFixed(1)}°`}
             onChange={(v) =>

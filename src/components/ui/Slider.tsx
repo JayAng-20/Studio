@@ -34,6 +34,7 @@ export function Slider({
   disabled,
   className,
   warnAbove,
+  origin,
 }: SliderProps) {
   const [active, setActive] = useState(false)
   const warn = warnAbove !== undefined && value > warnAbove
@@ -57,14 +58,26 @@ export function Slider({
       onBlur={() => setActive(false)}
     >
       <RSlider.Track className="relative h-1.5 grow overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--text)_10%,transparent)]">
-        <RSlider.Range
-          className="absolute h-full rounded-full"
-          style={{
-            background: warn
-              ? 'linear-gradient(90deg, var(--accent), var(--warning))'
-              : 'linear-gradient(90deg, var(--accent-2), var(--accent))',
-          }}
-        />
+        {origin === undefined ? (
+          <RSlider.Range
+            className="absolute h-full rounded-full"
+            style={{
+              background: warn
+                ? 'linear-gradient(90deg, var(--accent), var(--warning))'
+                : 'linear-gradient(90deg, var(--accent-2), var(--accent))',
+            }}
+          />
+        ) : (
+          // 從 origin 往目前值填色（例如 −100～100 的調整值從 0 開始）
+          <span
+            aria-hidden
+            className="absolute h-full rounded-full bg-accent"
+            style={{
+              left: `${((Math.min(origin, value) - min) / (max - min)) * 100}%`,
+              width: `${(Math.abs(value - origin) / (max - min)) * 100}%`,
+            }}
+          />
+        )}
       </RSlider.Track>
       <RSlider.Thumb
         aria-label={label}

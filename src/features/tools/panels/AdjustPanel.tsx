@@ -192,6 +192,7 @@ export function AdjustPanel() {
                 label={name}
                 value={state.adjust[key]}
                 min={min}
+                origin={signed ? 0 : undefined}
                 max={100}
                 format={(v) => (signed && v > 0 ? `+${Math.round(v)}` : String(Math.round(v)))}
                 onChange={(v) =>

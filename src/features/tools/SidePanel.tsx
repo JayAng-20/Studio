@@ -13,7 +13,7 @@ import {
   Stamp,
   type LucideIcon,
 } from 'lucide-react'
-import { useEffect, type ComponentType } from 'react'
+import { useEffect, useRef, type ComponentType } from 'react'
 import { Tabs } from '@/components/ui'
 import { duration, easing, offset, sec } from '@/design/motion'
 import { cn } from '@/lib/cn'
@@ -49,6 +49,9 @@ const PANELS: Record<TabId, ComponentType> = {
   color: ColorPanel,
 }
 
+/** 分頁內容面板的 id（分頁列可能在面板內或畫布下方，都指向同一個面板） */
+export const TAB_PANEL_ID = 'tools-tabpanel'
+
 /** 分頁列（滑動底線） */
 export function TabStrip({ className }: { className?: string }) {
   const t = useT()
@@ -64,6 +67,7 @@ export function TabStrip({ className }: { className?: string }) {
       label={t('tools.tabs.label')}
       fullWidth
       animated={false}
+      panelId={TAB_PANEL_ID}
       listClassName={cn(
         'gap-0 bg-surface px-1 [&>button]:h-14 [&>button]:min-w-0 [&>button]:px-1',
         className,
@@ -105,26 +109,38 @@ export function SidePanel() {
     if (tab !== 'color') useColorStore.getState().setPicking(false)
   }, [tab])
 
+  // 面板以目前選取的分頁按鈕命名（分頁按鈕的 id 由 Radix 產生，渲染後才知道）
+  const panelRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const trigger = document.querySelector<HTMLElement>(
+      `[role="tab"][aria-controls="${TAB_PANEL_ID}"][data-state="active"]`,
+    )
+    const panel = panelRef.current
+    if (!panel) return
+    if (trigger?.id) panel.setAttribute('aria-labelledby', trigger.id)
+    else panel.removeAttribute('aria-labelledby')
+  }, [tab, desktop, ready])
+
   return (
     <aside
       aria-label={t('tools.tabs.label')}
-      className="card min-w-0 lg:sticky! lg:top-[calc(var(--topbar-h)+16px)] lg:h-(--tl-h) lg:overflow-y-auto"
+      className="card min-w-0 lg:sticky lg:top-[calc(var(--topbar-h)+16px)] lg:h-(--tl-h) lg:overflow-y-auto"
     >
       {desktop && <TabStrip className="sticky top-0 z-10 rounded-t-lg pt-1" />}
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={tab}
-          role="tabpanel"
-          aria-label={t(`tools.tabs.${tab}`)}
-          className="px-4 pb-4 pt-2"
-          initial={{ opacity: 0, x: offset.panel }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -offset.panel }}
-          transition={{ duration: sec(duration.fast), ease: easing.standard }}
-        >
-          {ready ? <Panel /> : null}
-        </motion.div>
-      </AnimatePresence>
+      <div ref={panelRef} id={TAB_PANEL_ID} role="tabpanel">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={tab}
+            className="px-4 pb-4 pt-2"
+            initial={{ opacity: 0, x: offset.panel }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -offset.panel }}
+            transition={{ duration: sec(duration.fast), ease: easing.standard }}
+          >
+            {ready ? <Panel /> : null}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </aside>
   )
 }

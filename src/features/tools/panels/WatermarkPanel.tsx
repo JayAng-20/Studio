@@ -241,6 +241,7 @@ export function WatermarkPanel() {
             value={wm.rotation}
             min={-90}
             max={90}
+            origin={0}
             format={(v) => `${Math.round(v)}°`}
             disabled={!wm.enabled}
             onChange={(v) => set({ rotation: Math.round(v) }, 'wm-rot')}

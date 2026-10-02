@@ -194,7 +194,7 @@ export function Workbench() {
         <ThumbRail onCollage={() => setCollage(true)} />
         <section
           aria-label={doc?.name}
-          className="card flex min-w-0 flex-col overflow-hidden max-lg:sticky! max-lg:top-(--topbar-h) max-lg:z-20 max-lg:shadow-e3! lg:h-(--tl-h)"
+          className="card flex min-w-0 flex-col overflow-hidden max-lg:sticky max-lg:top-(--topbar-h) max-lg:z-20 max-lg:shadow-e3 lg:h-(--tl-h)"
         >
           <Toolbar doc={doc} state={state} />
           <div className="relative h-[clamp(220px,36dvh,520px)] md:h-[clamp(320px,46dvh,620px)] lg:h-auto lg:min-h-0 lg:flex-1">

@@ -28,7 +28,7 @@ src/config/         app.ts（名稱版本連結）、modules.ts（七模組定�
 src/design/         tokens.css、motion.ts、Logo、ModuleGlyphs、Ambient、illustrations
 src/components/ui/  共用元件（Button、Dialog、DropZone、SortableList…，從 index.ts 匯入）
 src/components/layout/ ModulePage、Workspace、TopBarActions、ErrorBoundary
-src/features/<id>/  各模組：index.tsx（預設匯出頁面）、i18n.ts（zh／en 字串）
+src/features/<id>/  各模組：index.tsx（預設匯出頁面）、i18n.ts（zh／en 字串）；doc2pdf 由 PDF 工具載入
 src/stores/         settings、tasks（runTask／useTask）、fileBus、recents、ui
 src/lib/            format、filename、download、zip、image、files、capabilities、storage
 src/workers/        Worker
@@ -50,6 +50,7 @@ tests/              Vitest
 
 ## 目前進度
 
-- 已完成：Phase 0（骨架、CI／部署）、Phase 1（設計系統、外殼、首頁、設定、指令面板、任務中心、i18n）。
-- 進行中：Phase 2 到 4 的七個模組。
-- 已知問題：見 `docs/ACCEPTANCE.md`。
+- 已完成：Phase 0–5。七個模組（播放器、錄影、GIF、圖片互轉、圖片工具、QR、PDF）＋文字轉 PDF（在 PDF 工具內）全部 P0／P1 完成，P2 大部分完成。
+- 部署：GitHub Pages（`deploy.yml` 在 main 與工作分支推送時發布）。
+- 未完成／不做：OCR、PDF 加密（原因見 README「尚未支援」）。
+- 已知問題與未驗證項目：見 `docs/ACCEPTANCE.md`（實體裝置、Safari、Firefox 未測）。

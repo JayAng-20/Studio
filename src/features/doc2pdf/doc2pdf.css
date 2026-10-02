@@ -1,0 +1,27 @@
+/* 文字檔轉 PDF：排版中的紙張（目前這一行持續「打字」） */
+.d2p-paper {
+  background: #ffffff;
+}
+.d2p-typing {
+  transform-origin: left center;
+  animation: d2p-type 1.1s var(--ease-standard) infinite;
+}
+@keyframes d2p-type {
+  0% {
+    transform: scaleX(0.05);
+    opacity: 0.5;
+  }
+  70% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0.15;
+  }
+}
+/* 精簡／關閉動畫時：目前這一行直接顯示一半 */
+:root[data-motion='lite'] .d2p-typing,
+:root[data-motion='off'] .d2p-typing {
+  transform: scaleX(0.5);
+}

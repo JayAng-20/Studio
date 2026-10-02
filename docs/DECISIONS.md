@@ -35,3 +35,6 @@
 - 不做 OCR｜tesseract.js 需在執行時下載語言資料，違反不外連原則｜打包語言資料（數十 MB）
 - 共用元件樣式（ui.css）放進 `@layer components`，sonner 的覆寫留在 layer 外｜讓 Tailwind utilities（例如 sticky、padding）能正常覆蓋元件樣式｜在使用處加 !important
 - 等寬數字（tabular-nums）只套用在數值顯示，不全域開啟｜Inter 的 tnum 也會把連字號變成等寬，檔名與頁範圍（1-3）中間像多了空白｜全域 tabular-nums
+- 文字轉 PDF 使用自寫排版引擎＋pdf-lib 嵌入思源黑體子集（文字可選取）｜品質優先、中文可搜尋複製；瀏覽器列印需要使用者操作對話框｜轉成圖片再嵌入（文字不可選取）
+- 嵌入前修補 glyf 表長度（engine/fontfix.ts）｜@pdf-lib/fontkit 子集化思源黑體時，短格式 loca 未補偶數長度導致多數中文字變空白｜改用其他字型
+- 思源黑體 400／700 各約 7 MB，只在轉檔時下載並存入 Cache Storage｜字型自架、不外連｜CDN 載入字型

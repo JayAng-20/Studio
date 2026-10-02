@@ -1,0 +1,70 @@
+/* 圖片工具專用樣式（只動 transform／opacity） */
+
+/* 透明背景棋盤格 */
+.tl-checker {
+  background-color: var(--surface);
+  background-image: repeating-conic-gradient(
+    color-mix(in srgb, var(--text) 6%, transparent) 0 25%,
+    transparent 0 50%
+  );
+  background-size: 16px 16px;
+}
+
+/* 畫布舞台：淡淡的內陰影與底色，讓圖片浮起來 */
+.tl-stage {
+  background:
+    radial-gradient(
+      120% 90% at 50% 0%,
+      color-mix(in srgb, var(--accent) 5%, transparent),
+      transparent 60%
+    ),
+    color-mix(in srgb, var(--text) 3.5%, var(--surface-2));
+}
+
+/* 圖片在舞台上的陰影 */
+.tl-image-shadow {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 12px 32px -12px rgba(0, 0, 0, 0.35);
+}
+
+/* GPS 警示條：進場時脈動一次 */
+.tl-gps-pulse {
+  animation: pulse-once var(--dur-slower) var(--ease-standard) var(--dur-base) 1 both;
+}
+:root[data-motion='off'] .tl-gps-pulse {
+  animation: none;
+}
+
+/* 裁切框把手：觸控裝置加大可點範圍到 44 px */
+.tl-handle {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  touch-action: none;
+}
+@media (pointer: coarse) {
+  .tl-handle {
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+  }
+}
+
+/* 取色放大鏡 */
+.tl-loupe {
+  image-rendering: pixelated;
+}
+
+/* 縮圖列水平捲動時的邊緣淡出 */
+.tl-fade-x {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12px,
+    #000 calc(100% - 12px),
+    transparent
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+}

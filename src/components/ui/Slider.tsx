@@ -17,6 +17,8 @@ interface SliderProps {
   className?: string
   /** 超過此值以警示色顯示（例如音量 > 100%） */
   warnAbove?: number
+  /** 從這個值往兩側填色（例如 −100 到 100 的調整值設為 0） */
+  origin?: number
 }
 
 /** 滑桿：拖曳時把手放大、數值氣泡浮現 */

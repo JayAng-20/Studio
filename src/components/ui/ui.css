@@ -1,336 +1,414 @@
-/* 共用元件的複雜效果（只動 transform／opacity） */
+/* 共用元件樣式放在 components layer，讓 Tailwind utilities 能正常覆蓋（例如 sticky、padding） */
+@layer components {
+  /* 共用元件的複雜效果（只動 transform／opacity） */
 
-/* Button：primary 斜向光澤 */
-.btn-primary {
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 60%);
-}
-.btn-sheen {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
-  transform: translateX(-120%) skewX(-20deg);
-  pointer-events: none;
-}
-@media (hover: hover) {
-  .btn-primary:hover:not(:disabled) .btn-sheen {
-    animation: sheen var(--dur-slower) var(--ease-standard);
+  /* Button：primary 斜向光澤 */
+  .btn-primary {
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.14),
+      rgba(255, 255, 255, 0) 60%
+    );
   }
-  .btn-primary:hover:not(:disabled) {
-    filter: brightness(1.06);
+  .btn-sheen {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+    transform: translateX(-120%) skewX(-20deg);
+    pointer-events: none;
   }
-}
+  @media (hover: hover) {
+    .btn-primary:hover:not(:disabled) .btn-sheen {
+      animation: sheen var(--dur-slower) var(--ease-standard);
+    }
+    .btn-primary:hover:not(:disabled) {
+      filter: brightness(1.06);
+    }
+  }
 
-/* 圖示方塊 */
-.icon-tile {
-  background: linear-gradient(135deg, var(--tile-1), var(--tile-2));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
-    0 6px 16px -4px color-mix(in srgb, var(--tile-2) 50%, transparent);
-}
-.icon-tile::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%);
-  pointer-events: none;
-}
+  /* 圖示方塊 */
+  .icon-tile {
+    background: linear-gradient(135deg, var(--tile-1), var(--tile-2));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+      0 6px 16px -4px color-mix(in srgb, var(--tile-2) 50%, transparent);
+  }
+  .icon-tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%);
+    pointer-events: none;
+  }
 
-/* Card */
-.card {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--e1);
-  isolation: isolate;
-}
-.card-interactive {
-  transition:
-    transform var(--dur-base) var(--ease-emphasized),
-    box-shadow var(--dur-base) var(--ease-standard),
-    border-color var(--dur-base) var(--ease-standard);
-}
-.card-spotlight {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  z-index: -1;
-  background: radial-gradient(
-    420px circle at var(--mx, 50%) var(--my, 50%),
-    color-mix(in srgb, var(--card-glow, var(--accent)) 12%, transparent),
-    transparent 60%
-  );
-  transition: opacity var(--dur-base) var(--ease-standard);
-}
-@media (hover: hover) {
-  .card-interactive:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--e3);
-    border-color: var(--border-strong);
+  /* Card */
+  .card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--e1);
+    isolation: isolate;
   }
-  .card-interactive:hover .card-spotlight {
-    opacity: 1;
-  }
-  .card-tilt {
-    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  .card-interactive {
     transition:
-      transform var(--dur-slow) var(--ease-emphasized),
+      transform var(--dur-base) var(--ease-emphasized),
       box-shadow var(--dur-base) var(--ease-standard),
       border-color var(--dur-base) var(--ease-standard);
   }
-  .card-tilt:hover {
-    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-2px);
+  .card-spotlight {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    z-index: -1;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--card-glow, var(--accent)) 12%, transparent),
+      transparent 60%
+    );
+    transition: opacity var(--dur-base) var(--ease-standard);
   }
-  :root[data-motion='lite'] .card-tilt,
-  :root[data-motion='off'] .card-tilt,
-  :root[data-motion='lite'] .card-tilt:hover,
-  :root[data-motion='off'] .card-tilt:hover {
-    transform: none;
+  @media (hover: hover) {
+    .card-interactive:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--e3);
+      border-color: var(--border-strong);
+    }
+    .card-interactive:hover .card-spotlight {
+      opacity: 1;
+    }
+    .card-tilt {
+      transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      transition:
+        transform var(--dur-slow) var(--ease-emphasized),
+        box-shadow var(--dur-base) var(--ease-standard),
+        border-color var(--dur-base) var(--ease-standard);
+    }
+    .card-tilt:hover {
+      transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
+        translateY(-2px);
+    }
+    :root[data-motion='lite'] .card-tilt,
+    :root[data-motion='off'] .card-tilt,
+    :root[data-motion='lite'] .card-tilt:hover,
+    :root[data-motion='off'] .card-tilt:hover {
+      transform: none;
+    }
   }
-}
 
-/* 不確定進度 shimmer */
-.shimmer {
-  position: relative;
-  overflow: hidden;
-}
-.shimmer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--surface) 55%, transparent),
-    transparent
-  );
-  transform: translateX(-100%);
-  animation: shimmer 1.4s var(--ease-standard) infinite;
-}
-
-/* DropZone 虛線流動 */
-.dropzone-ants {
-  stroke-dasharray: 8 12;
-  animation: ants 6s linear infinite;
-}
-:root[data-motion='lite'] .dropzone-ants,
-:root[data-motion='off'] .dropzone-ants {
-  animation: none;
-}
-
-/* 轉換中卡片邊緣流動色光（conic 遮罩，只旋轉 transform） */
-.flow-ring {
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1.5px;
-  overflow: hidden;
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box exclude,
-    linear-gradient(#000 0 0);
-  pointer-events: none;
-}
-.flow-ring::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 250%;
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0 60%,
-    var(--accent-2),
-    var(--accent),
-    transparent 95%
-  );
-  animation: conic-spin 1.6s linear infinite;
-}
-
-:root[data-motion='lite'] .flow-ring::before,
-:root[data-motion='off'] .flow-ring::before {
-  animation: none;
-  background: linear-gradient(135deg, var(--accent-2), var(--accent));
-}
-
-/* 抖動（錯誤） */
-.shake {
-  animation: shake-x var(--dur-base) var(--ease-standard);
-}
-@keyframes shake-x {
-  0%,
-  100% {
-    transform: translateX(0);
+  /* 不確定進度 shimmer */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
   }
-  16%,
-  50%,
-  83% {
-    transform: translateX(-4px);
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--surface) 55%, transparent),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shimmer 1.4s var(--ease-standard) infinite;
   }
-  33%,
-  66% {
-    transform: translateX(4px);
-  }
-}
-:root[data-motion='lite'] .shake,
-:root[data-motion='off'] .shake {
-  animation: flash-border var(--dur-slow) var(--ease-standard);
-}
-@keyframes flash-border {
-  0% {
-    box-shadow: 0 0 0 2px var(--danger);
-  }
-  100% {
-    box-shadow: 0 0 0 2px transparent;
-  }
-}
 
-/* 輸入框 */
-.field {
-  height: 40px;
-  width: 100%;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-strong);
-  background: var(--surface);
-  padding: 0 12px;
-  color: var(--text);
-  transition:
-    border-color var(--dur-fast) var(--ease-standard),
-    box-shadow var(--dur-fast) var(--ease-standard);
-}
-.field::placeholder {
-  color: var(--text-3);
-}
-.field:focus-visible,
-.field:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
-}
-.field[aria-invalid='true'] {
-  border-color: var(--danger);
-}
-textarea.field {
-  height: auto;
-  padding: 10px 12px;
-  resize: vertical;
-  min-height: 88px;
-  line-height: 22px;
-}
+  /* DropZone 虛線流動 */
+  .dropzone-ants {
+    stroke-dasharray: 8 12;
+    animation: ants 6s linear infinite;
+  }
+  :root[data-motion='lite'] .dropzone-ants,
+  :root[data-motion='off'] .dropzone-ants {
+    animation: none;
+  }
 
-/* 標籤 */
-.label {
-  display: block;
-  font-size: 13px;
-  line-height: 20px;
-  font-weight: 500;
-  color: var(--text-2);
-  margin-bottom: 6px;
-}
+  /* 轉換中卡片邊緣流動色光（conic 遮罩，只旋轉 transform） */
+  .flow-ring {
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1.5px;
+    overflow: hidden;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+  .flow-ring::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 250%;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0 60%,
+      var(--accent-2),
+      var(--accent),
+      transparent 95%
+    );
+    animation: conic-spin 1.6s linear infinite;
+  }
 
-/* Popover／Dialog 外觀 */
-.floating {
-  background: color-mix(in srgb, var(--surface) 86%, transparent);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid var(--border);
-  box-shadow: var(--e4);
-  border-radius: var(--radius-lg);
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .floating {
+  :root[data-motion='lite'] .flow-ring::before,
+  :root[data-motion='off'] .flow-ring::before {
+    animation: none;
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  }
+
+  /* 抖動（錯誤） */
+  .shake {
+    animation: shake-x var(--dur-base) var(--ease-standard);
+  }
+  @keyframes shake-x {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    16%,
+    50%,
+    83% {
+      transform: translateX(-4px);
+    }
+    33%,
+    66% {
+      transform: translateX(4px);
+    }
+  }
+  :root[data-motion='lite'] .shake,
+  :root[data-motion='off'] .shake {
+    animation: flash-border var(--dur-slow) var(--ease-standard);
+  }
+  @keyframes flash-border {
+    0% {
+      box-shadow: 0 0 0 2px var(--danger);
+    }
+    100% {
+      box-shadow: 0 0 0 2px transparent;
+    }
+  }
+
+  /* 輸入框 */
+  .field {
+    height: 40px;
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-strong);
     background: var(--surface);
+    padding: 0 12px;
+    color: var(--text);
+    transition:
+      border-color var(--dur-fast) var(--ease-standard),
+      box-shadow var(--dur-fast) var(--ease-standard);
+  }
+  .field::placeholder {
+    color: var(--text-3);
+  }
+  .field:focus-visible,
+  .field:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  .field[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+  textarea.field {
+    height: auto;
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 88px;
+    line-height: 22px;
+  }
+
+  /* 標籤 */
+  .label {
+    display: block;
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--text-2);
+    margin-bottom: 6px;
+  }
+
+  /* Popover／Dialog 外觀 */
+  .floating {
+    background: color-mix(in srgb, var(--surface) 86%, transparent);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid var(--border);
+    box-shadow: var(--e4);
+    border-radius: var(--radius-lg);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .floating {
+      background: var(--surface);
+    }
+  }
+
+  /* 完成光環 */
+  .done-halo {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 2px solid var(--success);
+    pointer-events: none;
+  }
+
+  /* Skeleton */
+  .skeleton {
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface-2));
+    border-radius: var(--radius-sm);
+  }
+
+  /* Radix 浮層進出場（由 data-state 驅動，Radix 會等待 animationend 才卸載） */
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes pop-out {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .popover-content,
+  .menu-content {
+    transform-origin: var(
+      --radix-popover-content-transform-origin,
+      var(--radix-dropdown-menu-content-transform-origin, center)
+    );
+  }
+  .popover-content[data-state='open'],
+  .menu-content[data-state='open'] {
+    animation: pop-in var(--dur-fast) var(--ease-emphasized);
+  }
+  .popover-content[data-state='closed'],
+  .menu-content[data-state='closed'] {
+    animation: pop-out var(--dur-instant) var(--ease-accelerate) forwards;
+  }
+  .tooltip-content {
+    transform-origin: var(--radix-tooltip-content-transform-origin);
+  }
+  .tooltip-content[data-state='delayed-open'] {
+    animation: pop-in var(--dur-fast) var(--ease-emphasized);
+  }
+  .tooltip-content[data-state='instant-open'] {
+    animation: fade-in var(--dur-instant) var(--ease-standard);
+  }
+  .tooltip-content[data-state='closed'] {
+    animation: pop-out var(--dur-instant) var(--ease-accelerate) forwards;
+  }
+  :root[data-motion='lite'] .popover-content[data-state='open'],
+  :root[data-motion='lite'] .menu-content[data-state='open'],
+  :root[data-motion='lite'] .tooltip-content[data-state='delayed-open'] {
+    animation-name: fade-in;
+  }
+
+  /* Radix 浮層進出場（由 data-state 驅動，Radix 會等待 animationend 才卸載） */
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes pop-out {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .popover-content,
+  .menu-content {
+    transform-origin: var(
+      --radix-popover-content-transform-origin,
+      var(--radix-dropdown-menu-content-transform-origin, center)
+    );
+  }
+  .popover-content[data-state='open'],
+  .menu-content[data-state='open'] {
+    animation: pop-in var(--dur-fast) var(--ease-emphasized);
+  }
+  .popover-content[data-state='closed'],
+  .menu-content[data-state='closed'] {
+    animation: pop-out var(--dur-instant) var(--ease-accelerate) forwards;
+  }
+  .tooltip-content {
+    transform-origin: var(--radix-tooltip-content-transform-origin);
+  }
+  .tooltip-content[data-state='delayed-open'] {
+    animation: pop-in var(--dur-fast) var(--ease-emphasized);
+  }
+  .tooltip-content[data-state='instant-open'] {
+    animation: fade-in var(--dur-instant) var(--ease-standard);
+  }
+  .tooltip-content[data-state='closed'] {
+    animation: pop-out var(--dur-instant) var(--ease-accelerate) forwards;
+  }
+  :root[data-motion='lite'] .popover-content[data-state='open'],
+  :root[data-motion='lite'] .menu-content[data-state='open'],
+  :root[data-motion='lite'] .tooltip-content[data-state='delayed-open'] {
+    animation-name: fade-in;
+  }
+
+  /* 指令面板 */
+  .cmdk [cmdk-group-heading] {
+    padding: 10px 12px 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-3);
   }
 }
 
-/* 完成光環 */
-.done-halo {
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  border: 2px solid var(--success);
-  pointer-events: none;
-}
-
-/* Skeleton */
-.skeleton {
-  background: color-mix(in srgb, var(--accent) 8%, var(--surface-2));
-  border-radius: var(--radius-sm);
-}
-
-/* Radix 浮層進出場（由 data-state 驅動，Radix 會等待 animationend 才卸載） */
-@keyframes pop-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96) translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes pop-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-}
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.popover-content,
-.menu-content {
-  transform-origin: var(
-    --radix-popover-content-transform-origin,
-    var(--radix-dropdown-menu-content-transform-origin, center)
-  );
-}
-.popover-content[data-state='open'],
-.menu-content[data-state='open'] {
-  animation: pop-in var(--dur-fast) var(--ease-emphasized);
-}
-.popover-content[data-state='closed'],
-.menu-content[data-state='closed'] {
-  animation: pop-out var(--dur-instant) var(--ease-accelerate) forwards;
-}
-.tooltip-content {
-  transform-origin: var(--radix-tooltip-content-transform-origin);
-}
-.tooltip-content[data-state='delayed-open'] {
-  animation: pop-in var(--dur-fast) var(--ease-emphasized);
-}
-.tooltip-content[data-state='instant-open'] {
-  animation: fade-in var(--dur-instant) var(--ease-standard);
-}
-.tooltip-content[data-state='closed'] {
-  animation: pop-out var(--dur-instant) var(--ease-accelerate) forwards;
-}
-:root[data-motion='lite'] .popover-content[data-state='open'],
-:root[data-motion='lite'] .menu-content[data-state='open'],
-:root[data-motion='lite'] .tooltip-content[data-state='delayed-open'] {
-  animation-name: fade-in;
-}
-
-/* Toast（sonner） */
+/* Toast（sonner）：維持在 layer 外，才能蓋過 sonner 自己注入的樣式 */
 [data-sonner-toaster] .jt-toast {
   font-family: var(--font-sans);
   background: color-mix(in srgb, var(--surface) 90%, transparent);
@@ -380,12 +458,4 @@ textarea.field {
 }
 [data-sonner-toaster] [data-type='warning'] [data-icon] svg {
   color: var(--warning);
-}
-
-/* 指令面板 */
-.cmdk [cmdk-group-heading] {
-  padding: 10px 12px 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-3);
 }

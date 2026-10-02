@@ -21,6 +21,8 @@ interface TabsProps<T extends string> {
   /** 內容切換時交叉淡化並位移 */
   animated?: boolean
   fullWidth?: boolean
+  /** 只用分頁列時，外部面板的 id（供 aria-controls） */
+  panelId?: string
 }
 
 /** 分頁：滑動底線；內容交叉淡化並位移 8 px */
@@ -34,6 +36,7 @@ export function Tabs<T extends string>({
   children,
   animated = true,
   fullWidth,
+  panelId,
 }: TabsProps<T>) {
   const id = useId()
   return (
@@ -48,6 +51,8 @@ export function Tabs<T extends string>({
               key={it.value}
               value={it.value}
               disabled={it.disabled}
+              // 只用分頁列（內容由外部渲染）時，不指向不存在的面板
+              aria-controls={children ? undefined : (panelId ?? undefined)}
               className={cn(
                 'relative -mb-px inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap px-3 text-body font-medium transition-colors duration-(--dur-fast)',
                 'text-text-2 hover:text-text data-[state=active]:text-text disabled:opacity-40',

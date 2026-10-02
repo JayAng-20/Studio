@@ -28,3 +28,9 @@
 - 圖片互轉：BMP 有透明時輸出 32 位元 V4 標頭；另外提供 GIF 輸出；處理名稱固定為 converted｜保留透明度；使用者常需要 GIF｜只輸出 24 位元 BMP
 - HEIC 解碼器以 `heic-to?url` 搭配 fetch 取得下載進度，再從 Blob URL 載入｜可顯示首次載入進度｜直接 import（無進度）
 - 進階編碼器（MozJPEG／libwebp／libavif／oxipng）預設與 Canvas 編碼比較、取較小者｜品質優先、檔案更小｜只用 Canvas
+- 圖片工具採非破壞性 EditState＋整個工作台共用一條 100 步的復原堆疊｜所有編輯可隨時回溯、批次套用｜每張圖獨立堆疊
+- GPS 以就地修改 TIFF 結構的方式移除（指標拿掉、GPS IFD 歸零）｜保住 MakerNote 等其他 EXIF 不損壞｜重建整個 EXIF
+- 圖片工具重新編碼時放回原 EXIF：方向改 1、移除內嵌縮圖、更新寬高｜避免縮圖洩漏被裁掉的內容｜直接丟棄 EXIF
+- 圖片工具在手機版讓畫布與分頁列一起黏在頂欄下方｜調整設定時仍看得到圖｜畫布跟著捲走
+- 不做 OCR｜tesseract.js 需在執行時下載語言資料，違反不外連原則｜打包語言資料（數十 MB）
+- 共用元件樣式（ui.css）放進 `@layer components`，sonner 的覆寫留在 layer 外｜讓 Tailwind utilities（例如 sticky、padding）能正常覆蓋元件樣式｜在使用處加 !important

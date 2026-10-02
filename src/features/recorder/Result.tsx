@@ -74,9 +74,6 @@ import { HUD_LAYOUT_ID } from './Hud'
 import { libraryAvailable } from './library'
 import { BlobImage } from './media'
 
-/** FileName 前段以 truncate 顯示，結尾的空白會被吃掉（日期與時間之間）；改成保留空白 */
-export const KEEP_SPACES = '[&>span:first-child]:whitespace-pre'
-
 const FFMPEG_SAFE_BYTES = 1024 * 1024 * 1024
 
 export function ResultView({ library }: { library: ReactNode }) {
@@ -418,7 +415,7 @@ function ResultInner({ result, library }: { result: RecordingResult; library: Re
         <div className="flex flex-col gap-3 p-4">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             <h2 className="min-w-0 flex-1 text-h3 font-semibold">
-              <FileName name={result.name} className={KEEP_SPACES} />
+              <FileName name={result.name} />
             </h2>
             {result.edited && (
               <Badge

@@ -76,7 +76,8 @@ export function useQr(): QrComputed {
     content,
     shown,
     matrix: error ? null : matrix,
-    displayType: current?.type ?? result.type,
+    // 沒有內容時顯示目前選取的類型；有內容時跟著畫面上的矩陣
+    displayType: shown.content ? (current?.type ?? result.type) : shown.type,
     geo: error ? null : geo,
     error,
     pending: content !== shown.content || (!!shown.content && !current),

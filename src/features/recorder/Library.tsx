@@ -24,7 +24,6 @@ import { formatDuration } from './core'
 import { openFromLibrary, updateResult, useRecorder } from './engine'
 import { libraryAvailable, loadRecordingBlob, useLibrary, type LibraryMeta } from './library'
 import { BlobImage } from './media'
-import { KEEP_SPACES } from './Result'
 
 export function LibrarySection() {
   const t = useT()
@@ -213,7 +212,7 @@ export function LibrarySection() {
                   </button>
                   <div className="flex flex-col gap-0.5 px-3 pt-2.5 pb-1.5">
                     <p className="text-small font-medium">
-                      <FileName name={m.name} className={KEEP_SPACES} />
+                      <FileName name={m.name} />
                     </p>
                     <div className="flex items-center gap-1">
                       <p className="min-w-0 flex-1 truncate text-caption tabular-nums text-text-3">

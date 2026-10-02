@@ -158,7 +158,7 @@ export function Hud({ onKeys }: { onKeys?: (e: KeyboardEvent) => void }) {
   )
 }
 
-function HudButton({
+export function HudButton({
   label,
   onClick,
   children,

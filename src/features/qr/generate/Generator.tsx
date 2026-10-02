@@ -1,20 +1,15 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { AlertTriangle, Download, Layers, QrCode } from 'lucide-react'
-import { useCallback, useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Badge, Button, Callout, CopyButton, ErrorState, SendToMenu, Tooltip, toast } from '@/components/ui'
 import { asFile } from '@/stores/fileBus'
-import { useRecents } from '@/stores/recents'
-import { useSettings } from '@/stores/settings'
 import { useModuleShortcuts } from '@/stores/ui'
 import { caps, modKey } from '@/lib/capabilities'
-import { copyBlob, downloadBlob } from '@/lib/download'
-import { sanitizeFilename } from '@/lib/filename'
 import { cn } from '@/lib/cn'
 import { duration, easing, scale, sec, spring } from '@/design/motion'
 import { useT } from '@/i18n'
-import { BYTE_CAPACITY, contentSlug, utf8Length } from '../lib/content'
+import { BYTE_CAPACITY, utf8Length } from '../lib/content'
 import { checkContrast } from '../lib/color'
-import { exportBlob, type ExportFormat } from '../lib/render'
 import { foregroundColors } from '../lib/style'
 import { QrArt } from '../components/QrArt'
 import { useQrStore } from '../store'
@@ -23,7 +18,9 @@ import { ContentForm } from './ContentForm'
 import { LogoNotice, StylePanel } from './StylePanel'
 import { Templates } from './Templates'
 import { TypePicker } from './TypePicker'
-import { useLogoImage, useQr, type QrComputed } from './useQr'
+import { useQr, type QrComputed } from './useQr'
+import { exportName, useExporter, useRipple } from './useExporter'
+import { MobilePreviewBar } from './MobilePreviewBar'
 
 const breatheVars = { '--qr-breathe': `${duration.hero * 3}ms` } as CSSProperties
 
@@ -33,9 +30,13 @@ export function Generator() {
   const setType = useQrStore((s) => s.setType)
   const qr = useQr()
   const [batchOpen, setBatchOpen] = useState(false)
+  // 精簡列與完整預覽共用同一次漣漪
+  const { ripple, onRippleEnd } = useRipple(!!qr.geo, qr.displayType)
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_var(--panel-w)] lg:gap-6">
+      {/* < 1024 px：常駐精簡預覽（sticky 在頂欄下方），整個產生分頁都看得到 */}
+      <MobilePreviewBar qr={qr} ripple={ripple} onRippleEnd={onRippleEnd} onBatch={() => setBatchOpen(true)} />
       {/* 內容：類型＋表單 */}
       <section className="flex min-w-0 flex-col gap-4 lg:col-start-1 lg:row-start-1">
         <TypePicker value={type} onChange={setType} />
@@ -59,7 +60,7 @@ export function Generator() {
 
       {/* 預覽與匯出（桌機 sticky 在右側；手機排在表單與樣式之間） */}
       <aside className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-[calc(var(--topbar-h)+16px)] lg:col-start-2 lg:row-span-2 lg:row-start-1">
-        <PreviewPanel qr={qr} onBatch={() => setBatchOpen(true)} />
+        <PreviewPanel qr={qr} onBatch={() => setBatchOpen(true)} ripple={ripple} onRippleEnd={onRippleEnd} />
         <Templates />
       </aside>
 
@@ -103,66 +104,22 @@ function CapacityMeter({ content }: { content: string }) {
   )
 }
 
-/** 匯出檔名：qr_類型_摘要.ext */
-function exportName(ext: string) {
-  const s = useQrStore.getState()
-  const slug = sanitizeFilename(contentSlug(s.type, s.values[s.type]), '')
-  return sanitizeFilename(`qr_${s.type}${slug ? `_${slug}` : ''}`) + `.${ext}`
-}
-
-function PreviewPanel({ qr, onBatch }: { qr: QrComputed; onBatch: () => void }) {
+function PreviewPanel({
+  qr,
+  onBatch,
+  ripple,
+  onRippleEnd,
+}: {
+  qr: QrComputed
+  onBatch: () => void
+  ripple: boolean
+  onRippleEnd: () => void
+}) {
   const t = useT()
-  const style = useQrStore((s) => s.style)
   const tab = useQrStore((s) => s.tab)
-  const quality = useSettings((s) => s.imageQuality)
-  const logo = useLogoImage(style)
   const { geo, matrix, error, displayType } = qr
-  const [busy, setBusy] = useState<ExportFormat | null>(null)
-
-  // 漣漪：第一次出現（從空白到有內容）與換內容類型時播放
-  const [appear, setAppear] = useState(0)
-  const [had, setHad] = useState(false)
-  if (!!geo !== had) {
-    setHad(!!geo)
-    if (geo) setAppear((a) => a + 1)
-  }
-  const trigger = `${displayType}-${appear}`
-  const [played, setPlayed] = useState<string | null>(null)
-  const ripple = !!geo && played !== trigger
-  const onRippleEnd = useCallback(() => setPlayed(trigger), [trigger])
-
+  const { style, busy, logoReady, doExport, copy, pngFile } = useExporter(geo)
   const contrast = checkContrast(foregroundColors(style), style.bgTransparent ? '#FFFFFF' : style.bg)
-  const logoReady = !style.logo || !!logo
-
-  const doExport = useCallback(
-    async (format: ExportFormat) => {
-      if (!geo) return
-      setBusy(format)
-      try {
-        const blob = await exportBlob(geo, style, format, { quality, logo })
-        const name = exportName(format)
-        downloadBlob(blob, name)
-        useRecents.getState().visit('qr', name)
-      } catch (e) {
-        console.error(e)
-        toast.error(t('qr.export.failed'), { description: t('qr.export.failedDesc') })
-      } finally {
-        setBusy(null)
-      }
-    },
-    [geo, style, quality, logo, t],
-  )
-
-  const copy = useCallback(async () => {
-    if (!geo) return false
-    try {
-      const blob = await exportBlob(geo, style, 'png', { logo, size: Math.min(style.size, 1024) })
-      return await copyBlob(blob)
-    } catch (e) {
-      console.error(e)
-      return false
-    }
-  }, [geo, style, logo])
 
   // 快捷鍵：⌘／Ctrl+S 下載 PNG、⌘／Ctrl+Shift+C 複製
   useModuleShortcuts(
@@ -354,9 +311,8 @@ function PreviewPanel({ qr, onBatch }: { qr: QrComputed; onBatch: () => void }) 
             variant="ghost"
             targets={['tools', 'convert', 'pdf']}
             getFiles={async () => {
-              if (!geo) return []
-              const blob = await exportBlob(geo, style, 'png', { logo })
-              return [asFile(blob, exportName('png'))]
+              const blob = await pngFile()
+              return blob ? [asFile(blob, exportName('png'))] : []
             }}
           />
         </div>

@@ -182,8 +182,11 @@ function LiveClock() {
   return <span className="tabular-nums">{formatClock(elapsed)}</span>
 }
 
+/** 第一個 chunk（timeslice 約 1 秒）到之前還沒有實際大小，顯示「—」 */
 function LiveBytes() {
   const bytes = useRecorder((s) => s.bytes)
+  // 開頭可能先收到只有檔頭的極小 chunk，未滿 1 KB 時仍視為尚無資料
+  if (bytes < 1024) return <span className="text-text-3">—</span>
   return <AnimatedNumber value={bytes} format={(v) => formatBytes(v)} />
 }
 

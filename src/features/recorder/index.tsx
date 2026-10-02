@@ -11,13 +11,12 @@ import { spring } from '@/design/motion'
 import { useT } from '@/i18n'
 import { caps } from '@/lib/capabilities'
 import { useMedia } from '@/lib/useMedia'
-import { useModuleShortcuts, useUnsaved } from '@/stores/ui'
+import { useModuleShortcuts } from '@/stores/ui'
 import { formatClock, pickFormat } from './core'
 import {
   addMarkerNow,
   beginRecording,
   cancelCountdown,
-  isResultUnsaved,
   stopRecording,
   toggleMute,
   togglePause,
@@ -60,10 +59,9 @@ export default function RecorderPage() {
   const format = pickFormat(formats, preferredFormat)
   const screenOk = caps.displayMedia()
   const cameraOk = caps.userMedia()
-  const busy = stage === 'acquiring' || stage === 'countdown' || stage === 'recording' || stage === 'finalizing'
 
-  // 錄製中或有還沒保存的錄影：離開頁面要警告
-  useUnsaved('recorder', busy || isResultUnsaved(result))
+  // 「錄製中或有還沒保存的錄影」的離開警告由 engine 自己登記（UNSAVED_KEY），
+  // 不綁在頁面上：切到其他工具時頁面卸載，警告與全域 HUD 仍要有效
 
   useModuleShortcuts([
     { keys: ['R'], label: t('recorder.shortcuts.startStop') },

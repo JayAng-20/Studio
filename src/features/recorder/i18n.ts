@@ -281,6 +281,12 @@ export const zh = {
   pip: {
     title: '錄影控制',
   },
+  global: {
+    label: '錄影中（在其他工具）',
+    open: '回到螢幕錄影',
+    recording: '錄製中',
+    paused: '已暫停',
+  },
   a11y: {
     countdown: '倒數 {n}',
     recordingStarted: '已開始錄影',
@@ -570,6 +576,12 @@ export const en: DeepString<typeof zh> = {
   },
   pip: {
     title: 'Recording controls',
+  },
+  global: {
+    label: 'Recording (in another tool)',
+    open: 'Back to Screen Recorder',
+    recording: 'Recording',
+    paused: 'Paused',
   },
   a11y: {
     countdown: 'Countdown {n}',

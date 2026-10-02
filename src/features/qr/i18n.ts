@@ -178,6 +178,11 @@ export const zh = {
     failedDesc: '可能是尺寸太大、記憶體不夠。可以把輸出尺寸調小再試一次。',
     saved: '已下載 {name}',
   },
+  mobile: {
+    expand: '放大預覽',
+    more: '更多匯出選項',
+    mayFail: '可能掃不出來',
+  },
   templates: {
     title: '常用範本',
     save: '儲存為範本',
@@ -543,6 +548,11 @@ export const en: DeepString<typeof zh> = {
     failed: 'Export failed',
     failedDesc: 'The size may be too large for available memory. Try a smaller output size.',
     saved: 'Downloaded {name}',
+  },
+  mobile: {
+    expand: 'Enlarge preview',
+    more: 'More export options',
+    mayFail: 'May not scan',
   },
   templates: {
     title: 'Templates',

@@ -11,6 +11,7 @@ import { t } from '@/i18n'
 import { formatBytes } from '@/lib/format'
 import { uid } from '@/lib/files'
 import { useSettings } from '@/stores/settings'
+import { useUi } from '@/stores/ui'
 import {
   addMarker,
   audioBitrate,
@@ -937,3 +938,20 @@ export const clearError = () => setState({ error: null })
 /** 結果是否還沒保存（沒下載也沒存進錄影庫） */
 export const isResultUnsaved = (r: RecordingResult | null) =>
   !!r && !r.libraryId && !r.downloaded && !r.saving
+
+/* ===================== 離開頁面保護 ===================== */
+
+/** 在 useUi().unsavedReasons 裡使用的 key（外殼依此決定是否載入全域 HUD） */
+export const UNSAVED_KEY = 'recorder'
+
+export const isCapturing = (stage: Stage) =>
+  stage === 'acquiring' || stage === 'countdown' || stage === 'recording' || stage === 'finalizing'
+
+/** 錄製中、或有還沒下載也沒存進錄影庫的錄影時登記；不依賴錄影頁是否掛載 */
+let unsavedOn = false
+useRecorder.subscribe((s) => {
+  const on = isCapturing(s.stage) || isResultUnsaved(s.result)
+  if (on === unsavedOn) return
+  unsavedOn = on
+  useUi.getState().markUnsaved(UNSAVED_KEY, on)
+})

@@ -100,6 +100,8 @@ function Hero() {
               >
                 {w}
               </motion.span>
+              {/* 英文等以空白分詞的語言，詞組之間補回空白（行內區塊會吃掉尾端空白） */}
+              {i < words.length - 1 && /[A-Za-z0-9,.!?]$/.test(w) ? '\u00a0' : null}
             </span>
           ))}
         </span>

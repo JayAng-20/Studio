@@ -16,7 +16,7 @@ export interface ModuleDef {
   descKey: TKey
   tagKeys: TKey[]
   /** 首頁全域拖放：可開啟的檔案類型 */
-  opens: Array<'image' | 'pdf' | 'video' | 'audio'>
+  opens: Array<'image' | 'pdf' | 'video' | 'audio' | 'text'>
   load: () => Promise<{ default: ComponentType }>
   Page: LazyExoticComponent<ComponentType>
 }
@@ -92,7 +92,7 @@ export const modules: ModuleDef[] = [
     path: '/pdf',
     m1: '#FF8A5B',
     m2: '#D9480F',
-    opens: ['pdf', 'image'],
+    opens: ['pdf', 'image', 'text'],
     load: () => import('@/features/pdf'),
   }),
 ]

@@ -38,3 +38,9 @@
 - 文字轉 PDF 使用自寫排版引擎＋pdf-lib 嵌入思源黑體子集（文字可選取）｜品質優先、中文可搜尋複製；瀏覽器列印需要使用者操作對話框｜轉成圖片再嵌入（文字不可選取）
 - 嵌入前修補 glyf 表長度（engine/fontfix.ts）｜@pdf-lib/fontkit 子集化思源黑體時，短格式 loca 未補偶數長度導致多數中文字變空白｜改用其他字型
 - 思源黑體 400／700 各約 7 MB，只在轉檔時下載並存入 Cache Storage｜字型自架、不外連｜CDN 載入字型
+- pdf.js 使用 legacy 版本（`pdfjs-dist/legacy/build/*`）｜一般版本用到 Chromium 141 也沒有的 API（Map#getOrInsertComputed、Math.sumPrecise），legacy 內建 polyfill｜一般版本＋自行 polyfill
+- PDF 長截圖用自寫串流 PNG 編碼器＋原生 CompressionStream（不支援時退回 fflate 不壓縮模式）｜避開 canvas 尺寸上限；fflate 0.8 串流 Zlib 在特定資料會產生壞掉的壓縮流（已寫回歸測試）｜巨型 canvas 拼接（上限低、易崩潰）
+- PDF 移除密碼：讓 pdf.js 以多來源輸出（原檔＋一頁空白檔）得到未加密檔，再用 pdf-lib 刪掉該頁｜pdf-lib 無法寫出解密檔｜不提供
+- 不提供「為 PDF 加上密碼」｜瀏覽器端沒有可靠的加密寫入方式｜不完整的自製加密
+- pdf.js 的 CMap、標準字型、WASM 以 import.meta.glob 打包進站；CMYK ICC 色彩檔未打包｜不外連｜CDN
+- 檔案類型新增「文字檔」（md／txt／rtf），首頁拖放會建議 PDF 工具（文字轉 PDF）｜使用者新增文字轉 PDF 功能｜歸類為其他

@@ -22,16 +22,6 @@ const CommandPalette = lazy(() => loadPalette().then((m) => ({ default: m.Comman
 const Settings = lazy(() => import('./pages/Settings'))
 // 錄影中切到其他工具時的浮動控制列：只有錄影模組標記未儲存時才載入
 const RecorderGlobalHud = lazy(() => import('@/features/recorder/GlobalHud'))
-// 暫時的開發預覽路由（整合進 PDF 工具後移除）
-const Doc2PdfDev = lazy(() =>
-  import('@/features/doc2pdf/TextToPdfTool').then((m) => ({
-    default: () => (
-      <div className="mx-auto max-w-[1200px] p-6">
-        <m.TextToPdfTool />
-      </div>
-    ),
-  })),
-)
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 
@@ -139,14 +129,6 @@ export function Shell() {
                 {modules.map((m) => (
                   <Route key={m.id} path={`${m.path}/*`} element={<ModuleRoute m={m} />} />
                 ))}
-                <Route
-                  path="/_dev/doc2pdf"
-                  element={
-                    <Suspense fallback={<ModuleSkeleton />}>
-                      <Doc2PdfDev />
-                    </Suspense>
-                  }
-                />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </motion.div>

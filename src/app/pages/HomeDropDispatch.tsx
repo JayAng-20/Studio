@@ -9,7 +9,7 @@ import { fileKind, filesFromDataTransfer } from '@/lib/files'
 import { spring, staggerDelay } from '@/design/motion'
 import { useT, type TKey } from '@/i18n'
 
-type Kind = 'image' | 'pdf' | 'video' | 'audio'
+type Kind = 'image' | 'pdf' | 'video' | 'audio' | 'text'
 
 /** 首頁全域拖放：依檔案類型建議工具，選了就帶著檔案跳轉 */
 export function HomeDropDispatch({ children }: { children: ReactNode }) {
@@ -24,7 +24,10 @@ export function HomeDropDispatch({ children }: { children: ReactNode }) {
   const kinds = new Set(
     (files ?? [])
       .map((f) => fileKind(f))
-      .filter((k): k is Kind => k === 'image' || k === 'pdf' || k === 'video' || k === 'audio'),
+      .filter(
+        (k): k is Kind =>
+          k === 'image' || k === 'pdf' || k === 'video' || k === 'audio' || k === 'text',
+      ),
   )
   const kindLabel: TKey =
     kinds.size > 1

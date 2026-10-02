@@ -1,6 +1,6 @@
 /** 檔案輸入相關：類型判斷、資料夾展開、物件 URL 管理 */
 
-export type FileKind = 'image' | 'pdf' | 'video' | 'audio' | 'subtitle' | 'other'
+export type FileKind = 'image' | 'pdf' | 'video' | 'audio' | 'subtitle' | 'text' | 'other'
 
 const IMAGE_EXT = /\.(jpe?g|png|webp|gif|bmp|avif|heic|heif|svg|ico|tiff?)$/i
 const VIDEO_EXT = /\.(mp4|m4v|mov|webm|mkv|avi|ogv|3gp)$/i
@@ -13,6 +13,14 @@ export function fileKind(f: { name: string; type: string }): FileKind {
   if (t.startsWith('video/') || VIDEO_EXT.test(f.name)) return 'video'
   if (t.startsWith('audio/') || AUDIO_EXT.test(f.name)) return 'audio'
   if (/\.(srt|vtt)$/i.test(f.name)) return 'subtitle'
+  if (
+    /\.(md|markdown|txt|rtf)$/i.test(f.name) ||
+    t === 'text/markdown' ||
+    t === 'text/plain' ||
+    t === 'application/rtf' ||
+    t === 'text/rtf'
+  )
+    return 'text'
   return 'other'
 }
 

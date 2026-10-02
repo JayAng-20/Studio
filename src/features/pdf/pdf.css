@@ -1,0 +1,35 @@
+/* PDF 工具模組專屬樣式（只動 transform／opacity） */
+
+/* 檢視器：頁面畫好後隱藏骨架並淡入畫布 */
+.viewer-page:has(canvas) .viewer-skel {
+  opacity: 0;
+  pointer-events: none;
+}
+.viewer-skel {
+  transition: opacity var(--dur-base) var(--ease-standard);
+}
+.viewer-page canvas[data-fresh='1'] {
+  animation: fade-in var(--dur-base) var(--ease-standard);
+}
+
+/* 紙張：PDF 頁面在淺色與深色主題下都是白紙，文字用固定的中性灰以確保對比 */
+.paper {
+  background: #ffffff;
+  color: #5f6a7d;
+}
+
+/* 透明背景示意（棋盤格） */
+.checker {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(45deg, var(--surface-3) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--surface-3) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--surface-3) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--surface-3) 75%);
+  background-size: 16px 16px;
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+}

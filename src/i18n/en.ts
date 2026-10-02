@@ -65,9 +65,9 @@ export const en: DeepString<typeof zhTW> = {
     },
     pdf: {
       name: 'PDF Tools',
-      desc: 'Merge, split, reorder pages, add watermarks and page numbers.',
+      desc: 'Merge, split, reorder, watermark and number pages; turn text into PDFs and PDFs into long images.',
       tag1: 'Merge & split',
-      tag2: 'CJK watermarks',
+      tag2: 'Text to PDF',
     },
   },
   common: {
@@ -178,6 +178,7 @@ export const en: DeepString<typeof zhTW> = {
       pdf: 'PDF',
       video: 'video',
       audio: 'audio',
+      text: 'text documents',
       mixed: 'mixed',
       other: 'other',
     },

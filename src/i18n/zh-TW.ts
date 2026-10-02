@@ -63,9 +63,9 @@ export const zhTW = {
     },
     pdf: {
       name: 'PDF 工具',
-      desc: '合併、分割、整理頁面、加浮水印與頁碼。',
+      desc: '合併、分割、整理頁面、浮水印與頁碼，文字檔轉 PDF、PDF 轉長圖。',
       tag1: '合併與分割',
-      tag2: '支援中文浮水印',
+      tag2: '文字轉 PDF',
     },
   },
   common: {
@@ -175,6 +175,7 @@ export const zhTW = {
       pdf: 'PDF',
       video: '影片',
       audio: '音訊',
+      text: '文字檔',
       mixed: '多種類型',
       other: '其他',
     },

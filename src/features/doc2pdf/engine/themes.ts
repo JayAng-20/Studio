@@ -155,5 +155,7 @@ export const THEMES: Record<ThemeId, Theme> = {
 }
 
 /** 深色程式碼區塊用淺色文字 */
-export const codeTextColor = (t: Theme): RGB => (t.colors.codeBg[0] < 0.4 ? hex('#e6e8ee') : t.colors.text)
-export const codeMutedColor = (t: Theme): RGB => (t.colors.codeBg[0] < 0.4 ? hex('#9aa3b5') : t.colors.muted)
+export const codeTextColor = (t: Theme): RGB =>
+  t.colors.codeBg[0] < 0.4 ? hex('#e6e8ee') : t.colors.text
+export const codeMutedColor = (t: Theme): RGB =>
+  t.colors.codeBg[0] < 0.4 ? hex('#9aa3b5') : t.colors.muted

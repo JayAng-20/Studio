@@ -64,8 +64,20 @@ export function clipPlan(
       outExt: inExt,
       // -ss 放在 -i 前：快速跳到最近的關鍵影格後直接複製
       args: (i, o) => [
-        '-ss', ss, '-i', i, '-t', dur, '-map', '0', '-c', 'copy',
-        '-avoid_negative_ts', 'make_zero', '-y', o,
+        '-ss',
+        ss,
+        '-i',
+        i,
+        '-t',
+        dur,
+        '-map',
+        '0',
+        '-c',
+        'copy',
+        '-avoid_negative_ts',
+        'make_zero',
+        '-y',
+        o,
       ],
     }
   }
@@ -78,16 +90,39 @@ export function clipPlan(
         : outExt === 'wav'
           ? ['-c:a', 'pcm_s16le']
           : ['-c:a', 'aac', '-b:a', '192k']
-    return { inName, outExt, args: (i, o) => ['-ss', ss, '-i', i, '-t', dur, '-vn', ...codec, '-y', o] }
+    return {
+      inName,
+      outExt,
+      args: (i, o) => ['-ss', ss, '-i', i, '-t', dur, '-vn', ...codec, '-y', o],
+    }
   }
   return {
     inName,
     outExt: 'mp4',
     // 單執行緒 WebAssembly 很慢：用 ultrafast 換取速度，以較低的 CRF 補畫質
     args: (i, o) => [
-      '-ss', ss, '-i', i, '-t', dur,
-      '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '20', '-pix_fmt', 'yuv420p',
-      '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', '-y', o,
+      '-ss',
+      ss,
+      '-i',
+      i,
+      '-t',
+      dur,
+      '-c:v',
+      'libx264',
+      '-preset',
+      'ultrafast',
+      '-crf',
+      '20',
+      '-pix_fmt',
+      'yuv420p',
+      '-c:a',
+      'aac',
+      '-b:a',
+      '160k',
+      '-movflags',
+      '+faststart',
+      '-y',
+      o,
     ],
   }
 }
@@ -150,8 +185,15 @@ export async function exportClip(opts: {
       if (code !== 0) throw new Error(`ffmpeg exited with ${code}`)
       const data = await ff.readFile(outFile)
       if (typeof data === 'string' || !data.byteLength) throw new Error('empty output')
-      const blob = new Blob([data.slice()], { type: MIME[plan.outExt] ?? 'application/octet-stream' })
-      const name = outputName(file.name, `clip_${fileTime(start)}-${fileTime(end)}`, plan.outExt, opts.template)
+      const blob = new Blob([data.slice()], {
+        type: MIME[plan.outExt] ?? 'application/octet-stream',
+      })
+      const name = outputName(
+        file.name,
+        `clip_${fileTime(start)}-${fileTime(end)}`,
+        plan.outExt,
+        opts.template,
+      )
       progress(1)
       return { blob, name }
     } finally {

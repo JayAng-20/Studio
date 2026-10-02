@@ -35,7 +35,9 @@ export function loadOptions(quality: number): StoredOptions {
     typeof v === 'number' && Number.isFinite(v) ? clamp(Math.round(v), lo, hi) : fb
   const r = (raw.resize ?? {}) as Partial<StoredOptions['resize']>
   return {
-    format: OUTPUT_ORDER.includes(raw.format as OutputFormat) ? (raw.format as OutputFormat) : d.format,
+    format: OUTPUT_ORDER.includes(raw.format as OutputFormat)
+      ? (raw.format as OutputFormat)
+      : d.format,
     quality: num(raw.quality, 1, 100, d.quality),
     targetOn: typeof raw.targetOn === 'boolean' ? raw.targetOn : d.targetOn,
     targetKB: num(raw.targetKB, 5, 100_000, d.targetKB),
@@ -49,12 +51,19 @@ export function loadOptions(quality: number): StoredOptions {
       percent: num(r.percent, 1, 1000, d.resize.percent),
       upscale: typeof r.upscale === 'boolean' ? r.upscale : d.resize.upscale,
     },
-    background: typeof raw.background === 'string' && /^#[0-9a-f]{6}$/i.test(raw.background) ? raw.background : d.background,
-    exif: ['strip', 'keep-no-gps', 'keep'].includes(raw.exif as string) ? (raw.exif as StoredOptions['exif']) : d.exif,
+    background:
+      typeof raw.background === 'string' && /^#[0-9a-f]{6}$/i.test(raw.background)
+        ? raw.background
+        : d.background,
+    exif: ['strip', 'keep-no-gps', 'keep'].includes(raw.exif as string)
+      ? (raw.exif as StoredOptions['exif'])
+      : d.exif,
     encoder: raw.encoder === 'fast' || raw.encoder === 'best' ? raw.encoder : d.encoder,
     icoSizes:
       Array.isArray(raw.icoSizes) && raw.icoSizes.length
-        ? raw.icoSizes.filter((n): n is number => (ICO_SIZES as readonly number[]).includes(n as number))
+        ? raw.icoSizes.filter((n): n is number =>
+            (ICO_SIZES as readonly number[]).includes(n as number),
+          )
         : d.icoSizes,
     template: typeof raw.template === 'string' && raw.template.trim() ? raw.template : null,
     keepAnimation: typeof raw.keepAnimation === 'boolean' ? raw.keepAnimation : d.keepAnimation,

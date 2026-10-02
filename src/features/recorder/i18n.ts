@@ -48,7 +48,8 @@ export const zh = {
     desc: 'iPhone、iPad 與部分手機瀏覽器不支援螢幕擷取。你仍然可以用鏡頭錄影，或改用電腦上的 Chrome、Edge、Firefox 或 Safari。',
     useCamera: '改用鏡頭錄影',
     noRecorderTitle: '這個瀏覽器無法錄影',
-    noRecorderDesc: '你的瀏覽器不支援錄影功能（MediaRecorder）。請改用最新版的 Chrome、Edge、Firefox 或 Safari。',
+    noRecorderDesc:
+      '你的瀏覽器不支援錄影功能（MediaRecorder）。請改用最新版的 Chrome、Edge、Firefox 或 Safari。',
     noCaptureTitle: '這個裝置沒有可用的錄影來源',
     noCaptureDesc: '瀏覽器不支援螢幕擷取，也無法使用鏡頭。請改用電腦上的最新版瀏覽器。',
     insecureDesc: '螢幕錄影需要安全連線（https）。請用 https 開啟這個網站。',
@@ -163,7 +164,8 @@ export const zh = {
     title: '無法開始錄影',
     canceled: '已取消，沒有開始錄影。',
     screenDenied: '沒有螢幕擷取權限。到網址列左側的網站設定允許後再試一次。',
-    systemDenied: '作業系統擋下了擷取。macOS 請到「系統設定 → 隱私權與安全性 → 螢幕與系統錄音（或攝影機、麥克風）」允許這個瀏覽器，然後重新開啟瀏覽器。',
+    systemDenied:
+      '作業系統擋下了擷取。macOS 請到「系統設定 → 隱私權與安全性 → 螢幕與系統錄音（或攝影機、麥克風）」允許這個瀏覽器，然後重新開啟瀏覽器。',
     micDenied: '沒有麥克風權限。到網址列左側的網站設定允許麥克風後再試一次。',
     cameraDenied: '沒有鏡頭權限。到網址列左側的網站設定允許攝影機後再試一次。',
     micNotFound: '找不到麥克風。接上麥克風後再試一次。',
@@ -344,9 +346,11 @@ export const en: DeepString<typeof zh> = {
     desc: 'iPhone, iPad and some mobile browsers don’t support screen capture. You can still record with your camera, or use Chrome, Edge, Firefox or Safari on a computer.',
     useCamera: 'Record with camera',
     noRecorderTitle: 'This browser can’t record video',
-    noRecorderDesc: 'Your browser doesn’t support recording (MediaRecorder). Try the latest Chrome, Edge, Firefox or Safari.',
+    noRecorderDesc:
+      'Your browser doesn’t support recording (MediaRecorder). Try the latest Chrome, Edge, Firefox or Safari.',
     noCaptureTitle: 'No recording source available',
-    noCaptureDesc: 'This browser supports neither screen capture nor the camera. Try the latest browser on a computer.',
+    noCaptureDesc:
+      'This browser supports neither screen capture nor the camera. Try the latest browser on a computer.',
     insecureDesc: 'Screen recording needs a secure (https) connection. Open this site over https.',
   },
   audio: {
@@ -435,7 +439,8 @@ export const en: DeepString<typeof zh> = {
     format: 'Format',
     bitrate: 'Bitrate',
     markers: 'Markers',
-    markersEmpty: 'Press T or the flag in the controls to mark important moments, then jump to them later.',
+    markersEmpty:
+      'Press T or the flag in the controls to mark important moments, then jump to them later.',
     audio: 'Audio',
     noAudio: 'This recording has no audio',
     tipsTitle: 'Tips',
@@ -445,10 +450,12 @@ export const en: DeepString<typeof zh> = {
   },
   warn: {
     sizeTitle: 'This recording is getting large ({size})',
-    sizeDesc: 'It stops automatically at {limit} so your browser doesn’t run out of memory. You can stop and save now.',
+    sizeDesc:
+      'It stops automatically at {limit} so your browser doesn’t run out of memory. You can stop and save now.',
     stopNow: 'Stop now',
     limitReached: 'The recording reached {size} and was stopped to avoid running out of memory.',
-    systemAudioMissing: 'No system audio was captured. Tick “Share audio” when sharing — recording a browser tab is most reliable.',
+    systemAudioMissing:
+      'No system audio was captured. Tick “Share audio” when sharing — recording a browser tab is most reliable.',
     sourceEnded: 'Sharing stopped, so the recording is finished.',
     recorderError: 'The recorder hit an error. Everything recorded before it was kept.',
     micSkipped: 'This recording won’t include the microphone',
@@ -458,15 +465,22 @@ export const en: DeepString<typeof zh> = {
   errors: {
     title: 'Couldn’t start recording',
     canceled: 'Canceled — nothing was recorded.',
-    screenDenied: 'Screen capture is blocked. Allow it in the site settings (left of the address bar) and try again.',
-    systemDenied: 'Your operating system blocked capture. On macOS, open System Settings → Privacy & Security → Screen & System Audio Recording (or Camera, Microphone), allow this browser, then restart it.',
-    micDenied: 'Microphone access is blocked. Allow it in the site settings (left of the address bar) and try again.',
-    cameraDenied: 'Camera access is blocked. Allow it in the site settings (left of the address bar) and try again.',
+    screenDenied:
+      'Screen capture is blocked. Allow it in the site settings (left of the address bar) and try again.',
+    systemDenied:
+      'Your operating system blocked capture. On macOS, open System Settings → Privacy & Security → Screen & System Audio Recording (or Camera, Microphone), allow this browser, then restart it.',
+    micDenied:
+      'Microphone access is blocked. Allow it in the site settings (left of the address bar) and try again.',
+    cameraDenied:
+      'Camera access is blocked. Allow it in the site settings (left of the address bar) and try again.',
     micNotFound: 'No microphone found. Connect one and try again.',
     cameraNotFound: 'No camera found. Connect one and try again.',
-    inUse: 'The device is in use by another app. Close other apps using the camera or microphone and try again.',
-    unsupported: 'Your browser doesn’t support this kind of capture. Try the latest Chrome, Edge, Firefox or Safari.',
-    recorder: 'The recorder couldn’t start with this format. Try another format or a lower quality.',
+    inUse:
+      'The device is in use by another app. Close other apps using the camera or microphone and try again.',
+    unsupported:
+      'Your browser doesn’t support this kind of capture. Try the latest Chrome, Edge, Firefox or Safari.',
+    recorder:
+      'The recorder couldn’t start with this format. Try another format or a lower quality.',
     empty: 'Nothing was recorded. Record a bit longer, or try another format.',
     generic: 'Something went wrong while recording. Try again, or pick another format and quality.',
   },
@@ -481,14 +495,17 @@ export const en: DeepString<typeof zh> = {
     downloaded: 'Downloaded',
     rerecord: 'Record again',
     rerecordConfirmTitle: 'Record again?',
-    rerecordConfirmDesc: 'This recording hasn’t been downloaded or saved to the library. It will be lost if you record again.',
+    rerecordConfirmDesc:
+      'This recording hasn’t been downloaded or saved to the library. It will be lost if you record again.',
     rerecordConfirm: 'Discard and record',
     saving: 'Saving to library…',
     saved: 'Saved to library',
     saveToLibrary: 'Save to library',
-    saveFailed: 'Couldn’t save to the library — storage may be full. Download it first, or delete some old recordings.',
+    saveFailed:
+      'Couldn’t save to the library — storage may be full. Download it first, or delete some old recordings.',
     preparing: 'Preparing preview…',
-    previewError: 'This recording can’t be previewed in the browser, but you can still download it.',
+    previewError:
+      'This recording can’t be previewed in the browser, but you can still download it.',
     edited: {
       trim: 'Trimmed',
       mp4: 'Converted to MP4',
@@ -531,9 +548,11 @@ export const en: DeepString<typeof zh> = {
     taskConvert: 'Convert recording to MP4',
     trimDone: 'Trimmed',
     convertDone: 'Converted to MP4',
-    failed: 'Processing failed. The file may be too large or unsupported — you can still download the original.',
+    failed:
+      'Processing failed. The file may be too large or unsupported — you can still download the original.',
     tooLarge: 'The file is larger than {size} and may be too big to process in the browser.',
-    noWasm: 'Your browser doesn’t support WebAssembly, so trimming and converting aren’t available.',
+    noWasm:
+      'Your browser doesn’t support WebAssembly, so trimming and converting aren’t available.',
     cancel: 'Cancel',
     busy: 'Another edit is in progress',
   },
@@ -543,7 +562,8 @@ export const en: DeepString<typeof zh> = {
     empty: 'No recordings yet',
     emptyDesc: 'Recordings are saved here automatically so you can download or send them later.',
     disabled: 'Auto-save is off — new recordings won’t be added.',
-    unavailable: 'The library isn’t available in this browser (for example in private mode). Download your recordings directly.',
+    unavailable:
+      'The library isn’t available in this browser (for example in private mode). Download your recordings directly.',
     usage: '{used} used of about {quota}',
     usageLabel: 'Storage used',
     usageUnknown: 'Storage information isn’t available',

@@ -11,7 +11,8 @@ export const PDF_LABELS = {
   },
   en: {
     toc: 'Contents',
-    imageExternal: 'Images from web addresses are not downloaded (your files never leave this device); showing the alt text instead.',
+    imageExternal:
+      'Images from web addresses are not downloaded (your files never leave this device); showing the alt text instead.',
     imageNotFound: 'Image not found. Drop the image file together with the text file to embed it.',
     imageUnsupported: 'This image format can’t be embedded.',
     imageLabel: 'Image',

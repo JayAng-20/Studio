@@ -2,7 +2,15 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { FolderPlus, Trash2 } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { AddFilesButton, Button, ConfirmDialog, DropTarget, Tooltip, useFileIntake, usePasteFiles } from '@/components/ui'
+import {
+  AddFilesButton,
+  Button,
+  ConfirmDialog,
+  DropTarget,
+  Tooltip,
+  useFileIntake,
+  usePasteFiles,
+} from '@/components/ui'
 import { duration, sec, spring, staggerDelay } from '@/design/motion'
 import { formatBytes } from '@/lib/format'
 import { useT } from '@/i18n'
@@ -18,7 +26,13 @@ const folderSupported = () =>
   typeof document !== 'undefined' && 'webkitdirectory' in document.createElement('input')
 
 /** 選擇資料夾（支援時顯示）：只取圖片檔 */
-export function AddFolderButton({ onFiles, compact }: { onFiles: (f: File[]) => void; compact?: boolean }) {
+export function AddFolderButton({
+  onFiles,
+  compact,
+}: {
+  onFiles: (f: File[]) => void
+  compact?: boolean
+}) {
   const t = useT()
   const input = useRef<HTMLInputElement>(null)
   const { intake } = useFileIntake({ accept: ACCEPT, onFiles })
@@ -50,7 +64,11 @@ export function AddFolderButton({ onFiles, compact }: { onFiles: (f: File[]) => 
         onChange={(e) => {
           // 資料夾裡的非圖片檔直接略過，不逐一提示
           const all = Array.from(e.target.files || [])
-          const images = all.filter((f) => /^image\//.test(f.type) || /\.(heic|heif|avif|svg|jfif|webp|bmp|gif|png|jpe?g|ico)$/i.test(f.name))
+          const images = all.filter(
+            (f) =>
+              /^image\//.test(f.type) ||
+              /\.(heic|heif|avif|svg|jfif|webp|bmp|gif|png|jpe?g|ico)$/i.test(f.name),
+          )
           intake(images)
           e.target.value = ''
         }}
@@ -101,9 +119,15 @@ export function WorkStage({
           )}
         </AnimatePresence>
 
-        <motion.div layout="position" transition={spring.smooth} className="flex flex-wrap items-center gap-2">
+        <motion.div
+          layout="position"
+          transition={spring.smooth}
+          className="flex flex-wrap items-center gap-2"
+        >
           <p className="mr-auto text-small text-text-2" aria-live="polite">
-            <span className="font-semibold text-text">{t('common.fileCount', { count: items.length })}</span>
+            <span className="font-semibold text-text">
+              {t('common.fileCount', { count: items.length })}
+            </span>
             <span className="text-text-3"> · {formatBytes(total)}</span>
           </p>
           <AddFilesButton onFiles={onFiles} accept={ACCEPT} label={t('convert.work.add')} />
@@ -131,7 +155,10 @@ export function WorkStage({
                 initial={{ opacity: 0, scale: 0.96, y: 8 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.92, transition: { duration: sec(duration.fast) } }}
-                transition={{ ...spring.smooth, delay: it.status === 'idle' && !it.thumb ? staggerDelay(i % 12) : 0 }}
+                transition={{
+                  ...spring.smooth,
+                  delay: it.status === 'idle' && !it.thumb ? staggerDelay(i % 12) : 0,
+                }}
                 className="min-w-0"
               >
                 <ItemCard item={it} freshKey={key} onCompare={onCompare} onRetry={onRetry} />

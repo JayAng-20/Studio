@@ -70,14 +70,29 @@ export function SnapshotCard() {
             onBlurCapture={() => setHover(false)}
           >
             <div className="flex items-center justify-between gap-2 px-1 pb-1.5">
-              <span className="truncate text-caption font-semibold tabular-nums">{t('player.snapshot.taken', { time: formatTime(snap.time) })}</span>
-              <button type="button" className="stage-btn h-7! min-w-7! p-0" aria-label={t('player.snapshot.close')} onClick={clearSnapshot}>
+              <span className="truncate text-caption font-semibold tabular-nums">
+                {t('player.snapshot.taken', { time: formatTime(snap.time) })}
+              </span>
+              <button
+                type="button"
+                className="stage-btn h-7! min-w-7! p-0"
+                aria-label={t('player.snapshot.close')}
+                onClick={clearSnapshot}
+              >
                 <X size={15} aria-hidden />
               </button>
             </div>
-            <img src={snap.url} alt={snap.name} className="block aspect-video w-full rounded-sm bg-[var(--stage-bg)] object-contain" />
+            <img
+              src={snap.url}
+              alt={snap.name}
+              className="block aspect-video w-full rounded-sm bg-[var(--stage-bg)] object-contain"
+            />
             <div className="mt-1.5 grid grid-cols-3 gap-1">
-              <button type="button" className="stage-btn h-auto! flex-col gap-0.5 py-1.5 text-[11px] font-medium" onClick={() => downloadBlob(snap.blob, snap.name)}>
+              <button
+                type="button"
+                className="stage-btn h-auto! flex-col gap-0.5 py-1.5 text-[11px] font-medium"
+                onClick={() => downloadBlob(snap.blob, snap.name)}
+              >
                 <Download size={16} aria-hidden />
                 {t('common.download')}
               </button>
@@ -108,7 +123,11 @@ export function SnapshotCard() {
                 </AnimatePresence>
                 {copied ? t('common.copied') : t('player.snapshot.copy')}
               </button>
-              <button type="button" className="stage-btn h-auto! flex-col gap-0.5 py-1.5 text-[11px] font-medium" onClick={() => void send()}>
+              <button
+                type="button"
+                className="stage-btn h-auto! flex-col gap-0.5 py-1.5 text-[11px] font-medium"
+                onClick={() => void send()}
+              >
                 <Send size={16} aria-hidden />
                 <span className="leading-tight">{t('modules.tools.name')}</span>
               </button>

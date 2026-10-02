@@ -12,8 +12,18 @@ export function MorphPlayIcon({ playing, size = 22 }: { playing: boolean; size?:
   const d = playing ? PAUSE : PLAY
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden fill="currentColor">
-      <motion.path initial={false} animate={{ d: d[0] }} transition={spring.snappy} strokeLinejoin="round" />
-      <motion.path initial={false} animate={{ d: d[1] }} transition={spring.snappy} strokeLinejoin="round" />
+      <motion.path
+        initial={false}
+        animate={{ d: d[0] }}
+        transition={spring.snappy}
+        strokeLinejoin="round"
+      />
+      <motion.path
+        initial={false}
+        animate={{ d: d[1] }}
+        transition={spring.snappy}
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }

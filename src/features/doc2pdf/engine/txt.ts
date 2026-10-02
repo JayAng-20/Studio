@@ -94,7 +94,8 @@ const RE_SETEXT2 = /^\s*-{3,}\s*$/
 const RE_LIST =
   /^([ \t\u3000]*)([-*+•·‧●○■□▪◦–]|\d{1,3}[.)、]|[(（]\d{1,3}[)）]|[a-zA-Z][)]|[①-⑳])[ \t\u3000]+(.*)$/
 const RE_TASK = /^\[([ xX])\]\s+(.*)$/
-const RE_URL = /(https?:\/\/[^\s<>"'，。、；：）」』》]+[^\s<>"'，。、；：）」』》.,;:!?)\]])|([\w.+-]+@[\w-]+\.[\w.-]+\w)/g
+const RE_URL =
+  /(https?:\/\/[^\s<>"'，。、；：）」』》]+[^\s<>"'，。、；：）」』》.,;:!?)\]])|([\w.+-]+@[\w-]+\.[\w.-]+\w)/g
 
 const isBlank = (s: string | undefined) => s === undefined || !s.trim()
 const CJK_RE = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af\uff00-\uffef]/
@@ -173,7 +174,9 @@ export function parseTxt(text: string, name: string, opts: TxtOptions = {}): Doc
       name,
       kind: 'txt',
       title: splitExt(name).base,
-      blocks: normalized.trim() ? [{ type: 'code', text: normalized.replace(/\n+$/, ''), plain: true }] : [],
+      blocks: normalized.trim()
+        ? [{ type: 'code', text: normalized.replace(/\n+$/, ''), plain: true }]
+        : [],
     }
   }
   const lines = normalized.split('\n')
@@ -185,7 +188,8 @@ export function parseTxt(text: string, name: string, opts: TxtOptions = {}): Doc
   const present = KIND_ORDER.filter((k) => kinds.has(k))
   const mdLevels = present.filter((k) => k.startsWith('md'))
   const levelOf = (k: HeadingKind): HeadingBlock['level'] => {
-    if (k.startsWith('md') && mdLevels.length === present.length) return Number(k.slice(2)) as HeadingBlock['level']
+    if (k.startsWith('md') && mdLevels.length === present.length)
+      return Number(k.slice(2)) as HeadingBlock['level']
     return Math.min(6, present.indexOf(k) + 1) as HeadingBlock['level']
   }
   const slug = createSlugger()
@@ -193,7 +197,13 @@ export function parseTxt(text: string, name: string, opts: TxtOptions = {}): Doc
   const blocks: Block[] = drafts.map((d) => {
     if (d.type !== 'pendingHeading') return d
     const t = d.h.text
-    return { type: 'heading', level: levelOf(d.h.kind), runs: linkify(t), id: `${prefix}${n++}`, slug: slug(t) }
+    return {
+      type: 'heading',
+      level: levelOf(d.h.kind),
+      runs: linkify(t),
+      id: `${prefix}${n++}`,
+      slug: slug(t),
+    }
   })
   const first = blocks.find((b): b is HeadingBlock => b.type === 'heading' && b.level === 1)
   return {
@@ -244,7 +254,8 @@ class TxtParser {
       inGroup++
       if (displayWidth(lines[i].trim()) >= this.wrapOf(lines[i]) * 0.8) nearWrap++
     }
-    this.hardWrapped = Math.max(this.wrapCjk, this.wrapLat) <= 110 && inGroup >= 2 && nearWrap / inGroup >= 0.5
+    this.hardWrapped =
+      Math.max(this.wrapCjk, this.wrapLat) <= 110 && inGroup >= 2 && nearWrap / inGroup >= 0.5
     // 長段落：寬度 > 60 的行，或連續多行的段落
     let groups = 0
     let long = 0
@@ -300,7 +311,10 @@ class TxtParser {
       // setext 標題：文字行下面接 === 或 ---
       if (nextLine !== undefined && isShort(t, 80) && !RE_HR.test(line) && !RE_LIST.test(line)) {
         if (RE_SETEXT1.test(nextLine) || (RE_SETEXT2.test(nextLine) && prevBlank)) {
-          out.push({ type: 'pendingHeading', h: { kind: RE_SETEXT1.test(nextLine) ? 'setext1' : 'setext2', text: t } })
+          out.push({
+            type: 'pendingHeading',
+            h: { kind: RE_SETEXT1.test(nextLine) ? 'setext1' : 'setext2', text: t },
+          })
           i += 2
           sawContent = true
           continue
@@ -321,7 +335,10 @@ class TxtParser {
         // 「1. xxx」若下一行緊接著也是編號，或本身前後都沒有空行，比較像清單
         let nn = i + 1
         while (nn < L.length && isBlank(L[nn])) nn++
-        const nextIsSibling = nn < L.length && /^\s*\d{1,3}[.)、]\s/.test(L[nn]) && !headingKindOf(L[nn])?.startsWith('num2')
+        const nextIsSibling =
+          nn < L.length &&
+          /^\s*\d{1,3}[.)、]\s/.test(L[nn]) &&
+          !headingKindOf(L[nn])?.startsWith('num2')
         if (!isNumbered || (prevBlank && !nextIsSibling)) {
           const md = RE_MD.exec(t)
           out.push({ type: 'pendingHeading', h: { kind, text: md ? md[2] : t } })
@@ -360,7 +377,8 @@ class TxtParser {
 
       const nextBlank = isBlank(nextLine)
       const standalone = prevBlank && nextBlank
-      const looksTitle = standalone && isShort(t, 50) && !SENTENCE_END.test(t) && !/[，,：:]$/.test(t)
+      const looksTitle =
+        standalone && isShort(t, 50) && !SENTENCE_END.test(t) && !/[，,：:]$/.test(t)
       // 第一行文件標題
       if (!sawContent && looksTitle && this.hasLongParagraphs) {
         out.push({ type: 'pendingHeading', h: { kind: 'title', text: t } })
@@ -417,7 +435,8 @@ class TxtParser {
     let text = ''
     let indent = false
     const flush = () => {
-      if (text.trim()) blocks.push({ type: 'paragraph', runs: linkify(text.trim()), indent: indent || undefined })
+      if (text.trim())
+        blocks.push({ type: 'paragraph', runs: linkify(text.trim()), indent: indent || undefined })
       text = ''
     }
     for (let k = 0; k < group.length; k++) {
@@ -466,7 +485,10 @@ class TxtParser {
     if (start > 0 && !isBlank(L[start - 1])) return null
     let j = start
     const body: string[] = []
-    while (j < L.length && (isCodeLine(L[j]) || (isBlank(L[j]) && j + 1 < L.length && isCodeLine(L[j + 1])))) {
+    while (
+      j < L.length &&
+      (isCodeLine(L[j]) || (isBlank(L[j]) && j + 1 < L.length && isCodeLine(L[j + 1])))
+    ) {
       body.push(L[j].replace(/^( {4}|\t)/, ''))
       j++
     }
@@ -505,7 +527,13 @@ class TxtParser {
         if (rows.length === 1 && !hasSep) {
           hasSep = true
           align = split(L[j]).map((c) =>
-            c.startsWith(':') && c.endsWith(':') ? 'center' : c.endsWith(':') ? 'right' : c.startsWith(':') ? 'left' : null,
+            c.startsWith(':') && c.endsWith(':')
+              ? 'center'
+              : c.endsWith(':')
+                ? 'right'
+                : c.startsWith(':')
+                  ? 'left'
+                  : null,
           )
         }
         j++
@@ -523,7 +551,11 @@ class TxtParser {
   private tryTabTable(start: number): { block: Block; next: number } | null {
     const L = this.lines
     if (!L[start]?.includes('\t') || /^\t/.test(L[start])) return null
-    const split = (l: string) => l.trim().split(/\t+/).map((c) => c.trim())
+    const split = (l: string) =>
+      l
+        .trim()
+        .split(/\t+/)
+        .map((c) => c.trim())
     const n = split(L[start]).length
     if (n < 2) return null
     const rows: string[][] = []
@@ -573,7 +605,8 @@ class TxtParser {
     const avg = cellsFlat.reduce((s, c) => s + displayWidth(c.text), 0) / cellsFlat.length
     if (avg > 24) return null
     // 欄位多半以句點結尾：是用兩個空白分句的散文
-    if (cellsFlat.filter((c) => /[.。!?！？]$/.test(c.text)).length >= cellsFlat.length / 2) return null
+    if (cellsFlat.filter((c) => /[.。!?！？]$/.test(c.text)).length >= cellsFlat.length / 2)
+      return null
     return {
       block: makeTable(
         rows.map((r) => r.map((c) => c.text)),
@@ -602,7 +635,12 @@ class TxtParser {
         // 空行後接著同一份清單的項目（鬆散清單）
         const k = j + 1
         const m2 = RE_LIST.exec(L[k] ?? '')
-        if (k < L.length && m2 && leadingWidth(L[k]) >= baseIndent && isOrderedMarker(m2[2]) === baseOrdered) {
+        if (
+          k < L.length &&
+          m2 &&
+          leadingWidth(L[k]) >= baseIndent &&
+          isOrderedMarker(m2[2]) === baseOrdered
+        ) {
           j = k
           continue
         }
@@ -618,7 +656,10 @@ class TxtParser {
       }
       // 續行：比項目符號縮排更深，或沒有縮排但緊接在項目後（硬換行的長項目）
       const last = flat[flat.length - 1]
-      if (last && (leadingWidth(l) > last.indent || (!this.startsStructure(j) && !headingKindOf(l)))) {
+      if (
+        last &&
+        (leadingWidth(l) > last.indent || (!this.startsStructure(j) && !headingKindOf(l)))
+      ) {
         last.text += joiner(last.text, l.trim()) + l.trim()
         j++
         continue
@@ -699,8 +740,15 @@ function makeTable(rows: string[][], headerRows: number, align: (Align | null)[]
       al.push(align[c])
       continue
     }
-    const body = normalized.slice(headerRows).map((r) => r[c]).filter(Boolean)
-    al.push(body.length && body.filter((v) => NUMERIC.test(v)).length / body.length >= 0.7 ? 'right' : null)
+    const body = normalized
+      .slice(headerRows)
+      .map((r) => r[c])
+      .filter(Boolean)
+    al.push(
+      body.length && body.filter((v) => NUMERIC.test(v)).length / body.length >= 0.7
+        ? 'right'
+        : null,
+    )
   }
   const cells: TableCell[][] = normalized.map((r) => r.map((c) => ({ runs: c ? linkify(c) : [] })))
   return { type: 'table', rows: cells, headerRows, align: al }

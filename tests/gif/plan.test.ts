@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest'
 import { autoPlan } from '@/features/gif/feed'
 import { outputSize } from '@/features/gif/render'
 import { resizeCrop } from '@/features/gif/components/CropOverlay'
-import { fitCropToRatio, matchPreset, normalizeSettings, DEFAULT_SETTINGS, PRESETS } from '@/features/gif/settings'
+import {
+  fitCropToRatio,
+  matchPreset,
+  normalizeSettings,
+  DEFAULT_SETTINGS,
+  PRESETS,
+} from '@/features/gif/settings'
 import type { Source } from '@/features/gif/store'
 
 const video = { kind: 'video', width: 1920, height: 1080, duration: 10 } as unknown as Source
@@ -17,7 +23,11 @@ describe('影格計畫', () => {
   })
   it('圖片：來回播放', () => {
     const imgs = { kind: 'images', items: [{}, {}, {}] } as unknown as Source
-    expect(autoPlan(imgs, [0, 0], { fps: 5, speed: 1, reverse: false, pingpong: true }).map((x) => x.src)).toEqual([0, 1, 2, 1])
+    expect(
+      autoPlan(imgs, [0, 0], { fps: 5, speed: 1, reverse: false, pingpong: true }).map(
+        (x) => x.src,
+      ),
+    ).toEqual([0, 1, 2, 1])
   })
   it('沒有來源時為空', () => {
     expect(autoPlan(null, [0, 1], DEFAULT_SETTINGS)).toEqual([])

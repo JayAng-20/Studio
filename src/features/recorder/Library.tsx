@@ -103,7 +103,9 @@ export function LibrarySection() {
           <h2 id="rec-library" className="flex items-center gap-2 text-h3 font-semibold">
             <HardDrive size={17} className="text-accent-ink" aria-hidden />
             {t('recorder.library.title')}
-            {items.length > 0 && <Badge>{t('recorder.library.count', { count: items.length })}</Badge>}
+            {items.length > 0 && (
+              <Badge>{t('recorder.library.count', { count: items.length })}</Badge>
+            )}
           </h2>
           <p className="mt-0.5 text-small text-text-2">
             {!libraryAvailable()
@@ -196,12 +198,18 @@ export function LibrarySection() {
                         </Badge>
                       )}
                       {m.edited && (
-                        <Badge className="bg-black/60! text-white!" icon={<Scissors size={11} aria-hidden />}>
+                        <Badge
+                          className="bg-black/60! text-white!"
+                          icon={<Scissors size={11} aria-hidden />}
+                        >
                           {t('recorder.library.edited')}
                         </Badge>
                       )}
                       {m.mode === 'camera' && (
-                        <Badge className="bg-black/60! text-white!" icon={<Camera size={11} aria-hidden />}>
+                        <Badge
+                          className="bg-black/60! text-white!"
+                          icon={<Camera size={11} aria-hidden />}
+                        >
                           {t('recorder.library.camera')}
                         </Badge>
                       )}

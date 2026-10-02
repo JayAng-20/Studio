@@ -35,11 +35,26 @@ const ascii = (b: Uint8Array, o: number, n: number) => {
 const u16be = (b: Uint8Array, o: number) => (b[o] << 8) | b[o + 1]
 const u16le = (b: Uint8Array, o: number) => b[o] | (b[o + 1] << 8)
 const u24le = (b: Uint8Array, o: number) => b[o] | (b[o + 1] << 8) | (b[o + 2] << 16)
-const u32be = (b: Uint8Array, o: number) => ((b[o] << 24) >>> 0) + ((b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3])
-const u32le = (b: Uint8Array, o: number) => ((b[o + 3] << 24) >>> 0) + ((b[o + 2] << 16) | (b[o + 1] << 8) | b[o])
-const i32le = (b: Uint8Array, o: number) => b[o] | (b[o + 1] << 8) | (b[o + 2] << 16) | (b[o + 3] << 24)
+const u32be = (b: Uint8Array, o: number) =>
+  ((b[o] << 24) >>> 0) + ((b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3])
+const u32le = (b: Uint8Array, o: number) =>
+  ((b[o + 3] << 24) >>> 0) + ((b[o + 2] << 16) | (b[o + 1] << 8) | b[o])
+const i32le = (b: Uint8Array, o: number) =>
+  b[o] | (b[o + 1] << 8) | (b[o + 2] << 16) | (b[o + 3] << 24)
 
-const HEIC_BRANDS = ['heic', 'heix', 'hevc', 'hevx', 'heim', 'heis', 'hevm', 'hevs', 'mif1', 'msf1', 'mif2']
+const HEIC_BRANDS = [
+  'heic',
+  'heix',
+  'hevc',
+  'hevx',
+  'heim',
+  'heis',
+  'hevm',
+  'hevs',
+  'mif1',
+  'msf1',
+  'mif2',
+]
 
 /** 由開頭位元組辨識格式 */
 export function sniffFormat(b: Uint8Array): SourceFormat {
@@ -50,7 +65,10 @@ export function sniffFormat(b: Uint8Array): SourceFormat {
   if (ascii(b, 0, 4) === 'RIFF' && ascii(b, 8, 4) === 'WEBP') return 'webp'
   if (b[0] === 0x42 && b[1] === 0x4d) return 'bmp'
   if (b[0] === 0 && b[1] === 0 && b[2] === 1 && b[3] === 0) return 'ico'
-  if ((b[0] === 0x49 && b[1] === 0x49 && b[2] === 0x2a) || (b[0] === 0x4d && b[1] === 0x4d && b[3] === 0x2a))
+  if (
+    (b[0] === 0x49 && b[1] === 0x49 && b[2] === 0x2a) ||
+    (b[0] === 0x4d && b[1] === 0x4d && b[3] === 0x2a)
+  )
     return 'tiff'
   if (ascii(b, 4, 4) === 'ftyp') {
     const size = Math.min(u32be(b, 0), b.length)
@@ -61,8 +79,11 @@ export function sniffFormat(b: Uint8Array): SourceFormat {
     return 'unknown'
   }
   // SVG：文字檔，跳過 BOM、空白、XML 宣告與註解
-  const text = new TextDecoder().decode(b.subarray(0, Math.min(b.length, 4096))).replace(/^\uFEFF/, '')
-  if (/^\s*(<\?xml[^>]*>\s*)?(<!--[\s\S]*?-->\s*|<!DOCTYPE[^>]*>\s*)*<svg[\s>]/i.test(text)) return 'svg'
+  const text = new TextDecoder()
+    .decode(b.subarray(0, Math.min(b.length, 4096)))
+    .replace(/^\uFEFF/, '')
+  if (/^\s*(<\?xml[^>]*>\s*)?(<!--[\s\S]*?-->\s*|<!DOCTYPE[^>]*>\s*)*<svg[\s>]/i.test(text))
+    return 'svg'
   return 'unknown'
 }
 
@@ -252,7 +273,12 @@ export function gifInfo(b: Uint8Array): ProbeResult {
 
 function bmpInfo(b: Uint8Array): ProbeResult {
   const bpp = u16le(b, 28)
-  return { format: 'bmp', width: Math.abs(i32le(b, 18)), height: Math.abs(i32le(b, 22)), alpha: bpp === 32 }
+  return {
+    format: 'bmp',
+    width: Math.abs(i32le(b, 18)),
+    height: Math.abs(i32le(b, 22)),
+    alpha: bpp === 32,
+  }
 }
 
 /** HEIC／AVIF：在 meta 裡找所有 ispe，取面積最大者（格狀影像的完整尺寸）；irot 90／270 交換寬高 */
@@ -295,7 +321,8 @@ export function isobmffInfo(b: Uint8Array): { width: number; height: number } | 
 export function svgInfo(text: string): { width: number; height: number } | null {
   const tag = /<svg\b[^>]*>/i.exec(text)?.[0]
   if (!tag) return null
-  const attr = (name: string) => new RegExp(`\\s${name}\\s*=\\s*["']([^"']*)["']`, 'i').exec(tag)?.[1]
+  const attr = (name: string) =>
+    new RegExp(`\\s${name}\\s*=\\s*["']([^"']*)["']`, 'i').exec(tag)?.[1]
   const len = (v?: string) => {
     if (!v) return undefined
     const m = /^\s*([\d.]+)\s*(px)?\s*$/i.exec(v)
@@ -352,7 +379,8 @@ export async function probeFile(file: Blob & { name?: string }): Promise<ProbeRe
   const headLen = Math.min(file.size, 512 * 1024)
   let b = new Uint8Array(await file.slice(0, headLen).arrayBuffer())
   const f = sniffFormat(b)
-  const needAll = (f === 'gif' || f === 'webp') && file.size > headLen && file.size <= 64 * 1024 * 1024
+  const needAll =
+    (f === 'gif' || f === 'webp') && file.size > headLen && file.size <= 64 * 1024 * 1024
   if (needAll) b = new Uint8Array(await file.arrayBuffer())
   return probeBytes(b, file.name ?? '')
 }

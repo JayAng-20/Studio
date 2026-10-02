@@ -18,7 +18,11 @@ import type { OutputFormat, PaletteMode } from './settings'
 
 const abortError = () => new DOMException('aborted', 'AbortError')
 
-type Req = WorkerRequest extends infer R ? (R extends { id: number } ? Omit<R, 'id'> : never) : never
+type Req = WorkerRequest extends infer R
+  ? R extends { id: number }
+    ? Omit<R, 'id'>
+    : never
+  : never
 type Ok<T extends string> = Extract<WorkerResponse, { ok: true; type: T }>
 
 /** Worker 池：worker 0 保留給組裝器，其餘做量化／壓縮 */
@@ -64,11 +68,7 @@ export class WorkerPool {
   }
 
   /** 送出請求；worker 未指定時挑負載最低的運算 worker */
-  call<T extends string>(
-    req: Req,
-    transfer: Transferable[] = [],
-    worker?: number,
-  ): Promise<Ok<T>> {
+  call<T extends string>(req: Req, transfer: Transferable[] = [], worker?: number): Promise<Ok<T>> {
     if (this.isDead) return Promise.reject(abortError())
     const id = ++this.seq
     let w = worker ?? -1
@@ -102,7 +102,10 @@ export class WorkerPool {
 }
 
 export const poolSize = () =>
-  Math.max(1, Math.min(4, (typeof navigator !== 'undefined' ? navigator.hardwareConcurrency : 4) - 1 || 2))
+  Math.max(
+    1,
+    Math.min(4, (typeof navigator !== 'undefined' ? navigator.hardwareConcurrency : 4) - 1 || 2),
+  )
 
 export interface EncodeConfig {
   format: OutputFormat

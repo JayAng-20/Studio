@@ -12,7 +12,15 @@ import {
   sanitizeTiff,
   TAG,
 } from '@/lib/convert-exif'
-import { ascii, buildHeic, buildJpeg, buildPng, buildTiff, buildWebpExtended, buildWebpLossless } from './fixtures'
+import {
+  ascii,
+  buildHeic,
+  buildJpeg,
+  buildPng,
+  buildTiff,
+  buildWebpExtended,
+  buildWebpLossless,
+} from './fixtures'
 
 const blob = (b: Uint8Array) => new Blob([b as Uint8Array<ArrayBuffer>])
 const u16 = (t: Uint8Array, o: number) => new DataView(t.buffer, t.byteOffset).getUint16(o, true)
@@ -81,7 +89,9 @@ describe('EXIF 清理', () => {
   })
 
   it('大端序也能處理', () => {
-    const be = new Uint8Array([0x4d, 0x4d, 0, 0x2a, 0, 0, 0, 8, 0, 1, 0x01, 0x12, 0, 3, 0, 0, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0])
+    const be = new Uint8Array([
+      0x4d, 0x4d, 0, 0x2a, 0, 0, 0, 8, 0, 1, 0x01, 0x12, 0, 3, 0, 0, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0,
+    ])
     expect(readOrientation(be)).toBe(8)
     expect(readOrientation(sanitizeTiff(be, { resetOrientation: true }))).toBe(1)
   })
@@ -103,7 +113,9 @@ describe('EXIF 寫回', () => {
     expect(out.length).toBe(src.length + 2 + 2 + 6 + tiff.length)
     expect([...((await extractExif(blob(out))) ?? [])]).toEqual([...tiff])
     // JFIF 區段仍在
-    expect(String.fromCharCode(...out.subarray(out.indexOf(0xe0) + 3, out.indexOf(0xe0) + 7))).toBe('JFIF')
+    expect(String.fromCharCode(...out.subarray(out.indexOf(0xe0) + 3, out.indexOf(0xe0) + 7))).toBe(
+      'JFIF',
+    )
     // 再寫一次只會有一個 Exif APP1
     const twice = insertExifJpeg(out, tiff)
     expect(twice.length).toBe(out.length)
@@ -123,7 +135,9 @@ describe('EXIF 寫回', () => {
     const crc = new DataView(out.buffer).getUint32(8 + 25 + 8 + len)
     expect(crc).toBe(crc32(out, 8 + 25 + 4, 8 + 25 + 8 + len))
     expect([...((await extractExif(blob(out))) ?? [])]).toEqual([...tiff])
-    expect(out.filter((_, i) => String.fromCharCode(...out.subarray(i, i + 4)) === 'eXIf').length).toBe(1)
+    expect(
+      out.filter((_, i) => String.fromCharCode(...out.subarray(i, i + 4)) === 'eXIf').length,
+    ).toBe(1)
   })
 
   it('WebP 簡單格式（VP8L）：轉成 VP8X、帶 EXIF 與 alpha 旗標', async () => {
@@ -142,6 +156,10 @@ describe('EXIF 寫回', () => {
   it('WebP 延伸格式：只加上 EXIF 旗標', () => {
     const out = insertExifWebp(buildWebpExtended(64, 64, 0x10), tiff)
     expect(out[20]).toBe(0x18)
-    expect(ascii('EXIF').every((c, i) => out[out.length - (tiff.length + (tiff.length & 1)) - 8 + i] === c)).toBe(true)
+    expect(
+      ascii('EXIF').every(
+        (c, i) => out[out.length - (tiff.length + (tiff.length & 1)) - 8 + i] === c,
+      ),
+    ).toBe(true)
   })
 })

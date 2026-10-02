@@ -26,9 +26,16 @@ export function TypesetPaper({ progress, layoutId }: { progress: number; layoutI
           w === 0 ? (
             <span key={i} className="block h-[3px]" />
           ) : (
-            <span key={i} className="relative block h-[3px] rounded-full bg-black/[0.05]" style={{ width: `${w * 100}%` }}>
+            <span
+              key={i}
+              className="relative block h-[3px] rounded-full bg-black/[0.05]"
+              style={{ width: `${w * 100}%` }}
+            >
               <motion.span
-                className={cn('absolute inset-0 origin-left rounded-full bg-black/35', i === filled && 'd2p-typing')}
+                className={cn(
+                  'absolute inset-0 origin-left rounded-full bg-black/35',
+                  i === filled && 'd2p-typing',
+                )}
                 initial={false}
                 animate={i === filled ? undefined : { scaleX: i < filled ? 1 : 0 }}
                 transition={spring.smooth}
@@ -63,7 +70,9 @@ export function WorkingCard({
           <span className="text-small tabular-nums text-text-2">{pct}%</span>
         </div>
         <ProgressBar value={progress} label={title} />
-        <p className="mt-2 min-h-5 truncate text-left text-small tabular-nums text-text-3">{detail}</p>
+        <p className="mt-2 min-h-5 truncate text-left text-small tabular-nums text-text-3">
+          {detail}
+        </p>
         <p className="sr-only" aria-live="polite">
           {t('doc2pdf.working.progress', { title, percent: Math.round(pct / 10) * 10 })}
         </p>

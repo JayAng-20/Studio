@@ -16,7 +16,8 @@ function checksum(b: Uint8Array): number {
   let sum = 0
   const n = b.length
   for (let i = 0; i < n; i += 4) {
-    const v = ((b[i] << 24) | ((b[i + 1] ?? 0) << 16) | ((b[i + 2] ?? 0) << 8) | (b[i + 3] ?? 0)) >>> 0
+    const v =
+      ((b[i] << 24) | ((b[i + 1] ?? 0) << 16) | ((b[i + 2] ?? 0) << 8) | (b[i + 3] ?? 0)) >>> 0
     sum = (sum + v) >>> 0
   }
   return sum
@@ -55,7 +56,8 @@ function readLoca(src: Uint8Array) {
   const n = dv.getUint16(maxp.offset + 4)
   const offsets = new Array<number>(n + 1)
   for (let i = 0; i <= n; i++)
-    offsets[i] = format === 0 ? dv.getUint16(loca.offset + i * 2) * 2 : dv.getUint32(loca.offset + i * 4)
+    offsets[i] =
+      format === 0 ? dv.getUint16(loca.offset + i * 2) * 2 : dv.getUint32(loca.offset + i * 4)
   return { tables, offsets, head, loca, glyf }
 }
 

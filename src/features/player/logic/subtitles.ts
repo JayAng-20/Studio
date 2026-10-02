@@ -106,7 +106,10 @@ export function parseVtt(vtt: string): Cue[] {
     const start = parseTimestamp(m[1])
     const end = parseTimestamp(m[2])
     if (start === null || end === null || end < start) continue
-    const body = lines.slice(ti + 1).join('\n').trim()
+    const body = lines
+      .slice(ti + 1)
+      .join('\n')
+      .trim()
     if (!body) continue
     cues.push({ start, end, text: body })
   }

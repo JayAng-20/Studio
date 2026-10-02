@@ -3,7 +3,13 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parseRtf } from '@/features/doc2pdf/engine/rtf'
-import { collectHeadings, runsText, type Block, type ListBlock, type TableBlock } from '@/features/doc2pdf/engine/model'
+import {
+  collectHeadings,
+  runsText,
+  type Block,
+  type ListBlock,
+  type TableBlock,
+} from '@/features/doc2pdf/engine/model'
 
 /** 把字串用 big5 編成 \'hh */
 function big5(s: string): string {
@@ -19,7 +25,9 @@ function big5(s: string): string {
   }
   Object.assign(table, cache)
   return Array.from(s)
-    .map((ch) => (ch.charCodeAt(0) < 128 ? ch : table[ch].map((b) => `\\'${b.toString(16)}`).join('')))
+    .map((ch) =>
+      ch.charCodeAt(0) < 128 ? ch : table[ch].map((b) => `\\'${b.toString(16)}`).join(''),
+    )
     .join('')
 }
 const cache: Record<string, number[]> = {}
@@ -30,7 +38,7 @@ function range(a: number, b: number) {
 const text = (b: Block) => ('runs' in b ? runsText(b.runs) : '')
 
 describe('RTF 解析', () => {
-  it('\\\'hh 依 \\ansicpg950 以 Big5 解碼（含多位元組）', () => {
+  it("\\'hh 依 \\ansicpg950 以 Big5 解碼（含多位元組）", () => {
     const doc = parseRtf(`{\\rtf1\\ansi\\ansicpg950 ${big5('繁體中文測試')}\\par}`, 'a.rtf')
     expect(text(doc.blocks[0])).toBe('繁體中文測試')
   })
@@ -51,7 +59,7 @@ describe('RTF 解析', () => {
 
   it('\\uN Unicode 與 \\ucN 略過替代字元、負數與代理對', () => {
     const doc = parseRtf(
-      '{\\rtf1\\ansi\\uc1 \\u26085?\\u26412?{\\uc2 \\u35486\\\'3f\\\'3f}\\uc0 \\u-10179\\u-8704 end\\par}',
+      "{\\rtf1\\ansi\\uc1 \\u26085?\\u26412?{\\uc2 \\u35486\\'3f\\'3f}\\uc0 \\u-10179\\u-8704 end\\par}",
       'a.rtf',
     )
     // 控制字後的空白是分隔符號，不是文字
@@ -68,7 +76,10 @@ describe('RTF 解析', () => {
   })
 
   it('粗體、斜體、底線、刪除線、\\line、\\tab、對齊', () => {
-    const doc = parseRtf('{\\rtf1\\pard\\qc {\\b B}\\i I\\i0 \\ul U\\ulnone \\strike S\\strike0\\line x\\tab y\\par}', 'a.rtf')
+    const doc = parseRtf(
+      '{\\rtf1\\pard\\qc {\\b B}\\i I\\i0 \\ul U\\ulnone \\strike S\\strike0\\line x\\tab y\\par}',
+      'a.rtf',
+    )
     const p = doc.blocks[0]
     expect(p.type).toBe('paragraph')
     if (p.type !== 'paragraph') return
@@ -132,7 +143,8 @@ describe('RTF 解析', () => {
 
   it('超連結欄位與 PNG 圖片', () => {
     const png =
-      '89504e470d0a1a0a0000000d4948445200000001000000010806000000' + '1f15c4890000000d49444154789c6360000000000200015e5a3b0b0000000049454e44ae426082'
+      '89504e470d0a1a0a0000000d4948445200000001000000010806000000' +
+      '1f15c4890000000d49444154789c6360000000000200015e5a3b0b0000000049454e44ae426082'
     const doc = parseRtf(
       `{\\rtf1 See {\\field{\\*\\fldinst{HYPERLINK "https://example.com"}}{\\fldrslt{\\ul site}}} now.\\par{\\pict\\pngblip\\picwgoal1440\\pichgoal1440 ${png}}\\par}`,
       'a.rtf',
@@ -146,7 +158,10 @@ describe('RTF 解析', () => {
   })
 
   it('範例檔：Big5 中文、表格、標題、清單、連結都正確', () => {
-    const doc = parseRtf(new Uint8Array(readFileSync(resolve(__dirname, 'fixtures/sample.rtf'))), 'sample.rtf')
+    const doc = parseRtf(
+      new Uint8Array(readFileSync(resolve(__dirname, 'fixtures/sample.rtf'))),
+      'sample.rtf',
+    )
     expect(doc.title).toBe('季度報告')
     const hs = collectHeadings(doc).map((h) => h.text)
     expect(hs).toEqual(['季度報告', '一、營收概況', '二、各區域表現', '三、後續計畫'])

@@ -21,7 +21,8 @@ class BlobReader {
     return this.blob.size
   }
   async read(offset: number, length: number): Promise<Uint8Array> {
-    if (offset < 0 || length < 0 || offset + length > this.blob.size) throw new RangeError('超出檔案範圍')
+    if (offset < 0 || length < 0 || offset + length > this.blob.size)
+      throw new RangeError('超出檔案範圍')
     if (offset >= this.start && offset + length <= this.start + this.buf.length)
       return this.buf.subarray(offset - this.start, offset - this.start + length)
     const len = Math.min(this.blob.size - offset, Math.max(length, this.window))
@@ -37,8 +38,10 @@ const ascii = (b: Uint8Array, o: number, n: number) => {
   return s
 }
 const u16be = (b: Uint8Array, o: number) => (b[o] << 8) | b[o + 1]
-const u32be = (b: Uint8Array, o: number) => ((b[o] << 24) >>> 0) + ((b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3])
-const u32le = (b: Uint8Array, o: number) => ((b[o + 3] << 24) >>> 0) + ((b[o + 2] << 16) | (b[o + 1] << 8) | b[o])
+const u32be = (b: Uint8Array, o: number) =>
+  ((b[o] << 24) >>> 0) + ((b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3])
+const u32le = (b: Uint8Array, o: number) =>
+  ((b[o + 3] << 24) >>> 0) + ((b[o + 2] << 16) | (b[o + 1] << 8) | b[o])
 
 /** 是否為合法的 TIFF 標頭（II*\0 或 MM\0*） */
 export function isTiff(b: Uint8Array | null | undefined): b is Uint8Array {
@@ -283,7 +286,20 @@ function findTiffStart(b: Uint8Array): number {
 
 // ───────────── TIFF 讀寫 ─────────────
 
-const TYPE_SIZE: Record<number, number> = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 6: 1, 7: 1, 8: 2, 9: 4, 10: 8, 11: 4, 12: 8 }
+const TYPE_SIZE: Record<number, number> = {
+  1: 1,
+  2: 1,
+  3: 2,
+  4: 4,
+  5: 8,
+  6: 1,
+  7: 1,
+  8: 2,
+  9: 4,
+  10: 8,
+  11: 4,
+  12: 8,
+}
 
 export const TAG = {
   orientation: 0x0112,
@@ -312,7 +328,10 @@ interface IfdEntry {
   at: number
 }
 
-function readIfd(t: Uint8Array, offset: number): { entries: IfdEntry[]; next: number; nextAt: number } | null {
+function readIfd(
+  t: Uint8Array,
+  offset: number,
+): { entries: IfdEntry[]; next: number; nextAt: number } | null {
   const io = tiffIo(t)
   if (offset < 8 || offset + 2 > t.length) return null
   const n = io.u16(offset)
@@ -536,7 +555,8 @@ export function insertExifWebp(webp: Uint8Array, tiff: Uint8Array): Uint8Array {
     const vp8x = webp.slice(first.start, first.end)
     vp8x[8] |= 0x08
     parts.push(vp8x)
-    for (const c of chunks.slice(1)) if (c.type !== 'EXIF') parts.push(webp.subarray(c.start, c.end))
+    for (const c of chunks.slice(1))
+      if (c.type !== 'EXIF') parts.push(webp.subarray(c.start, c.end))
   } else {
     const { width, height, alpha } = simpleWebpInfo(webp, chunks)
     const body = new Uint8Array(10)

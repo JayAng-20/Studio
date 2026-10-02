@@ -62,7 +62,9 @@ export function ChipGrid<T extends string | number>({
               type="button"
               role="radio"
               aria-checked={selected}
-              tabIndex={selected || (i === current && !options.some((x) => x.value === value)) ? 0 : -1}
+              tabIndex={
+                selected || (i === current && !options.some((x) => x.value === value)) ? 0 : -1
+              }
               disabled={disabled}
               onClick={() => onChange(o.value)}
               onKeyDown={(e) => onKey(e, i)}

@@ -1,7 +1,14 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { ImageOff, SearchX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AddFilesButton, Callout, DropTarget, DropZone, FileName, usePasteFiles } from '@/components/ui'
+import {
+  AddFilesButton,
+  Callout,
+  DropTarget,
+  DropZone,
+  FileName,
+  usePasteFiles,
+} from '@/components/ui'
 import { EmptyIllustration } from '@/design/illustrations'
 import { decodeImage } from '@/lib/image'
 import { UrlPool } from '@/lib/files'
@@ -131,7 +138,9 @@ export function ImageScanner({
   }
 
   const target =
-    found && found.list[0] ? mapCorners(found.list[0].corners, { w: found.w, h: found.h }, box, 'contain') : null
+    found && found.list[0]
+      ? mapCorners(found.list[0].corners, { w: found.w, h: found.h }, box, 'contain')
+      : null
 
   return (
     <DropTarget onFiles={intake} accept={ACCEPT} multiple={false} className="flex flex-col gap-3">
@@ -139,7 +148,13 @@ export function ImageScanner({
         <span className="min-w-0 flex-1 text-small font-medium text-text-2">
           <FileName name={file.name} />
         </span>
-        <AddFilesButton onFiles={intake} accept={ACCEPT} multiple={false} label={t('qr.image.another')} size="sm" />
+        <AddFilesButton
+          onFiles={intake}
+          accept={ACCEPT}
+          multiple={false}
+          label={t('qr.image.another')}
+          size="sm"
+        />
       </div>
       <AnimatePresence initial={false}>
         {(state === 'none' || state === 'error') && (
@@ -151,7 +166,13 @@ export function ImageScanner({
           >
             <Callout
               tone="warning"
-              icon={state === 'none' ? <SearchX size={16} aria-hidden /> : <ImageOff size={16} aria-hidden />}
+              icon={
+                state === 'none' ? (
+                  <SearchX size={16} aria-hidden />
+                ) : (
+                  <ImageOff size={16} aria-hidden />
+                )
+              }
               title={state === 'none' ? t('qr.image.notFoundTitle') : t('qr.image.decodeFailed')}
             >
               {state === 'none' ? t('qr.image.notFoundDesc') : t('qr.image.decodeFailedDesc')}
@@ -179,7 +200,11 @@ export function ImageScanner({
           className="absolute inset-0 size-full object-contain"
         />
         {(state === 'scanning' || state === 'found') && (
-          <ScanOverlay box={box} target={target} state={state === 'scanning' ? 'scanning' : 'success'} />
+          <ScanOverlay
+            box={box}
+            target={target}
+            state={state === 'scanning' ? 'scanning' : 'success'}
+          />
         )}
         <p className="sr-only" role="status" aria-live="polite">
           {state === 'scanning'

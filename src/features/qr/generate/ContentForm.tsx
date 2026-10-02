@@ -73,7 +73,9 @@ function TextInput({
           onChange={(e) => onChange(e.target.value)}
           onPaste={onPaste}
         />
-        {trailing && <div className="absolute inset-y-0 right-0 flex items-center pr-1">{trailing}</div>}
+        {trailing && (
+          <div className="absolute inset-y-0 right-0 flex items-center pr-1">{trailing}</div>
+        )}
       </div>
     </Field>
   )
@@ -305,7 +307,12 @@ function VCardForm() {
         className="sm:col-span-2"
       />
       <div className="sm:col-span-2">
-        <TextArea label={t('qr.form.note')} value={v.note} onChange={(note) => set({ note })} rows={2} />
+        <TextArea
+          label={t('qr.form.note')}
+          value={v.note}
+          onChange={(note) => set({ note })}
+          rows={2}
+        />
       </div>
     </div>
   )
@@ -324,7 +331,11 @@ function EmailForm() {
         inputMode="email"
         hint={t('qr.form.toHint')}
       />
-      <TextInput label={t('qr.form.subject')} value={v.subject} onChange={(subject) => set({ subject })} />
+      <TextInput
+        label={t('qr.form.subject')}
+        value={v.subject}
+        onChange={(subject) => set({ subject })}
+      />
       <TextArea label={t('qr.form.body')} value={v.body} onChange={(body) => set({ body })} />
     </div>
   )
@@ -420,7 +431,10 @@ function GeoForm() {
         onPaste={onPaste}
       />
       <p
-        className={cn('text-caption sm:col-span-2', latBad || lngBad ? 'text-warning-ink' : 'text-text-3')}
+        className={cn(
+          'text-caption sm:col-span-2',
+          latBad || lngBad ? 'text-warning-ink' : 'text-text-3',
+        )}
         aria-live="polite"
       >
         {latBad || lngBad ? t('qr.form.geoInvalid') : t('qr.form.geoHint')}

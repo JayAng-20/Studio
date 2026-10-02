@@ -1,7 +1,16 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { AlertTriangle, Download, Layers, QrCode } from 'lucide-react'
 import { useEffect, useState, type CSSProperties } from 'react'
-import { Badge, Button, Callout, CopyButton, ErrorState, SendToMenu, Tooltip, toast } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Callout,
+  CopyButton,
+  ErrorState,
+  SendToMenu,
+  Tooltip,
+  toast,
+} from '@/components/ui'
 import { asFile } from '@/stores/fileBus'
 import { useModuleShortcuts } from '@/stores/ui'
 import { caps, modKey } from '@/lib/capabilities'
@@ -36,7 +45,12 @@ export function Generator() {
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_var(--panel-w)] lg:gap-6">
       {/* < 1024 px：常駐精簡預覽（sticky 在頂欄下方），整個產生分頁都看得到 */}
-      <MobilePreviewBar qr={qr} ripple={ripple} onRippleEnd={onRippleEnd} onBatch={() => setBatchOpen(true)} />
+      <MobilePreviewBar
+        qr={qr}
+        ripple={ripple}
+        onRippleEnd={onRippleEnd}
+        onBatch={() => setBatchOpen(true)}
+      />
       {/* 內容：類型＋表單 */}
       <section className="flex min-w-0 flex-col gap-4 lg:col-start-1 lg:row-start-1">
         <TypePicker value={type} onChange={setType} />
@@ -60,7 +74,12 @@ export function Generator() {
 
       {/* 預覽與匯出（桌機 sticky 在右側；手機排在表單與樣式之間） */}
       <aside className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-[calc(var(--topbar-h)+16px)] lg:col-start-2 lg:row-span-2 lg:row-start-1">
-        <PreviewPanel qr={qr} onBatch={() => setBatchOpen(true)} ripple={ripple} onRippleEnd={onRippleEnd} />
+        <PreviewPanel
+          qr={qr}
+          onBatch={() => setBatchOpen(true)}
+          ripple={ripple}
+          onRippleEnd={onRippleEnd}
+        />
         <Templates />
       </aside>
 
@@ -119,7 +138,10 @@ function PreviewPanel({
   const tab = useQrStore((s) => s.tab)
   const { geo, matrix, error, displayType } = qr
   const { style, busy, logoReady, doExport, copy, pngFile } = useExporter(geo)
-  const contrast = checkContrast(foregroundColors(style), style.bgTransparent ? '#FFFFFF' : style.bg)
+  const contrast = checkContrast(
+    foregroundColors(style),
+    style.bgTransparent ? '#FFFFFF' : style.bg,
+  )
 
   // 快捷鍵：⌘／Ctrl+S 下載 PNG、⌘／Ctrl+Shift+C 複製
   useModuleShortcuts(
@@ -202,7 +224,9 @@ function PreviewPanel({
               <ErrorState
                 className="px-2 py-4"
                 title={error === 'tooLong' ? t('qr.preview.tooLong') : t('qr.preview.failed')}
-                description={error === 'tooLong' ? t('qr.preview.tooLongDesc') : t('qr.preview.failedDesc')}
+                description={
+                  error === 'tooLong' ? t('qr.preview.tooLongDesc') : t('qr.preview.failedDesc')
+                }
               />
             </motion.div>
           ) : (
@@ -217,8 +241,12 @@ function PreviewPanel({
                 <QrCode size={40} strokeWidth={1.6} aria-hidden />
               </span>
               <p className="text-body font-semibold text-text">{t('qr.preview.empty')}</p>
-              <p className="mt-1 hidden text-small text-text-3 lg:block">{t('qr.preview.emptyDesc')}</p>
-              <p className="mt-1 text-small text-text-3 lg:hidden">{t('qr.preview.emptyDescMobile')}</p>
+              <p className="mt-1 hidden text-small text-text-3 lg:block">
+                {t('qr.preview.emptyDesc')}
+              </p>
+              <p className="mt-1 text-small text-text-3 lg:hidden">
+                {t('qr.preview.emptyDescMobile')}
+              </p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -236,7 +264,11 @@ function PreviewPanel({
             <Callout
               tone="warning"
               icon={<AlertTriangle size={16} aria-hidden />}
-              title={contrast.issue === 'low' ? t('qr.preview.contrastLow') : t('qr.preview.contrastInverted')}
+              title={
+                contrast.issue === 'low'
+                  ? t('qr.preview.contrastLow')
+                  : t('qr.preview.contrastInverted')
+              }
             >
               {contrast.issue === 'low'
                 ? t('qr.preview.contrastLowDesc', { ratio: contrast.ratio.toFixed(1) })
@@ -281,11 +313,25 @@ function PreviewPanel({
             {t('qr.export.jpg')}
           </Button>
           {canCopy ? (
-            <CopyButton variant="secondary" disabled={disabled} iconOnly label={t('qr.export.copy')} onCopy={copy} className="w-full" />
+            <CopyButton
+              variant="secondary"
+              disabled={disabled}
+              iconOnly
+              label={t('qr.export.copy')}
+              onCopy={copy}
+              className="w-full"
+            />
           ) : (
             <Tooltip content={t('qr.export.copyUnsupported')}>
               <span className="inline-flex">
-                <CopyButton variant="secondary" disabled iconOnly label={t('qr.export.copy')} onCopy={() => false} className="w-full" />
+                <CopyButton
+                  variant="secondary"
+                  disabled
+                  iconOnly
+                  label={t('qr.export.copy')}
+                  onCopy={() => false}
+                  className="w-full"
+                />
               </span>
             </Tooltip>
           )}

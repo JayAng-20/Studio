@@ -55,7 +55,10 @@ export function useWarningText() {
   const t = useT()
   return useCallback(
     (code: WarningCode, format: OutputFormat) =>
-      t(`convert.warnings.${code}` as TKey, { format: OUTPUT_LABEL[format], ext: FORMATS[format].ext }),
+      t(`convert.warnings.${code}` as TKey, {
+        format: OUTPUT_LABEL[format],
+        ext: FORMATS[format].ext,
+      }),
     [t],
   )
 }

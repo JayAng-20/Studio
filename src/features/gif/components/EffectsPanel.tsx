@@ -16,7 +16,13 @@ import { cn } from '@/lib/cn'
 import { spring } from '@/design/motion'
 import { useGT } from '../useGT'
 import { newTextLayer, useGifStore } from '../store'
-import { cropRatioValue, fitCropToRatio, FULL_CROP, type CropRatio, type TextLayer } from '../settings'
+import {
+  cropRatioValue,
+  fitCropToRatio,
+  FULL_CROP,
+  type CropRatio,
+  type TextLayer,
+} from '../settings'
 import type { Geometry } from '../render'
 
 export type EffectsTab = 'text' | 'crop' | 'chroma' | 'frames'
@@ -149,7 +155,9 @@ function TextTab({ durationMs, selectedText, onSelectText }: Props) {
         <Button variant="secondary" leading={<Plus size={16} aria-hidden />} onClick={add}>
           {t('text.add')}
         </Button>
-        {texts.length > 0 && <span className="text-caption text-text-3">{t('preview.textHint')}</span>}
+        {texts.length > 0 && (
+          <span className="text-caption text-text-3">{t('preview.textHint')}</span>
+        )}
       </div>
     </div>
   )
@@ -178,7 +186,12 @@ function TextLayerEditor({
   const pos = layer.y < 0.34 ? 'top' : layer.y > 0.66 ? 'bottom' : 'middle'
   const id = `gif-text-${layer.id}`
   return (
-    <div className={cn('rounded-md border border-border bg-surface-2/60', open && 'border-[color-mix(in_srgb,var(--accent)_45%,transparent)]')}>
+    <div
+      className={cn(
+        'rounded-md border border-border bg-surface-2/60',
+        open && 'border-[color-mix(in_srgb,var(--accent)_45%,transparent)]',
+      )}
+    >
       <div className="flex items-center gap-2 p-1.5 pl-3">
         <button
           type="button"
@@ -187,7 +200,9 @@ function TextLayerEditor({
           aria-controls={id}
           className="flex min-h-9 min-w-0 flex-1 items-center gap-2 rounded-sm text-left"
         >
-          <span className="shrink-0 text-caption font-semibold text-text-3">{t('text.layer', { index: index + 1 })}</span>
+          <span className="shrink-0 text-caption font-semibold text-text-3">
+            {t('text.layer', { index: index + 1 })}
+          </span>
           <span className="truncate text-body text-text">{layer.text || '—'}</span>
         </button>
         <Button variant="ghost" icon size="sm" aria-label={t('text.remove')} onClick={onRemove}>
@@ -221,7 +236,11 @@ function TextLayerEditor({
             format={(v) => `${v}%`}
             onChange={(v) => set({ stroke: v / 100 })}
           />
-          <ColorPicker label={t('text.color')} value={layer.color} onChange={(color) => set({ color })} />
+          <ColorPicker
+            label={t('text.color')}
+            value={layer.color}
+            onChange={(color) => set({ color })}
+          />
           <ColorPicker
             label={t('text.strokeColor')}
             value={layer.strokeColor}
@@ -243,7 +262,12 @@ function TextLayerEditor({
             />
           </div>
           <div className="flex items-end">
-            <Switch label={t('text.bold')} checked={layer.bold} onChange={(bold) => set({ bold })} className="w-full" />
+            <Switch
+              label={t('text.bold')}
+              checked={layer.bold}
+              onChange={(bold) => set({ bold })}
+              className="w-full"
+            />
           </div>
           <div className="flex flex-col gap-2 sm:col-span-2">
             <div className="flex items-baseline justify-between gap-2">
@@ -288,7 +312,14 @@ function CropTab({ geom }: { geom: Geometry }) {
             value={ratio}
             onChange={(r) => {
               setRatio(r)
-              setCrop(fitCropToRatio(cropRatioValue(r, geom.baseW, geom.baseH), geom.baseW, geom.baseH, crop))
+              setCrop(
+                fitCropToRatio(
+                  cropRatioValue(r, geom.baseW, geom.baseH),
+                  geom.baseW,
+                  geom.baseH,
+                  crop,
+                ),
+              )
             }}
             options={ratios.map((r) => ({ value: r, label: t(`crop.ratios.${r}`) }))}
           />
@@ -334,9 +365,19 @@ function ChromaTab({ picking, onPicking }: { picking: boolean; onPicking: (on: b
           if (!enabled) onPicking(false)
         }}
       />
-      <div className={cn('grid gap-4 sm:grid-cols-2', !chroma.enabled && 'pointer-events-none opacity-45')} aria-disabled={!chroma.enabled}>
+      <div
+        className={cn(
+          'grid gap-4 sm:grid-cols-2',
+          !chroma.enabled && 'pointer-events-none opacity-45',
+        )}
+        aria-disabled={!chroma.enabled}
+      >
         <div className="flex flex-col gap-2">
-          <ColorPicker label={t('chroma.color')} value={chroma.color} onChange={(color) => setChroma({ color })} />
+          <ColorPicker
+            label={t('chroma.color')}
+            value={chroma.color}
+            onChange={(color) => setChroma({ color })}
+          />
           <Button
             variant={picking ? 'primary' : 'secondary'}
             size="sm"
@@ -373,7 +414,10 @@ function FramesTab({ frameCount, durationMs, customPlan, onOpenEditor }: Props) 
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-body font-medium tabular-nums text-text">
-          {t('frames.summary', { count: frameCount, duration: formatTime(durationMs / 1000, { tenths: true }) })}
+          {t('frames.summary', {
+            count: frameCount,
+            duration: formatTime(durationMs / 1000, { tenths: true }),
+          })}
         </span>
         {customPlan && <Badge tone="accent">{t('frames.customized')}</Badge>}
       </div>
@@ -383,7 +427,11 @@ function FramesTab({ frameCount, durationMs, customPlan, onOpenEditor }: Props) 
           {t('actions.openEditor')}
         </Button>
         {customPlan && (
-          <Button variant="ghost" leading={<RotateCcw size={16} aria-hidden />} onClick={() => setCustomPlan(null)}>
+          <Button
+            variant="ghost"
+            leading={<RotateCcw size={16} aria-hidden />}
+            onClick={() => setCustomPlan(null)}
+          >
             {t('actions.restoreAuto')}
           </Button>
         )}

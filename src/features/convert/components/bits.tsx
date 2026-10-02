@@ -33,7 +33,15 @@ export function CountUp({
 }
 
 /** 節省（綠色）或增加（警示）百分比徽章 */
-export function SavingsBadge({ pct, onceKey, className }: { pct: number; onceKey?: string; className?: string }) {
+export function SavingsBadge({
+  pct,
+  onceKey,
+  className,
+}: {
+  pct: number
+  onceKey?: string
+  className?: string
+}) {
   const t = useT()
   const saved = pct <= 0
   const rounded = Math.round(Math.abs(pct))
@@ -64,7 +72,15 @@ export function SavingsBadge({ pct, onceKey, className }: { pct: number; onceKey
 }
 
 /** 完成勾勾：第一次出現時描繪＋光環，之後靜態顯示 */
-export function DoneCheck({ id, size = 22, className }: { id: string; size?: number; className?: string }) {
+export function DoneCheck({
+  id,
+  size = 22,
+  className,
+}: {
+  id: string
+  size?: number
+  className?: string
+}) {
   const [first] = useState(() => !celebrated.has(`c:${id}`))
   useEffect(() => {
     celebrated.add(`c:${id}`)
@@ -72,7 +88,10 @@ export function DoneCheck({ id, size = 22, className }: { id: string; size?: num
   if (first) return <SuccessCheck size={size} className={className} />
   return (
     <span
-      className={cn('grid shrink-0 place-items-center rounded-full bg-success text-white', className)}
+      className={cn(
+        'grid shrink-0 place-items-center rounded-full bg-success text-white',
+        className,
+      )}
       style={{ width: size, height: size }}
     >
       <Check size={size * 0.6} strokeWidth={2.8} aria-hidden />
@@ -105,9 +124,16 @@ export function BlurImage({
           draggable={false}
           decoding="async"
           onLoad={() => setLoaded(src)}
-          className={cn('absolute inset-0 size-full', fit === 'cover' ? 'object-cover' : 'object-contain')}
+          className={cn(
+            'absolute inset-0 size-full',
+            fit === 'cover' ? 'object-cover' : 'object-contain',
+          )}
           initial={{ opacity: 0, scale: 1.08, filter: 'blur(14px)' }}
-          animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 1.08, filter: 'blur(14px)' }}
+          animate={
+            ready
+              ? { opacity: 1, scale: 1, filter: 'blur(0px)' }
+              : { opacity: 0, scale: 1.08, filter: 'blur(14px)' }
+          }
           transition={{ duration: sec(duration.slower), ease: easing.decelerate }}
         />
       )}

@@ -74,7 +74,11 @@ export function releaseSurface(s: Surface | null | undefined) {
 export function surfaceToBlob(s: Surface, type: string, quality?: number): Promise<Blob> {
   if (isOffscreen(s)) return s.convertToBlob({ type, quality })
   return new Promise((resolve, reject) =>
-    s.toBlob((b) => (b ? resolve(b) : reject(new EngineError('memory', 'toBlob 失敗'))), type, quality),
+    s.toBlob(
+      (b) => (b ? resolve(b) : reject(new EngineError('memory', 'toBlob 失敗'))),
+      type,
+      quality,
+    ),
   )
 }
 
@@ -125,7 +129,10 @@ function fitCanvas(size: Size, warnings: WarningCode[]): Size {
   const MAX_SIDE = 16384
   if (Math.max(cur.width, cur.height) > MAX_SIDE) {
     const s = MAX_SIDE / Math.max(cur.width, cur.height)
-    cur = { width: Math.max(1, Math.floor(cur.width * s)), height: Math.max(1, Math.floor(cur.height * s)) }
+    cur = {
+      width: Math.max(1, Math.floor(cur.width * s)),
+      height: Math.max(1, Math.floor(cur.height * s)),
+    }
     warnings.push('downscaled-canvas')
   }
   if (!surfaceUsable(cur.width, cur.height)) {
@@ -269,7 +276,9 @@ async function encodeLossy(s: Surface, opts: ConvertOptions, report: Report): Pr
   if (opts.targetOn) {
     // 目標大小：只用一個編碼器搜尋（最佳模式的 JPEG 用 MozJPEG，每位元組畫質較好）
     const primary =
-      (opts.format === 'jpeg' && opts.encoder === 'best' && encoders.find((e) => e.id === 'mozjpeg')) ||
+      (opts.format === 'jpeg' &&
+        opts.encoder === 'best' &&
+        encoders.find((e) => e.id === 'mozjpeg')) ||
       encoders[0]
     const target = Math.max(1, opts.targetKB) * 1024
     const run = (enc: Encoder) =>
@@ -296,14 +305,18 @@ async function encodeLossy(s: Surface, opts: ConvertOptions, report: Report): Pr
     const e = encoders[i]
     try {
       const bytes = await e.encode(opts.quality)
-      if (!best || bytes.length < best.bytes.length) best = { bytes, encoder: e.id, quality: opts.quality }
+      if (!best || bytes.length < best.bytes.length)
+        best = { bytes, encoder: e.id, quality: opts.quality }
     } catch (err) {
       console.error(err)
       lastError = err
     }
     report((i + 1) / encoders.length)
   }
-  if (!best) throw lastError instanceof EngineError ? lastError : new EngineError('encode', String(lastError))
+  if (!best)
+    throw lastError instanceof EngineError
+      ? lastError
+      : new EngineError('encode', String(lastError))
   return best
 }
 
@@ -323,7 +336,11 @@ async function encodePng(s: Surface, opts: ConvertOptions, report: Report): Prom
   return { bytes: png, encoder: 'canvas' }
 }
 
-async function encodeIcoFrom(src: ImageBitmap | Surface, opts: ConvertOptions, report: Report): Promise<Encoded> {
+async function encodeIcoFrom(
+  src: ImageBitmap | Surface,
+  opts: ConvertOptions,
+  report: Report,
+): Promise<Encoded> {
   const sizes = [...new Set(opts.icoSizes)].filter((n) => n >= 1 && n <= 256).sort((a, b) => b - a)
   if (!sizes.length) sizes.push(256, 48, 32, 16)
   // 先畫最大尺寸，較小的尺寸從它縮小（品質好、速度快）
@@ -356,7 +373,11 @@ async function encodeGifStatic(s: Surface): Promise<Encoded> {
   const index = applyPalette(d.data, palette, 'rgba4444')
   const ti = palette.findIndex((c) => c[3] === 0)
   const enc = GIFEncoder()
-  enc.writeFrame(index, s.width, s.height, { palette, transparent: ti >= 0, transparentIndex: Math.max(0, ti) })
+  enc.writeFrame(index, s.width, s.height, {
+    palette,
+    transparent: ti >= 0,
+    transparentIndex: Math.max(0, ti),
+  })
   enc.finish()
   return { bytes: enc.bytes(), encoder: 'gifenc' }
 }
@@ -435,7 +456,9 @@ export async function convertImage(job: ConvertJob, report: Report): Promise<Con
         return out
       }
     }
-    bmp = job.bitmap ?? (await decodeFile(job.file, job.source, job.srcSize, job.limits.maxPixels, warnings))
+    bmp =
+      job.bitmap ??
+      (await decodeFile(job.file, job.source, job.srcSize, job.limits.maxPixels, warnings))
     const srcW = job.srcSize?.width ?? bmp.width
     const srcH = job.srcSize?.height ?? bmp.height
     report(0.15)
@@ -483,7 +506,8 @@ export async function convertImage(job: ConvertJob, report: Report): Promise<Con
           throw new EngineError('unsupported', opts.format)
       }
     }
-    if (opts.targetOn && FORMATS[opts.format].target && encoded.met === false) warnings.push('target-unmet')
+    if (opts.targetOn && FORMATS[opts.format].target && encoded.met === false)
+      warnings.push('target-unmet')
     report(0.94)
     const withExif = await applyExif(encoded.bytes, job.file, opts, outSize, warnings)
     report(1)
@@ -522,7 +546,10 @@ export async function makeThumb(job: ThumbJob): Promise<ThumbResult> {
         const known = job.srcSize
         const opts: ImageBitmapOptions = { imageOrientation: 'from-image' }
         if (known && Math.max(known.width, known.height) > job.maxSide * 2) {
-          opts.resizeWidth = Math.max(1, Math.round((job.maxSide * 1.5 * known.width) / Math.max(known.width, known.height)))
+          opts.resizeWidth = Math.max(
+            1,
+            Math.round((job.maxSide * 1.5 * known.width) / Math.max(known.width, known.height)),
+          )
           opts.resizeQuality = 'medium'
         }
         bmp = await createImageBitmap(job.file, opts)

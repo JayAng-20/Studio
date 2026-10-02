@@ -52,7 +52,10 @@ export function EstimateCard({ frames, durationMs, geom, estimate, onStart, disa
         widthOptions: WIDTH_OPTIONS,
         pingpong: settings.pingpong,
         stats: estimate.stats,
-        header: settings.format === 'gif' ? 0 : headerBytes(settings.format, settings.palette === 'global'),
+        header:
+          settings.format === 'gif'
+            ? 0
+            : headerBytes(settings.format, settings.palette === 'global'),
       })
     : []
 
@@ -77,7 +80,10 @@ export function EstimateCard({ frames, durationMs, geom, estimate, onStart, disa
           {estimate.status === 'error' && !bytes ? (
             <span className="text-small text-text-3">{t('errors.estimateFailed')}</span>
           ) : bytes ? (
-            <AnimatedNumber value={bytes} format={(v) => t('estimate.approx', { value: formatBytes(v) })} />
+            <AnimatedNumber
+              value={bytes}
+              format={(v) => t('estimate.approx', { value: formatBytes(v) })}
+            />
           ) : (
             <span className="text-small text-text-3">{t('estimate.calculating')}</span>
           )}
@@ -118,10 +124,20 @@ export function EstimateCard({ frames, durationMs, geom, estimate, onStart, disa
                 <li key={s.kind} className="flex items-center justify-between gap-2">
                   <span className="min-w-0 text-text">
                     {s.kind === 'fps'
-                      ? t('estimate.suggest.fps', { value: s.value, frames: s.frames, size: formatBytes(s.bytes) })
+                      ? t('estimate.suggest.fps', {
+                          value: s.value,
+                          frames: s.frames,
+                          size: formatBytes(s.bytes),
+                        })
                       : s.kind === 'width'
-                        ? t('estimate.suggest.width', { value: s.value, size: formatBytes(s.bytes) })
-                        : t('estimate.suggest.range', { value: s.value.toFixed(1), frames: s.frames })}
+                        ? t('estimate.suggest.width', {
+                            value: s.value,
+                            size: formatBytes(s.bytes),
+                          })
+                        : t('estimate.suggest.range', {
+                            value: s.value.toFixed(1),
+                            frames: s.frames,
+                          })}
                   </span>
                   <Button size="sm" variant="secondary" onClick={() => apply(s)}>
                     {t('actions.applySuggestion')}
@@ -171,7 +187,13 @@ function Stat({
       )}
     >
       <dt className="text-caption text-text-3">{label}</dt>
-      <dd className={cn('truncate text-h3 font-semibold', warn ? 'text-warning-ink' : 'text-text', busy && 'opacity-60')}>
+      <dd
+        className={cn(
+          'truncate text-h3 font-semibold',
+          warn ? 'text-warning-ink' : 'text-text',
+          busy && 'opacity-60',
+        )}
+      >
         {children}
       </dd>
       {busy && (

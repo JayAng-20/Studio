@@ -3,13 +3,7 @@
  */
 
 export type TextEncodingName =
-  | 'utf-8'
-  | 'utf-16le'
-  | 'utf-16be'
-  | 'big5'
-  | 'gb18030'
-  | 'shift_jis'
-  | 'windows-1252'
+  'utf-8' | 'utf-16le' | 'utf-16be' | 'big5' | 'gb18030' | 'shift_jis' | 'windows-1252'
 
 export const MANUAL_ENCODINGS: TextEncodingName[] = [
   'utf-8',

@@ -27,7 +27,8 @@ export function ResultView({
 }) {
   const t = useGT()
   const copyable = result.format === 'gif' && canCopyGif()
-  const copyReason = result.format !== 'gif' ? t('errors.copyUnsupportedFormat') : t('errors.copyUnsupported')
+  const copyReason =
+    result.format !== 'gif' ? t('errors.copyUnsupportedFormat') : t('errors.copyUnsupported')
   const ratio = result.width / result.height
   const merged = result.frames < result.planned ? result.planned - result.frames : 0
 
@@ -40,7 +41,9 @@ export function ResultView({
     { label: t('result.duration'), value: formatTime(result.durationMs / 1000, { tenths: true }) },
     {
       label: t('result.frames'),
-      value: merged ? t('result.framesMerged', { written: result.frames, merged }) : String(result.frames),
+      value: merged
+        ? t('result.framesMerged', { written: result.frames, merged })
+        : String(result.frames),
     },
   ]
 
@@ -57,7 +60,11 @@ export function ResultView({
               aspectRatio: `${result.width} / ${result.height}`,
             }}
           >
-            <img src={result.url} alt={t('result.alt')} className="absolute inset-0 size-full object-contain" />
+            <img
+              src={result.url}
+              alt={t('result.alt')}
+              className="absolute inset-0 size-full object-contain"
+            />
           </motion.div>
         </div>
         <div className="flex min-w-0 flex-col gap-5">
@@ -87,7 +94,9 @@ export function ResultView({
             ))}
           </dl>
           <p className="-mt-2 text-caption text-text-3">
-            {result.estimated ? `${t('result.estimated', { value: formatBytes(result.estimated) })} · ` : ''}
+            {result.estimated
+              ? `${t('result.estimated', { value: formatBytes(result.estimated) })} · `
+              : ''}
             {t('result.elapsed', { value: (result.elapsedMs / 1000).toFixed(1) })}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -101,27 +110,35 @@ export function ResultView({
               {t('actions.download')}
             </Button>
             <CopyButton
-                  size="lg"
-                  label={t('actions.copy')}
-                  disabled={!copyable}
-                  aria-disabled={!copyable || undefined}
-                  onCopy={async () => {
-                    try {
-                      await navigator.clipboard.write([new ClipboardItem({ 'image/gif': result.blob })])
-                      return true
-                    } catch (e) {
-                      console.error(e)
-                      return false
-                    }
-                  }}
-                />
+              size="lg"
+              label={t('actions.copy')}
+              disabled={!copyable}
+              aria-disabled={!copyable || undefined}
+              onCopy={async () => {
+                try {
+                  await navigator.clipboard.write([new ClipboardItem({ 'image/gif': result.blob })])
+                  return true
+                } catch (e) {
+                  console.error(e)
+                  return false
+                }
+              }}
+            />
           </div>
           {!copyable && <p className="-mt-3 text-caption text-text-3">{copyReason}</p>}
           <div className="flex flex-wrap gap-2 border-t border-border pt-4">
-            <Button variant="secondary" leading={<SlidersHorizontal size={16} aria-hidden />} onClick={onAdjust}>
+            <Button
+              variant="secondary"
+              leading={<SlidersHorizontal size={16} aria-hidden />}
+              onClick={onAdjust}
+            >
               {t('actions.adjust')}
             </Button>
-            <Button variant="ghost" leading={<RotateCcw size={16} aria-hidden />} onClick={onStartOver}>
+            <Button
+              variant="ghost"
+              leading={<RotateCcw size={16} aria-hidden />}
+              onClick={onStartOver}
+            >
               {t('actions.startOver')}
             </Button>
           </div>

@@ -27,7 +27,12 @@ export function AudioView({ item }: { item: PlayItem }) {
         >
           {/* 背景：封面模糊放大，或模組色光暈 */}
           {cover ? (
-            <img src={cover} alt="" aria-hidden className="absolute inset-0 size-full scale-125 object-cover opacity-45 blur-3xl" />
+            <img
+              src={cover}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 size-full scale-125 object-cover opacity-45 blur-3xl"
+            />
           ) : (
             <div
               aria-hidden
@@ -38,7 +43,10 @@ export function AudioView({ item }: { item: PlayItem }) {
               }}
             />
           )}
-          <div className="absolute inset-0 bg-[color-mix(in_srgb,var(--stage-bg)_45%,transparent)]" aria-hidden />
+          <div
+            className="absolute inset-0 bg-[color-mix(in_srgb,var(--stage-bg)_45%,transparent)]"
+            aria-hidden
+          />
           <div className="absolute inset-x-0 top-0 flex h-[62%] flex-col items-center justify-center gap-4 px-6 @lg:flex-row @lg:gap-6 @lg:px-[8%]">
             <motion.div
               className="relative aspect-square h-[46cqh] max-h-56 shrink-0 overflow-hidden rounded-xl shadow-[0_20px_50px_-12px_rgba(0,0,0,.7)] @lg:h-[52cqh]"
@@ -54,7 +62,10 @@ export function AudioView({ item }: { item: PlayItem }) {
                   style={{ background: 'linear-gradient(135deg, var(--m-1), var(--m-2))' }}
                 >
                   <Music className="size-1/3 text-white/90" strokeWidth={1.75} aria-hidden />
-                  <span aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,.22),transparent_55%)]" />
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,.22),transparent_55%)]"
+                  />
                 </div>
               )}
             </motion.div>
@@ -64,7 +75,9 @@ export function AudioView({ item }: { item: PlayItem }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ ...spring.smooth, delay: sec(dur.instant) }}
             >
-              <p className="line-clamp-2 text-h2 font-semibold @2xl:text-[26px] @2xl:leading-9">{title}</p>
+              <p className="line-clamp-2 text-h2 font-semibold @2xl:text-[26px] @2xl:leading-9">
+                {title}
+              </p>
               {sub && <p className="mt-1 truncate text-body text-[var(--stage-fg-2)]">{sub}</p>}
             </motion.div>
           </div>
@@ -127,7 +140,8 @@ function Visualizer() {
         const bars = Math.max(16, Math.min(64, Math.floor(w / 14)))
         if (levels.length !== bars) levels = new Float32Array(bars)
         if (an && playing) {
-          if (!freq || freq.length !== an.frequencyBinCount) freq = new Uint8Array(an.frequencyBinCount)
+          if (!freq || freq.length !== an.frequencyBinCount)
+            freq = new Uint8Array(an.frequencyBinCount)
           an.getByteFrequencyData(freq)
           // 對數分佈：低頻多一點細節
           for (let i = 0; i < bars; i++) {

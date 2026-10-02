@@ -28,11 +28,22 @@ export function fillDef(fill: FillStyle, geo: Geometry, id: string): SvgNode | n
   if (fill.type === 'linear') {
     return el(
       'linearGradient',
-      { id, gradientUnits: 'userSpaceOnUse', x1: r3(g.x1), y1: r3(g.y1), x2: r3(g.x2), y2: r3(g.y2) },
+      {
+        id,
+        gradientUnits: 'userSpaceOnUse',
+        x1: r3(g.x1),
+        y1: r3(g.y1),
+        x2: r3(g.x2),
+        y2: r3(g.y2),
+      },
       stops,
     )
   }
-  return el('radialGradient', { id, gradientUnits: 'userSpaceOnUse', cx: g.cx, cy: g.cy, r: r3(g.r) }, stops)
+  return el(
+    'radialGradient',
+    { id, gradientUnits: 'userSpaceOnUse', cx: g.cx, cy: g.cy, r: r3(g.r) },
+    stops,
+  )
 }
 
 const r3 = (n: number) => Math.round(n * 1000) / 1000

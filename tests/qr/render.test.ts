@@ -31,7 +31,15 @@ describe('矩陣與來回解碼', () => {
     ['網址', 'https://example.com/path?q=1'],
     ['中文', '檔案不上傳，全部在你的瀏覽器裡完成。'],
     ['Wi‑Fi', buildWifi({ ssid: '咖啡;店', password: 'a:b', security: 'WPA', hidden: false })],
-    ['vCard', buildVCard({ ...defaultValues().vcard, firstName: '小明', lastName: '王', mobile: '0912345678' })],
+    [
+      'vCard',
+      buildVCard({
+        ...defaultValues().vcard,
+        firstName: '小明',
+        lastName: '王',
+        mobile: '0912345678',
+      }),
+    ],
   ])('%s', async (_n, text) => {
     const m = await createMatrix(text, 'M')
     const { data, side } = rasterize(m)
@@ -160,11 +168,15 @@ describe('批次', () => {
     ])
   })
   it('自動檔名', () => {
-    expect(batchFileStem({ content: 'https://a.com/x?y=1', name: '' }, 0, 5)).toBe('qr_001_a-com-x-y-1')
+    expect(batchFileStem({ content: 'https://a.com/x?y=1', name: '' }, 0, 5)).toBe(
+      'qr_001_a-com-x-y-1',
+    )
     expect(batchFileStem({ content: 'x', name: '自訂' }, 3, 5)).toBe('自訂')
     expect(batchFileStem({ content: '///', name: '' }, 9, 1200)).toBe('qr_0010')
   })
   it('解析回來的類型正確（整合）', () => {
-    expect(parseScan(buildWifi({ ssid: 'A', password: 'B', security: 'WPA', hidden: false })).kind).toBe('wifi')
+    expect(
+      parseScan(buildWifi({ ssid: 'A', password: 'B', security: 'WPA', hidden: false })).kind,
+    ).toBe('wifi')
   })
 })

@@ -84,7 +84,9 @@ describe('srtToVtt', () => {
   })
 
   it('略過沒有時間行或沒有文字的區塊，以及多個空行', () => {
-    const vtt = srtToVtt('垃圾\n\n\n\n1\n00:00:01,000 --> 00:00:02,000\n\n\n2\n00:00:03,000 --> 00:00:04,000\n有字')
+    const vtt = srtToVtt(
+      '垃圾\n\n\n\n1\n00:00:01,000 --> 00:00:02,000\n\n\n2\n00:00:03,000 --> 00:00:04,000\n有字',
+    )
     expect(parseVtt(vtt)).toEqual([{ start: 3, end: 4, text: '有字' }])
   })
 

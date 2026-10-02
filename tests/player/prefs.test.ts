@@ -10,7 +10,8 @@ import { STORAGE_KEYS } from '@/lib/storage'
 
 describe('播放器偏好驗證', () => {
   it('非物件或空值退回預設', () => {
-    for (const raw of [null, undefined, 42, 'x', [], true]) expect(sanitizePrefs(raw)).toEqual(DEFAULT_PREFS)
+    for (const raw of [null, undefined, 42, 'x', [], true])
+      expect(sanitizePrefs(raw)).toEqual(DEFAULT_PREFS)
   })
   it('保留合法值', () => {
     const p = {
@@ -29,7 +30,11 @@ describe('播放器偏好驗證', () => {
     expect(sanitizePrefs(p)).toEqual(p)
   })
   it('範圍外的數值夾在範圍內；增強音量不恢復', () => {
-    const p = sanitizePrefs({ volume: 1.8, subStyle: { size: 9, position: -5, bg: 'shadow' }, eqGains: [40, -40, 3.4, 0, 0] })
+    const p = sanitizePrefs({
+      volume: 1.8,
+      subStyle: { size: 9, position: -5, bg: 'shadow' },
+      eqGains: [40, -40, 3.4, 0, 0],
+    })
     expect(p.volume).toBe(1)
     expect(p.subStyle).toEqual({ size: 2, position: 0, bg: 'shadow' })
     expect(p.eqGains).toEqual([12, -12, 3, 0, 0])
@@ -51,7 +56,12 @@ describe('播放器偏好驗證', () => {
     expect(sanitizePrefs({ eqGains: [1, 2, 'x', 4, 5] }).eqGains).toEqual([0, 0, 0, 0, 0])
   })
   it('pickPrefs 只取偏好欄位', () => {
-    const state = { ...DEFAULT_PREFS, volume: 0.5, items: [1, 2], el: {} } as unknown as typeof DEFAULT_PREFS
+    const state = {
+      ...DEFAULT_PREFS,
+      volume: 0.5,
+      items: [1, 2],
+      el: {},
+    } as unknown as typeof DEFAULT_PREFS
     const p = pickPrefs(state)
     expect(Object.keys(p).sort()).toEqual(Object.keys(DEFAULT_PREFS).sort())
     expect(p.volume).toBe(0.5)

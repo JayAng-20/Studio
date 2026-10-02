@@ -27,9 +27,7 @@ export function outputSize(
 ): { w: number; h: number } {
   const cw = Math.max(1, baseW * crop.w)
   const ch = Math.max(1, baseH * crop.h)
-  const w = Math.round(
-    Math.min(WIDTH_MAX, Math.max(WIDTH_MIN, width === 'original' ? cw : width)),
-  )
+  const w = Math.round(Math.min(WIDTH_MAX, Math.max(WIDTH_MIN, width === 'original' ? cw : width)))
   const h = Math.max(1, Math.round((w * ch) / cw))
   return { w, h }
 }
@@ -75,7 +73,11 @@ export function fontFor(layer: TextLayer, outH: number) {
 
 /** 文字是否在這個輸出時間顯示 */
 export function textVisible(layer: TextLayer, outT: number) {
-  return layer.text.trim() !== '' && outT >= layer.start - 1e-6 && (layer.end === null || outT < layer.end - 1e-6)
+  return (
+    layer.text.trim() !== '' &&
+    outT >= layer.start - 1e-6 &&
+    (layer.end === null || outT < layer.end - 1e-6)
+  )
 }
 
 /** 量測文字框（輸出像素） */

@@ -38,9 +38,9 @@ describe('Wi‑Fi', () => {
     ).toBe('WIFI:T:WPA;S:My\\;Net;P:p\\:a\\,s\\"s\\\\;H:true;;')
   })
   it('不加密時不帶密碼', () => {
-    expect(buildWifi({ ssid: 'Cafe', password: 'ignored', security: 'nopass', hidden: false })).toBe(
-      'WIFI:T:nopass;S:Cafe;H:false;;',
-    )
+    expect(
+      buildWifi({ ssid: 'Cafe', password: 'ignored', security: 'nopass', hidden: false }),
+    ).toBe('WIFI:T:nopass;S:Cafe;H:false;;')
   })
   it('WEP', () => {
     expect(buildWifi({ ssid: 'Old', password: '12345', security: 'WEP', hidden: false })).toBe(
@@ -91,7 +91,9 @@ describe('vCard', () => {
   })
   it('跳脫逗號、分號、換行與反斜線', () => {
     expect(escapeVText('a,b;c\\d\ne')).toBe('a\\,b\\;c\\\\d\\ne')
-    const s = buildVCard(card({ firstName: 'A', address: '台北市, 信義區;1F', note: '第一行\n第二行' }))
+    const s = buildVCard(
+      card({ firstName: 'A', address: '台北市, 信義區;1F', note: '第一行\n第二行' }),
+    )
     expect(s).toContain('ADR;TYPE=WORK:;;台北市\\, 信義區\\;1F;;;;')
     expect(s).toContain('NOTE:第一行\\n第二行')
   })
@@ -168,7 +170,13 @@ describe('行事曆 VEVENT', () => {
     const start = '2026-10-02T09:30'
     const end = '2026-10-02T11:00'
     const s = buildEvent(
-      ev({ title: '設計審查; 第一輪', location: '會議室 A, 3F', start, end, description: '帶筆電\n準時' }),
+      ev({
+        title: '設計審查; 第一輪',
+        location: '會議室 A, 3F',
+        start,
+        end,
+        description: '帶筆電\n準時',
+      }),
     )
     const lines = s.split('\r\n')
     expect(lines[0]).toBe('BEGIN:VEVENT')
@@ -183,7 +191,9 @@ describe('行事曆 VEVENT', () => {
     expect(icsUtc(new Date(Date.UTC(2026, 9, 2, 1, 5, 9)))).toBe('20261002T010509Z')
   })
   it('全天活動：DTEND 為隔天', () => {
-    const s = buildEvent(ev({ title: '連假', start: '2026-10-09', end: '2026-10-11', allDay: true }))
+    const s = buildEvent(
+      ev({ title: '連假', start: '2026-10-09', end: '2026-10-11', allDay: true }),
+    )
     expect(s).toContain('DTSTART;VALUE=DATE:20261009')
     expect(s).toContain('DTEND;VALUE=DATE:20261012')
   })
@@ -226,8 +236,8 @@ describe('其他', () => {
   })
   it('檔名摘要', () => {
     expect(contentSlug('url', { url: 'https://www.example.com/a' })).toBe('example.com')
-    expect(contentSlug('wifi', { ssid: 'Home', password: '', security: 'WPA', hidden: false })).toBe(
-      'Home',
-    )
+    expect(
+      contentSlug('wifi', { ssid: 'Home', password: '', security: 'WPA', hidden: false }),
+    ).toBe('Home')
   })
 })

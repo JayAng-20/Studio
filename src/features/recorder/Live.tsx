@@ -64,7 +64,10 @@ export function LiveView() {
               <span className="flex h-7 items-center gap-1.5 rounded-full bg-black/55 px-2.5 text-caption font-semibold text-white backdrop-blur-md">
                 <span
                   aria-hidden
-                  className={cn('size-2 rounded-full', paused ? 'bg-white/60' : 'motion-decor bg-danger')}
+                  className={cn(
+                    'size-2 rounded-full',
+                    paused ? 'bg-white/60' : 'motion-decor bg-danger',
+                  )}
                   style={paused ? undefined : { animation: 'breathe 1.6s ease-in-out infinite' }}
                 />
                 {paused ? t('recorder.live.paused') : t('recorder.live.rec')}
@@ -73,7 +76,10 @@ export function LiveView() {
           </div>
         </div>
         <dl className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
-          <Stat label={t('recorder.live.elapsed')} sub={paused ? t('recorder.live.paused') : undefined}>
+          <Stat
+            label={t('recorder.live.elapsed')}
+            sub={paused ? t('recorder.live.paused') : undefined}
+          >
             <LiveClock />
           </Stat>
           <Stat
@@ -114,7 +120,9 @@ export function LiveView() {
                     className="flex h-8 items-center gap-1.5 rounded-full border border-border bg-surface-2 pl-2.5 pr-3 text-small"
                   >
                     <Flag size={13} className="text-accent-ink" aria-hidden />
-                    <span className="font-medium">{t('recorder.result.markerLabel', { n: i + 1 })}</span>
+                    <span className="font-medium">
+                      {t('recorder.result.markerLabel', { n: i + 1 })}
+                    </span>
                     <span className="tabular-nums text-text-3">{formatClock(m.t * 1000)}</span>
                   </motion.li>
                 ))}
@@ -129,7 +137,10 @@ export function LiveView() {
   const panel = (
     <>
       {level !== 'ok' && (
-        <Callout tone="warning" title={t('recorder.warn.sizeTitle', { size: formatBytes(useRecorder.getState().bytes) })}>
+        <Callout
+          tone="warning"
+          title={t('recorder.warn.sizeTitle', { size: formatBytes(useRecorder.getState().bytes) })}
+        >
           {t('recorder.warn.sizeDesc', { limit: formatBytes(SIZE_LIMIT_BYTES) })}
         </Callout>
       )}

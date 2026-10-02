@@ -20,7 +20,11 @@ export interface MonoOptions {
   tabSize?: number
 }
 
-export function layoutMono(text: string, m: Measurer, o: MonoOptions): { lines: LineBox[]; missing: number } {
+export function layoutMono(
+  text: string,
+  m: Measurer,
+  o: MonoOptions,
+): { lines: LineBox[]; missing: number } {
   const cw = MONO_ADVANCE * o.size
   const maxCols = Math.max(8, Math.floor(o.width / cw + 1e-6))
   const tab = o.tabSize ?? 4
@@ -66,11 +70,22 @@ export function layoutMono(text: string, m: Measurer, o: MonoOptions): { lines: 
         if (last && last.font === mono && Math.abs(last.x + last.width - x) < 0.01) {
           last.text += ch
           last.width += cw
-        } else pieces.push({ text: ch, font: mono, size: o.size, skew: false, style: o.style, width: cw, x, hs: MONO_SQUEEZE })
+        } else
+          pieces.push({
+            text: ch,
+            font: mono,
+            size: o.size,
+            skew: false,
+            style: o.style,
+            width: cw,
+            x,
+            hs: MONO_SQUEEZE,
+          })
       } else {
         let t = ch
         if (!m.has(fallback, cp)) {
-          if ((cp >= 0xfe00 && cp <= 0xfe0f) || cp === 0x200d || cp === 0x200b || cp === 0xfeff) continue
+          if ((cp >= 0xfe00 && cp <= 0xfe0f) || cp === 0x200d || cp === 0x200b || cp === 0xfeff)
+            continue
           missing++
           t = MISSING_GLYPH
         }
@@ -79,7 +94,15 @@ export function layoutMono(text: string, m: Measurer, o: MonoOptions): { lines: 
         // 字太寬時縮小以免壓到隔壁格
         const size = gw > slot ? (o.size * slot) / gw : o.size
         const w = Math.min(gw, slot)
-        pieces.push({ text: t, font: fallback, size, skew: false, style: o.style, width: w, x: x + (slot - w) / 2 })
+        pieces.push({
+          text: t,
+          font: fallback,
+          size,
+          skew: false,
+          style: o.style,
+          width: w,
+          x: x + (slot - w) / 2,
+        })
       }
       col += cells
     }

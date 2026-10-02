@@ -8,16 +8,7 @@ import { toast } from '@/components/ui'
 import { formatTime } from '@/lib/format'
 import { t } from '@/i18n'
 import { usePlayer, selectCurrent, type PlayItem } from './store'
-import {
-  consumeWantPlay,
-  next,
-  pause,
-  play,
-  poke,
-  prev,
-  seek,
-  seekBy,
-} from './actions'
+import { consumeWantPlay, next, pause, play, poke, prev, seek, seekBy } from './actions'
 import { applyEq, applyVolume } from './audio'
 import { loopTarget } from './logic/ab'
 import { diagnose, MEDIA_ERR } from './logic/formats'
@@ -352,7 +343,12 @@ export function useMediaEngine() {
     }
     apply()
     return usePlayer.subscribe((s, p) => {
-      if (s.volume !== p.volume || s.muted !== p.muted || s.eqEnabled !== p.eqEnabled || s.eqGains !== p.eqGains)
+      if (
+        s.volume !== p.volume ||
+        s.muted !== p.muted ||
+        s.eqEnabled !== p.eqEnabled ||
+        s.eqGains !== p.eqGains
+      )
         apply(s)
     })
   }, [el])
@@ -416,13 +412,22 @@ export function useMediaSession() {
     })
     return () => {
       ms.metadata = null
-      for (const a of ['play', 'pause', 'previoustrack', 'nexttrack', 'seekbackward', 'seekforward', 'seekto'] as const)
+      for (const a of [
+        'play',
+        'pause',
+        'previoustrack',
+        'nexttrack',
+        'seekbackward',
+        'seekforward',
+        'seekto',
+      ] as const)
         set(a, null)
     }
   }, [id, title, artist, album, cover])
   const paused = usePlayer((s) => s.paused)
   useEffect(() => {
-    if ('mediaSession' in navigator && id) navigator.mediaSession.playbackState = paused ? 'paused' : 'playing'
+    if ('mediaSession' in navigator && id)
+      navigator.mediaSession.playbackState = paused ? 'paused' : 'playing'
   }, [paused, id])
 }
 

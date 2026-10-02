@@ -26,7 +26,15 @@ export function FormatPicker({
   const onKey = (e: KeyboardEvent, i: number) => {
     const cols = 4
     const delta =
-      e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowDown' ? cols : e.key === 'ArrowUp' ? -cols : 0
+      e.key === 'ArrowRight'
+        ? 1
+        : e.key === 'ArrowLeft'
+          ? -1
+          : e.key === 'ArrowDown'
+            ? cols
+            : e.key === 'ArrowUp'
+              ? -cols
+              : 0
     if (!delta) return
     e.preventDefault()
     const n = OUTPUT_ORDER.length
@@ -41,11 +49,16 @@ export function FormatPicker({
 
   return (
     <LayoutGroup id={id}>
-      <div role="radiogroup" aria-label={t('convert.options.format')} className="grid grid-cols-4 gap-1.5">
+      <div
+        role="radiogroup"
+        aria-label={t('convert.options.format')}
+        className="grid grid-cols-4 gap-1.5"
+      >
         {OUTPUT_ORDER.map((f, i) => {
           const selected = f === value
           const s = support[f]
-          const reason = s === 'none' ? t('convert.format.unsupported', { format: OUTPUT_LABEL[f] }) : null
+          const reason =
+            s === 'none' ? t('convert.format.unsupported', { format: OUTPUT_LABEL[f] }) : null
           const btn = (
             <button
               ref={(el) => {

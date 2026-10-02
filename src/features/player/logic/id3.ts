@@ -24,10 +24,13 @@ export function id3TagSize(head: Uint8Array): number {
 }
 
 function synchsafe(b: Uint8Array, o: number): number {
-  return ((b[o] & 0x7f) << 21) | ((b[o + 1] & 0x7f) << 14) | ((b[o + 2] & 0x7f) << 7) | (b[o + 3] & 0x7f)
+  return (
+    ((b[o] & 0x7f) << 21) | ((b[o + 1] & 0x7f) << 14) | ((b[o + 2] & 0x7f) << 7) | (b[o + 3] & 0x7f)
+  )
 }
 
-const u32 = (b: Uint8Array, o: number) => ((b[o] << 24) | (b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3]) >>> 0
+const u32 = (b: Uint8Array, o: number) =>
+  ((b[o] << 24) | (b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3]) >>> 0
 const u24 = (b: Uint8Array, o: number) => (b[o] << 16) | (b[o + 1] << 8) | b[o + 2]
 
 /** 去除反同步（0xFF 0x00 → 0xFF） */
@@ -131,7 +134,11 @@ export function parseId3(bytes: Uint8Array): Id3Tags | null {
   while (pos + headerLen <= tag.length) {
     const id = String.fromCharCode(...tag.subarray(pos, pos + (v22 ? 3 : 4)))
     if (!/^[A-Z0-9]{3,4}$/.test(id)) break
-    const size = v22 ? u24(tag, pos + 3) : version === 4 ? synchsafe(tag, pos + 4) : u32(tag, pos + 4)
+    const size = v22
+      ? u24(tag, pos + 3)
+      : version === 4
+        ? synchsafe(tag, pos + 4)
+        : u32(tag, pos + 4)
     const frameFlags = v22 ? 0 : tag[pos + 9]
     const start = pos + headerLen
     const end = start + size

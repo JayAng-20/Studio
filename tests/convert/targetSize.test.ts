@@ -59,7 +59,10 @@ describe('目標檔案大小：二分搜尋品質（假編碼器）', () => {
 
   it('嘗試次數上限', async () => {
     const f = fake((q) => q * 1000)
-    const r = await searchQualityForSize(f.encode, f.sizeOf, 33_333, { maxAttempts: 4, tolerance: 0 })
+    const r = await searchQualityForSize(f.encode, f.sizeOf, 33_333, {
+      maxAttempts: 4,
+      tolerance: 0,
+    })
     expect(r.attempts).toBe(4)
     expect(r.met).toBe(true)
     expect(r.size).toBeLessThanOrEqual(33_333)
@@ -76,7 +79,11 @@ describe('目標檔案大小：二分搜尋品質（假編碼器）', () => {
 
   it('自訂品質範圍', async () => {
     const f = fake((q) => q * 1000)
-    const r = await searchQualityForSize(f.encode, f.sizeOf, 70_000, { min: 40, max: 90, tolerance: 0 })
+    const r = await searchQualityForSize(f.encode, f.sizeOf, 70_000, {
+      min: 40,
+      max: 90,
+      tolerance: 0,
+    })
     expect(r.quality).toBe(70)
     expect(f.calls.every((q) => q >= 40 && q <= 90)).toBe(true)
   })
@@ -87,7 +94,9 @@ describe('目標檔案大小：二分搜尋品質（假編碼器）', () => {
       if (q === 1) ctl.abort()
       return q * 1000
     })
-    await expect(searchQualityForSize(f.encode, f.sizeOf, 50_000, { signal: ctl.signal })).rejects.toMatchObject({
+    await expect(
+      searchQualityForSize(f.encode, f.sizeOf, 50_000, { signal: ctl.signal }),
+    ).rejects.toMatchObject({
       name: 'AbortError',
     })
   })

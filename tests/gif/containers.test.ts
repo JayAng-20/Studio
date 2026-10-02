@@ -21,7 +21,12 @@ function pngChunks(b: Uint8Array) {
   while (p < b.length) {
     const len = (b[p] << 24) | (b[p + 1] << 16) | (b[p + 2] << 8) | b[p + 3]
     const type = ascii(b, p + 4, 4)
-    const crc = ((b[p + 8 + len] << 24) | (b[p + 9 + len] << 16) | (b[p + 10 + len] << 8) | b[p + 11 + len]) >>> 0
+    const crc =
+      ((b[p + 8 + len] << 24) |
+        (b[p + 9 + len] << 16) |
+        (b[p + 10 + len] << 8) |
+        b[p + 11 + len]) >>>
+      0
     expect(crc32(b, p + 4, p + 8 + len)).toBe(crc)
     out.push(type)
     p += 12 + len
@@ -90,7 +95,15 @@ describe('APNG', () => {
       0,
       [
         { x: 0, y: 0, width: w, height: h, delayNum: 10, delayDen: 100, data },
-        { x: 1, y: 1, width: 2, height: 1, delayNum: 20, delayDen: 100, data: zlibSync(filterScanlines(px.subarray(0, 8), 2, 1, 2)) },
+        {
+          x: 1,
+          y: 1,
+          width: 2,
+          height: 1,
+          delayNum: 20,
+          delayDen: 100,
+          data: zlibSync(filterScanlines(px.subarray(0, 8), 2, 1, 2)),
+        },
       ],
       2,
     )

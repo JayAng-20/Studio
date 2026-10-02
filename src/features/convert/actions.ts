@@ -14,7 +14,10 @@ type RunTask = <T extends TaskResult[] | void>(
 ) => Promise<T>
 
 export const doneItems = (items: ConvertItem[]) =>
-  items.filter((x): x is ConvertItem & { result: NonNullable<ConvertItem['result']> } => x.status === 'done' && !!x.result)
+  items.filter(
+    (x): x is ConvertItem & { result: NonNullable<ConvertItem['result']> } =>
+      x.status === 'done' && !!x.result,
+  )
 
 /** 一個檔案直接下載；多個檔案打包成 ZIP（走任務中心，可取消） */
 export async function downloadResults(run: RunTask, items: ConvertItem[]) {

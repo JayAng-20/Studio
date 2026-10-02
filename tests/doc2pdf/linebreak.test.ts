@@ -27,7 +27,8 @@ describe('斷行：中日韓逐字可斷', () => {
 describe('避頭尾', () => {
   it('句讀與收尾括號不出現在行首', () => {
     // 第 10 個字後面緊接著「，」：逗號要黏到前一個字，一起移到下一行
-    const text = '一二三四五六七八九十，十一十二十三。（括號）「引號」『書名』《篇名》〈章〉！？；：、'
+    const text =
+      '一二三四五六七八九十，十一十二十三。（括號）「引號」『書名』《篇名》〈章〉！？；：、'
     for (const w of [60, 70, 80, 90, 100, 110, 130]) {
       const { lines } = breakText(text, w)
       for (const l of lines.slice(1)) expect(NO_LINE_START.has(lineText(l)[0])).toBe(false)
@@ -106,7 +107,9 @@ describe('拉丁文與混排', () => {
     }
     const first = lines[0].pieces.map((p) => p.text).join('')
     expect(first.endsWith(PAD)).toBe(false)
-    expect(lines.map((l) => l.pieces.map((p) => p.text).join('')).join('')).toBe(`一二三四五六七八${PAD}行內程式碼${PAD}`)
+    expect(lines.map((l) => l.pieces.map((p) => p.text).join('')).join('')).toBe(
+      `一二三四五六七八${PAD}行內程式碼${PAD}`,
+    )
   })
 
   it('沒有字型能顯示的字（表情符號）以 □ 代替並計數', () => {
@@ -118,19 +121,29 @@ describe('拉丁文與混排', () => {
 
 describe('等寬排版', () => {
   it('中文字佔兩格、英數一格，長行換行後續行縮排', () => {
-    const { lines } = layoutMono('    const 名稱 = "很長很長很長很長很長很長很長很長很長很長"', fakeMeasurer, {
-      size: 10,
-      width: 150, // 30 格（0.5 em × 10pt = 5pt 一格）
-      style: 0,
-    })
+    const { lines } = layoutMono(
+      '    const 名稱 = "很長很長很長很長很長很長很長很長很長很長"',
+      fakeMeasurer,
+      {
+        size: 10,
+        width: 150, // 30 格（0.5 em × 10pt = 5pt 一格）
+        style: 0,
+      },
+    )
     expect(lines.length).toBeGreaterThan(1)
     // 續行從原本的縮排（4 格）開始
     expect(lines[1].pieces[0].x).toBeCloseTo(4 * 5)
-    for (const l of lines) for (const p of l.pieces) expect(p.x + p.width).toBeLessThanOrEqual(150.01)
+    for (const l of lines)
+      for (const p of l.pieces) expect(p.x + p.width).toBeLessThanOrEqual(150.01)
   })
 
   it('Tab 依 tab stop 展開', () => {
-    const { lines } = layoutMono('a\tb', fakeMeasurer, { size: 10, width: 500, style: 0, tabSize: 4 })
+    const { lines } = layoutMono('a\tb', fakeMeasurer, {
+      size: 10,
+      width: 500,
+      style: 0,
+      tabSize: 4,
+    })
     expect(lines[0].pieces.map((p) => p.text).join('')).toBe('a   b')
   })
 })

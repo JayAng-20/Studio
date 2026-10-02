@@ -69,7 +69,8 @@ export const zh = {
       'keep-no-gps': '保留相機與拍攝時間，移除 GPS 位置。照片方向會先套用到畫面並重設。',
       keep: '保留全部資訊，包含拍攝地點（GPS）。分享前請先確認。',
     },
-    exifUnsupported: '{format} 無法寫入 EXIF，輸出的檔案不會包含拍攝資訊。JPG、PNG、WebP 可以保留。',
+    exifUnsupported:
+      '{format} 無法寫入 EXIF，輸出的檔案不會包含拍攝資訊。JPG、PNG、WebP 可以保留。',
     animation: '動畫',
     keepAnimation: '保留動畫',
     keepAnimationDesc: '動態 GIF、APNG、動態 WebP 會逐格轉成 {format} 動畫',
@@ -110,7 +111,8 @@ export const zh = {
       gif: '最多 256 色，相容性最高；適合簡單圖形與動畫。',
     },
     wasm: '你的瀏覽器無法直接輸出 {format}，會改用內建的 WebAssembly 編碼器，第一次使用需要載入。',
-    avifWasm: 'AVIF 由內建的 WebAssembly 編碼器處理（第一次使用會載入約 3.5 MB），大圖可能需要幾秒到數十秒。',
+    avifWasm:
+      'AVIF 由內建的 WebAssembly 編碼器處理（第一次使用會載入約 3.5 MB），大圖可能需要幾秒到數十秒。',
     unsupported: '你的瀏覽器無法輸出 {format}，也不支援 WebAssembly 編碼器。',
   },
   naming: {
@@ -267,7 +269,8 @@ export const en: DeepString<typeof zh> = {
     add: 'Add images',
     addFolder: 'Add folder',
     clearTitle: 'Clear all images?',
-    clearDesc: 'This removes {count} images and their results. Results you haven’t downloaded will be lost.',
+    clearDesc:
+      'This removes {count} images and their results. Results you haven’t downloaded will be lost.',
     duplicates: 'These images are already in the list ({count})',
     someDuplicates: 'Added {added}, skipped {count} duplicates',
   },
@@ -315,15 +318,20 @@ export const en: DeepString<typeof zh> = {
       keep: 'Keep all',
     },
     exifHint: {
-      strip: 'Removes camera model, date taken, location and more. Orientation is applied to the pixels first.',
-      'keep-no-gps': 'Keeps camera and date, removes GPS location. Orientation is applied to the pixels and reset.',
+      strip:
+        'Removes camera model, date taken, location and more. Orientation is applied to the pixels first.',
+      'keep-no-gps':
+        'Keeps camera and date, removes GPS location. Orientation is applied to the pixels and reset.',
       keep: 'Keeps everything, including where the photo was taken (GPS). Check before sharing.',
     },
-    exifUnsupported: '{format} can’t store EXIF, so the output won’t include photo info. JPG, PNG and WebP can.',
+    exifUnsupported:
+      '{format} can’t store EXIF, so the output won’t include photo info. JPG, PNG and WebP can.',
     animation: 'Animation',
     keepAnimation: 'Keep animation',
-    keepAnimationDesc: 'Animated GIF, APNG and WebP are converted frame by frame into an animated {format}',
-    animationFirstFrame: '{format} doesn’t support animation, so only the first frame is converted.',
+    keepAnimationDesc:
+      'Animated GIF, APNG and WebP are converted frame by frame into an animated {format}',
+    animationFirstFrame:
+      '{format} doesn’t support animation, so only the first frame is converted.',
     advanced: 'Advanced',
     encoder: 'Encoder',
     encoderBest: 'Best compression',
@@ -360,7 +368,8 @@ export const en: DeepString<typeof zh> = {
       gif: 'Up to 256 colors and the widest compatibility. Good for simple graphics and animation.',
     },
     wasm: 'Your browser can’t export {format} directly, so the built-in WebAssembly encoder is used. It loads on first use.',
-    avifWasm: 'AVIF uses the built-in WebAssembly encoder (about 3.5 MB on first use). Large images can take from seconds to tens of seconds.',
+    avifWasm:
+      'AVIF uses the built-in WebAssembly encoder (about 3.5 MB on first use). Large images can take from seconds to tens of seconds.',
     unsupported: 'Your browser can’t export {format} and doesn’t support WebAssembly encoders.',
   },
   naming: {
@@ -449,16 +458,21 @@ export const en: DeepString<typeof zh> = {
     download: 'Download all results',
   },
   warnings: {
-    'downscaled-pixels': 'This image is over 100 megapixels. It was scaled down first so the browser doesn’t run out of memory.',
-    'downscaled-canvas': 'This image exceeds the browser’s canvas limit, so it was scaled down first.',
-    'target-unmet': 'Even the lowest quality is above the target size. Try a smaller size, or WebP or AVIF.',
+    'downscaled-pixels':
+      'This image is over 100 megapixels. It was scaled down first so the browser doesn’t run out of memory.',
+    'downscaled-canvas':
+      'This image exceeds the browser’s canvas limit, so it was scaled down first.',
+    'target-unmet':
+      'Even the lowest quality is above the target size. Try a smaller size, or WebP or AVIF.',
     'exif-unsupported': '{format} can’t store photo info (EXIF), so the result has none.',
-    'exif-too-large': 'The original photo info is over 64 KB and doesn’t fit in a JPG, so it wasn’t kept.',
+    'exif-too-large':
+      'The original photo info is over 64 KB and doesn’t fit in a JPG, so it wasn’t kept.',
     'exif-none': 'The original has no photo info (EXIF) to keep.',
     'gps-kept': 'The location (GPS) was kept. Check before sharing.',
     'first-frame': 'This is an animated image; {format} keeps only the first frame.',
     flattened: 'Transparent areas were filled with the background color.',
-    'memory-retry': 'The browser ran out of memory on the first try, so the image was scaled down and converted again.',
+    'memory-retry':
+      'The browser ran out of memory on the first try, so the image was scaled down and converted again.',
   },
   errors: {
     allFailed: 'All images failed to convert',

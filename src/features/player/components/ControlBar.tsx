@@ -58,12 +58,31 @@ import { Timeline } from './Timeline'
 /** 倒退／快轉 10 秒圖示：圓弧箭頭＋數字 */
 function SkipIcon({ dir }: { dir: -1 | 1 }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
       <g transform={dir < 0 ? undefined : 'translate(24 0) scale(-1 1)'}>
         <path d="M3 12a9 9 0 1 0 2.64-6.36" />
         <path d="M3 3v5h5" />
       </g>
-      <text x="12" y="15.6" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="currentColor" stroke="none" fontFamily="var(--font-sans)">
+      <text
+        x="12"
+        y="15.6"
+        textAnchor="middle"
+        fontSize="8.5"
+        fontWeight="700"
+        fill="currentColor"
+        stroke="none"
+        fontFamily="var(--font-sans)"
+      >
         10
       </text>
     </svg>
@@ -80,7 +99,11 @@ function VolumeControl() {
   const pct = Math.round(volume * 100)
   return (
     <div className="flex items-center">
-      <StageButton label={muted ? t('player.controls.unmute') : t('player.controls.mute')} shortcut="M" onClick={toggleMute}>
+      <StageButton
+        label={muted ? t('player.controls.unmute') : t('player.controls.mute')}
+        shortcut="M"
+        onClick={toggleMute}
+      >
         <Icon size={20} aria-hidden />
       </StageButton>
       <div className="hidden w-24 items-center pl-1 pr-2 @2xl:flex">
@@ -159,10 +182,22 @@ function AbButtons() {
   const full = !!ab && isComplete(ab)
   return (
     <div className="hidden items-center @5xl:flex">
-      <StageButton label={t('player.controls.setA')} shortcut="A" pressed={ab?.a != null} onClick={() => setAPoint()} className="text-small font-bold">
+      <StageButton
+        label={t('player.controls.setA')}
+        shortcut="A"
+        pressed={ab?.a != null}
+        onClick={() => setAPoint()}
+        className="text-small font-bold"
+      >
         A
       </StageButton>
-      <StageButton label={t('player.controls.setB')} shortcut="B" pressed={ab?.b != null} onClick={() => setBPoint()} className="text-small font-bold">
+      <StageButton
+        label={t('player.controls.setB')}
+        shortcut="B"
+        pressed={ab?.b != null}
+        onClick={() => setBPoint()}
+        className="text-small font-bold"
+      >
         B
       </StageButton>
       {full && (
@@ -199,7 +234,9 @@ export function ControlBar({ onOpenPlaylist }: { onOpenPlaylist: () => void }) {
   useEffect(() => {
     const bar = barRef.current
     if (!bar || !stageEl) return
-    const ro = new ResizeObserver(() => stageEl.style.setProperty('--controls-h', `${bar.offsetHeight + 16}px`))
+    const ro = new ResizeObserver(() =>
+      stageEl.style.setProperty('--controls-h', `${bar.offsetHeight + 16}px`),
+    )
     ro.observe(bar)
     return () => ro.disconnect()
   }, [stageEl])
@@ -208,37 +245,124 @@ export function ControlBar({ onOpenPlaylist }: { onOpenPlaylist: () => void }) {
   const fsOk = canFullscreen()
 
   const moreItems = [
-    { key: 'back10', label: t('player.controls.back10'), icon: <SkipIcon dir={-1} />, hint: 'J', onSelect: () => seekBy(-10, { ripple: true }), keepOpen: true },
-    { key: 'fwd10', label: t('player.controls.fwd10'), icon: <SkipIcon dir={1} />, hint: 'L', onSelect: () => seekBy(10, { ripple: true }), keepOpen: true },
-    { key: 'a', label: t('player.controls.setA'), icon: <b className="text-caption">A</b>, hint: 'A', checked: ab?.a != null ? true : undefined, onSelect: () => setAPoint() },
-    { key: 'b', label: t('player.controls.setB'), icon: <b className="text-caption">B</b>, hint: 'B', checked: ab?.b != null ? true : undefined, onSelect: () => setBPoint() },
+    {
+      key: 'back10',
+      label: t('player.controls.back10'),
+      icon: <SkipIcon dir={-1} />,
+      hint: 'J',
+      onSelect: () => seekBy(-10, { ripple: true }),
+      keepOpen: true,
+    },
+    {
+      key: 'fwd10',
+      label: t('player.controls.fwd10'),
+      icon: <SkipIcon dir={1} />,
+      hint: 'L',
+      onSelect: () => seekBy(10, { ripple: true }),
+      keepOpen: true,
+    },
+    {
+      key: 'a',
+      label: t('player.controls.setA'),
+      icon: <b className="text-caption">A</b>,
+      hint: 'A',
+      checked: ab?.a != null ? true : undefined,
+      onSelect: () => setAPoint(),
+    },
+    {
+      key: 'b',
+      label: t('player.controls.setB'),
+      icon: <b className="text-caption">B</b>,
+      hint: 'B',
+      checked: ab?.b != null ? true : undefined,
+      onSelect: () => setBPoint(),
+    },
     ...(ab && isComplete(ab)
       ? [
-          { key: 'loop', label: t('player.controls.abLoop'), icon: <Repeat size={15} aria-hidden />, checked: loop, onSelect: toggleABLoop },
-          { key: 'clear', label: t('player.controls.clearAB'), icon: <X size={15} aria-hidden />, onSelect: clearAB },
+          {
+            key: 'loop',
+            label: t('player.controls.abLoop'),
+            icon: <Repeat size={15} aria-hidden />,
+            checked: loop,
+            onSelect: toggleABLoop,
+          },
+          {
+            key: 'clear',
+            label: t('player.controls.clearAB'),
+            icon: <X size={15} aria-hidden />,
+            onSelect: clearAB,
+          },
         ]
       : []),
     ...(isVideo
       ? [
-          { key: 'fb', label: t('player.controls.frameBack'), icon: <StepBack size={15} aria-hidden />, hint: ',', onSelect: () => frameStep(-1), keepOpen: true },
-          { key: 'ff', label: t('player.controls.frameFwd'), icon: <StepForward size={15} aria-hidden />, hint: '.', onSelect: () => frameStep(1), keepOpen: true },
-          { key: 'shot', label: t('player.actions.screenshot'), icon: <Camera size={15} aria-hidden />, hint: 'S', onSelect: () => void takeSnapshot() },
+          {
+            key: 'fb',
+            label: t('player.controls.frameBack'),
+            icon: <StepBack size={15} aria-hidden />,
+            hint: ',',
+            onSelect: () => frameStep(-1),
+            keepOpen: true,
+          },
+          {
+            key: 'ff',
+            label: t('player.controls.frameFwd'),
+            icon: <StepForward size={15} aria-hidden />,
+            hint: '.',
+            onSelect: () => frameStep(1),
+            keepOpen: true,
+          },
+          {
+            key: 'shot',
+            label: t('player.actions.screenshot'),
+            icon: <Camera size={15} aria-hidden />,
+            hint: 'S',
+            onSelect: () => void takeSnapshot(),
+          },
         ]
       : []),
     ...(pipOk
-      ? [{ key: 'pip', label: pip ? t('player.controls.pipExit') : t('player.controls.pip'), icon: <PictureInPicture2 size={15} aria-hidden />, hint: 'P', onSelect: () => void togglePip() }]
+      ? [
+          {
+            key: 'pip',
+            label: pip ? t('player.controls.pipExit') : t('player.controls.pip'),
+            icon: <PictureInPicture2 size={15} aria-hidden />,
+            hint: 'P',
+            onSelect: () => void togglePip(),
+          },
+        ]
       : []),
     {
       key: 'subs',
-      label: subsOn && hasSubs ? t('player.controls.subtitlesOff') : t('player.controls.subtitlesOn'),
+      label:
+        subsOn && hasSubs ? t('player.controls.subtitlesOff') : t('player.controls.subtitlesOn'),
       icon: <Captions size={15} aria-hidden />,
       hint: undefined,
       onSelect: toggleSubs,
     },
-    { key: 'info', label: t('player.controls.info'), icon: <Info size={15} aria-hidden />, hint: 'I', onSelect: () => usePlayer.getState().set({ infoOverlay: !usePlayer.getState().infoOverlay }) },
-    { key: 'list', label: t('player.controls.playlist'), icon: <ListMusic size={15} aria-hidden />, onSelect: onOpenPlaylist },
+    {
+      key: 'info',
+      label: t('player.controls.info'),
+      icon: <Info size={15} aria-hidden />,
+      hint: 'I',
+      onSelect: () => usePlayer.getState().set({ infoOverlay: !usePlayer.getState().infoOverlay }),
+    },
+    {
+      key: 'list',
+      label: t('player.controls.playlist'),
+      icon: <ListMusic size={15} aria-hidden />,
+      onSelect: onOpenPlaylist,
+    },
     ...(!fullscreen
-      ? [{ key: 'keys', label: t('player.actions.shortcuts'), icon: <Keyboard size={15} aria-hidden />, hint: '?', onSelect: () => useUi.getState().set({ shortcutsOpen: true }) }]
+      ? [
+          {
+            key: 'keys',
+            label: t('player.actions.shortcuts'),
+            icon: <Keyboard size={15} aria-hidden />,
+            hint: '?',
+            onSelect: () => useUi.getState().set({ shortcutsOpen: true }),
+          },
+        ]
       : []),
   ]
 
@@ -252,11 +376,20 @@ export function ControlBar({ onOpenPlaylist }: { onOpenPlaylist: () => void }) {
       onPointerMove={poke}
       onFocusCapture={poke}
     >
-      <div ref={barRef} role="group" aria-label={t('player.controls.controlBar')} className="stage-glass rounded-xl px-2 pb-1 pt-2 @md:px-3">
+      <div
+        ref={barRef}
+        role="group"
+        aria-label={t('player.controls.controlBar')}
+        className="stage-glass rounded-xl px-2 pb-1 pt-2 @md:px-3"
+      >
         <Timeline />
         <div className="flex items-center gap-0.5">
           {multi && (
-            <StageButton label={t('player.controls.previous')} onClick={prev} className="hidden @md:inline-grid">
+            <StageButton
+              label={t('player.controls.previous')}
+              onClick={prev}
+              className="hidden @md:inline-grid"
+            >
               <SkipBack size={19} aria-hidden fill="currentColor" />
             </StageButton>
           )}
@@ -268,14 +401,28 @@ export function ControlBar({ onOpenPlaylist }: { onOpenPlaylist: () => void }) {
             <MorphPlayIcon playing={!paused} />
           </StageButton>
           {multi && (
-            <StageButton label={t('player.controls.next')} onClick={() => next('user')} className="hidden @md:inline-grid">
+            <StageButton
+              label={t('player.controls.next')}
+              onClick={() => next('user')}
+              className="hidden @md:inline-grid"
+            >
               <SkipForward size={19} aria-hidden fill="currentColor" />
             </StageButton>
           )}
-          <StageButton label={t('player.controls.back10')} shortcut="J" onClick={() => seekBy(-10, { ripple: true })} className="hidden @lg:inline-grid">
+          <StageButton
+            label={t('player.controls.back10')}
+            shortcut="J"
+            onClick={() => seekBy(-10, { ripple: true })}
+            className="hidden @lg:inline-grid"
+          >
             <SkipIcon dir={-1} />
           </StageButton>
-          <StageButton label={t('player.controls.fwd10')} shortcut="L" onClick={() => seekBy(10, { ripple: true })} className="hidden @lg:inline-grid">
+          <StageButton
+            label={t('player.controls.fwd10')}
+            shortcut="L"
+            onClick={() => seekBy(10, { ripple: true })}
+            className="hidden @lg:inline-grid"
+          >
             <SkipIcon dir={1} />
           </StageButton>
           <VolumeControl />
@@ -283,21 +430,40 @@ export function ControlBar({ onOpenPlaylist }: { onOpenPlaylist: () => void }) {
           <div className="min-w-0 flex-1" />
           <AbButtons />
           <StageButton
-            label={subsOn && hasSubs ? t('player.controls.subtitlesOff') : t('player.controls.subtitlesOn')}
+            label={
+              subsOn && hasSubs
+                ? t('player.controls.subtitlesOff')
+                : t('player.controls.subtitlesOn')
+            }
             pressed={subsOn && hasSubs}
             onClick={toggleSubs}
             className="hidden @sm:inline-grid"
           >
-            {subsOn && hasSubs ? <Captions size={20} aria-hidden /> : <CaptionsOff size={20} aria-hidden />}
+            {subsOn && hasSubs ? (
+              <Captions size={20} aria-hidden />
+            ) : (
+              <CaptionsOff size={20} aria-hidden />
+            )}
           </StageButton>
           <SpeedMenu />
           {isVideo && (
-            <StageButton label={t('player.actions.screenshot')} shortcut="S" onClick={() => void takeSnapshot()} className="hidden @3xl:inline-grid">
+            <StageButton
+              label={t('player.actions.screenshot')}
+              shortcut="S"
+              onClick={() => void takeSnapshot()}
+              className="hidden @3xl:inline-grid"
+            >
               <Camera size={19} aria-hidden />
             </StageButton>
           )}
           {pipOk && (
-            <StageButton label={pip ? t('player.controls.pipExit') : t('player.controls.pip')} shortcut="P" pressed={pip} onClick={() => void togglePip()} className="hidden @3xl:inline-grid">
+            <StageButton
+              label={pip ? t('player.controls.pipExit') : t('player.controls.pip')}
+              shortcut="P"
+              pressed={pip}
+              onClick={() => void togglePip()}
+              className="hidden @3xl:inline-grid"
+            >
               <PictureInPicture2 size={19} aria-hidden />
             </StageButton>
           )}
@@ -306,10 +472,16 @@ export function ControlBar({ onOpenPlaylist }: { onOpenPlaylist: () => void }) {
               <ListMusic size={19} aria-hidden />
             </StageButton>
           )}
-          <StageMenu label={t('player.controls.more')} trigger={<Ellipsis size={20} aria-hidden />} items={moreItems} />
+          <StageMenu
+            label={t('player.controls.more')}
+            trigger={<Ellipsis size={20} aria-hidden />}
+            items={moreItems}
+          />
           {fsOk && (
             <StageButton
-              label={fullscreen ? t('player.controls.exitFullscreen') : t('player.controls.fullscreen')}
+              label={
+                fullscreen ? t('player.controls.exitFullscreen') : t('player.controls.fullscreen')
+              }
               shortcut="F"
               onClick={() => void toggleFullscreen()}
             >

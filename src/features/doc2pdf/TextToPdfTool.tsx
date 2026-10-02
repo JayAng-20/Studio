@@ -27,7 +27,15 @@ import { PasteDialog } from './components/PasteDialog'
 import { convertInWorker, EngineError, retainEngine } from './lib/client'
 import { FONT_TOTAL_BYTES, FontLoadError, fontsCached, loadFonts } from './lib/fonts'
 import { convertImageToPng } from './lib/images'
-import { ACCEPT, BIG_TEXT_BYTES, isImageFile, kindOf, looksLikeMarkdown, useDoc2Pdf, type Output } from './store'
+import {
+  ACCEPT,
+  BIG_TEXT_BYTES,
+  isImageFile,
+  kindOf,
+  looksLikeMarkdown,
+  useDoc2Pdf,
+  type Output,
+} from './store'
 import './doc2pdf.css'
 
 type Phase = 'idle' | 'working' | 'fontError'
@@ -71,7 +79,9 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
       const ok = files.filter((f) => kindOf(f.name, f.type) || isImageFile(f))
       const bad = files.filter((f) => !ok.includes(f))
       if (bad.length)
-        toast.error(t('errors.unsupportedFile'), { description: t('errors.unsupportedFileDesc', { name: bad[0].name }) })
+        toast.error(t('errors.unsupportedFile'), {
+          description: t('errors.unsupportedFileDesc', { name: bad[0].name }),
+        })
       if (!ok.length) return
       const texts = ok.filter((f) => kindOf(f.name, f.type))
       if (texts[0]) useRecents.getState().visit('pdf', texts[0].name)
@@ -97,7 +107,8 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
     if (phase === 'working' || pasteOpen) return
     const onPaste = (e: ClipboardEvent) => {
       const el = document.activeElement as HTMLElement | null
-      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable))
+        return
       const files = filesFromClipboard(e).filter((f) => matchesAccept(f, ACCEPT))
       if (files.length) {
         e.preventDefault()
@@ -119,7 +130,14 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
 
   const ready = sources.filter((s) => s.status === 'ready' && s.doc)
   const parsing = sources.some((s) => s.status === 'parsing')
-  const autoTitle = useMemo(() => docTitle(ready.map((s) => s.doc!), ''), [ready])
+  const autoTitle = useMemo(
+    () =>
+      docTitle(
+        ready.map((s) => s.doc!),
+        '',
+      ),
+    [ready],
+  )
   const canStart = ready.length > 0 && !parsing && phase !== 'working'
 
   const start = useCallback(async () => {
@@ -128,14 +146,21 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
     if (!list.length) return
     const groups = st.merge && list.length > 1 ? [list] : list.map((s) => [s])
     const options = { ...st.options, exclude: st.exclude, date: Date.now() }
-    const images = st.attachments.map((a) => ({ name: a.name, path: a.path, bytes: a.bytes, mime: a.mime }))
+    const images = st.attachments.map((a) => ({
+      name: a.name,
+      path: a.path,
+      bytes: a.bytes,
+      mime: a.mime,
+    }))
     const c = new AbortController()
     ctrl.current = c
     setPhase('working')
     setProgress({ value: 0, title: t('doc2pdf.working.title'), detail: '' })
     const report = (p: Progress) => alive.current && setProgress(p)
     const taskName =
-      list.length === 1 ? t('doc2pdf.working.task', { name: list[0].name }) : t('doc2pdf.working.taskMany', { count: list.length })
+      list.length === 1
+        ? t('doc2pdf.working.task', { name: list[0].name })
+        : t('doc2pdf.working.taskMany', { count: list.length })
     const results: Output[] = []
     try {
       await run(
@@ -152,7 +177,12 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
             set({
               value: (loaded / total) * fontShare,
               title: t('doc2pdf.working.fonts'),
-              detail: cached ? '' : t('doc2pdf.working.fontsDetail', { loaded: formatBytes(loaded), total: formatBytes(total || FONT_TOTAL_BYTES) }),
+              detail: cached
+                ? ''
+                : t('doc2pdf.working.fontsDetail', {
+                    loaded: formatBytes(loaded),
+                    total: formatBytes(total || FONT_TOTAL_BYTES),
+                  }),
             })
           }, signal)
           // 2. 每份輸出：解析圖片 → Worker 排版與產生 PDF
@@ -160,9 +190,12 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
           for (let gi = 0; gi < groups.length; gi++) {
             const group = groups[gi]
             const docs: DocModel[] = []
-            for (const s of group) docs.push(await resolveImages(structuredClone(s.doc!), images, convertImageToPng))
+            for (const s of group)
+              docs.push(await resolveImages(structuredClone(s.doc!), images, convertImageToPng))
             const fileLabel =
-              groups.length > 1 ? t('doc2pdf.working.fileOf', { i: gi + 1, n: groups.length, name: group[0].name }) : ''
+              groups.length > 1
+                ? t('doc2pdf.working.fileOf', { i: gi + 1, n: groups.length, name: group[0].name })
+                : ''
             const r = await convertInWorker(
               docs,
               options,
@@ -171,7 +204,8 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
                 const within = stage === 'layout' ? v * 0.25 : 0.25 + v * 0.75
                 set({
                   value: fontShare + ((1 - fontShare) * (gi + within)) / groups.length,
-                  title: stage === 'layout' ? t('doc2pdf.working.layout') : t('doc2pdf.working.render'),
+                  title:
+                    stage === 'layout' ? t('doc2pdf.working.layout') : t('doc2pdf.working.render'),
                   detail: fileLabel,
                 })
               },
@@ -201,7 +235,10 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
         return
       }
       console.error(e)
-      if (e instanceof FontLoadError || (e instanceof TypeError && /fetch|network/i.test(e.message))) {
+      if (
+        e instanceof FontLoadError ||
+        (e instanceof TypeError && /fetch|network/i.test(e.message))
+      ) {
         setPhase('fontError')
         return
       }
@@ -231,7 +268,15 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
   /* ---------- 畫面 ---------- */
 
   const stage =
-    phase === 'working' ? 'working' : phase === 'fontError' ? 'error' : outputs ? 'done' : sources.length ? 'ready' : 'empty'
+    phase === 'working'
+      ? 'working'
+      : phase === 'fontError'
+        ? 'error'
+        : outputs
+          ? 'done'
+          : sources.length
+            ? 'ready'
+            : 'empty'
 
   const startLabel =
     ready.length > 1
@@ -239,7 +284,11 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
         ? t('doc2pdf.panel.startMerged', { n: ready.length })
         : t('doc2pdf.panel.startMany', { n: ready.length })
       : t('doc2pdf.panel.start')
-  const disabledReason = parsing ? t('doc2pdf.panel.notReady') : !ready.length ? t('doc2pdf.panel.nothing') : undefined
+  const disabledReason = parsing
+    ? t('doc2pdf.panel.notReady')
+    : !ready.length
+      ? t('doc2pdf.panel.nothing')
+      : undefined
 
   return (
     <div className="doc2pdf">
@@ -256,7 +305,9 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
               illustration={<EmptyIllustration module="pdf" />}
               className="border-0 shadow-none"
             >
-              <p className="mt-1 text-caption text-text-3">{t('doc2pdf.pasteHint', { shortcut: `${modKey()}+V` })}</p>
+              <p className="mt-1 text-caption text-text-3">
+                {t('doc2pdf.pasteHint', { shortcut: `${modKey()}+V` })}
+              </p>
               <Button
                 variant="secondary"
                 className="mt-4"
@@ -265,7 +316,9 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
               >
                 {t('doc2pdf.pasteText')}
               </Button>
-              <p className="mt-5 max-w-md text-balance text-small text-text-2">{t('doc2pdf.emptyHint')}</p>
+              <p className="mt-5 max-w-md text-balance text-small text-text-2">
+                {t('doc2pdf.emptyHint')}
+              </p>
             </DropZone>
           </div>
         )}
@@ -293,7 +346,12 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
         )}
 
         {stage === 'working' && (
-          <WorkingCard title={progress.title} detail={progress.detail} progress={progress.value} onCancel={cancel} />
+          <WorkingCard
+            title={progress.title}
+            detail={progress.detail}
+            progress={progress.value}
+            onCancel={cancel}
+          />
         )}
 
         {stage === 'error' && (
@@ -305,7 +363,11 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
               retryLabel={t('doc2pdf.errors.retry')}
             />
             <div className="-mt-4 flex justify-center pb-8">
-              <Button variant="ghost" leading={<ArrowLeft size={16} aria-hidden />} onClick={() => setPhase('idle')}>
+              <Button
+                variant="ghost"
+                leading={<ArrowLeft size={16} aria-hidden />}
+                onClick={() => setPhase('idle')}
+              >
                 {t('doc2pdf.errors.back')}
               </Button>
             </div>
@@ -324,12 +386,21 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
         )}
       </StageContainer>
 
-      <PasteDialog open={pasteOpen} onOpenChange={setPasteOpen} onAdd={(text, kind) => addText(text, kind)} />
+      <PasteDialog
+        open={pasteOpen}
+        onOpenChange={setPasteOpen}
+        onAdd={(text, kind) => addText(text, kind)}
+      />
       <ConfirmDialog
         open={!!pendingBig}
         onOpenChange={(o) => !o && setPendingBig(null)}
         title={t('doc2pdf.big.title', {
-          size: formatBytes(Math.max(0, ...(pendingBig ?? []).filter((f) => kindOf(f.name, f.type)).map((f) => f.size))),
+          size: formatBytes(
+            Math.max(
+              0,
+              ...(pendingBig ?? []).filter((f) => kindOf(f.name, f.type)).map((f) => f.size),
+            ),
+          ),
         })}
         description={t('doc2pdf.big.desc')}
         confirmLabel={t('doc2pdf.big.confirm')}

@@ -50,8 +50,12 @@ export function NamingField() {
   }
 
   // 預覽：用第一個檔案（沒有時用範例）
-  const src = first?.probe?.width && first.probe.height ? { width: first.probe.width, height: first.probe.height } : { width: 4032, height: 3024 }
-  const out = options.format === 'ico' ? { width: 256, height: 256 } : computeOutputSize(src, options.resize)
+  const src =
+    first?.probe?.width && first.probe.height
+      ? { width: first.probe.width, height: first.probe.height }
+      : { width: 4032, height: 3024 }
+  const out =
+    options.format === 'ico' ? { width: 256, height: 256 } : computeOutputSize(src, options.resize)
   const example = buildOutputName(text || pattern, {
     original: first?.name ?? 'IMG_0001.HEIC',
     action: t('convert.naming.action'),

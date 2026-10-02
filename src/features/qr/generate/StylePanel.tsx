@@ -31,12 +31,36 @@ import { useQrStore } from '../store'
 
 type PresetId = 'classic' | 'slate' | 'ocean' | 'sunset' | 'forest' | 'grape'
 const PRESETS: Array<{ id: PresetId; fg: FillStyle; bg: string }> = [
-  { id: 'classic', fg: { type: 'solid', color: '#000000', color2: '#2F6BEA', angle: 45 }, bg: '#FFFFFF' },
-  { id: 'slate', fg: { type: 'solid', color: '#1E293B', color2: '#475569', angle: 45 }, bg: '#F1F5F9' },
-  { id: 'ocean', fg: { type: 'linear', color: '#1D4ED8', color2: '#0369A1', angle: 45 }, bg: '#FFFFFF' },
-  { id: 'sunset', fg: { type: 'linear', color: '#BE123C', color2: '#C2410C', angle: 135 }, bg: '#FFFBF5' },
-  { id: 'forest', fg: { type: 'linear', color: '#14532D', color2: '#15803D', angle: 90 }, bg: '#FFFFFF' },
-  { id: 'grape', fg: { type: 'radial', color: '#6D28D9', color2: '#A21CAF', angle: 45 }, bg: '#FFFFFF' },
+  {
+    id: 'classic',
+    fg: { type: 'solid', color: '#000000', color2: '#2F6BEA', angle: 45 },
+    bg: '#FFFFFF',
+  },
+  {
+    id: 'slate',
+    fg: { type: 'solid', color: '#1E293B', color2: '#475569', angle: 45 },
+    bg: '#F1F5F9',
+  },
+  {
+    id: 'ocean',
+    fg: { type: 'linear', color: '#1D4ED8', color2: '#0369A1', angle: 45 },
+    bg: '#FFFFFF',
+  },
+  {
+    id: 'sunset',
+    fg: { type: 'linear', color: '#BE123C', color2: '#C2410C', angle: 135 },
+    bg: '#FFFBF5',
+  },
+  {
+    id: 'forest',
+    fg: { type: 'linear', color: '#14532D', color2: '#15803D', angle: 90 },
+    bg: '#FFFFFF',
+  },
+  {
+    id: 'grape',
+    fg: { type: 'radial', color: '#6D28D9', color2: '#A21CAF', angle: 45 },
+    bg: '#FFFFFF',
+  },
 ]
 
 const swatchBg = (fg: FillStyle) =>
@@ -59,7 +83,14 @@ function ModuleIcon({ shape }: { shape: ModuleShape }) {
         shape === 'dots' ? (
           <circle key={`${x}-${y}`} cx={x + 3} cy={y + 3} r="2.8" />
         ) : (
-          <rect key={`${x}-${y}`} x={x} y={y} width="6" height="6" rx={shape === 'rounded' ? 3 : 0.5} />
+          <rect
+            key={`${x}-${y}`}
+            x={x}
+            y={y}
+            width="6"
+            height="6"
+            rx={shape === 'rounded' ? 3 : 0.5}
+          />
         ),
       )}
       {shape === 'rounded' ? (
@@ -92,17 +123,30 @@ function EyeIcon({ shape, part }: { shape: EyeShape; part: 'frame' | 'ball' }) {
   return (
     <span
       aria-hidden
-      className={cn('inline-block', part === 'frame' ? 'size-3.5 border-[2.5px] border-current' : 'size-2 bg-current')}
+      className={cn(
+        'inline-block',
+        part === 'frame' ? 'size-3.5 border-[2.5px] border-current' : 'size-2 bg-current',
+      )}
       style={{ borderRadius: `${tl}px ${tr}px ${br}px ${bl}px` }}
     />
   )
 }
 
-function Section({ title, children, action }: { title: string; children: ReactNode; action?: ReactNode }) {
+function Section({
+  title,
+  children,
+  action,
+}: {
+  title: string
+  children: ReactNode
+  action?: ReactNode
+}) {
   return (
     <section className="flex min-w-0 flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
-        <h4 className="text-caption font-semibold uppercase tracking-[0.04em] text-text-3">{title}</h4>
+        <h4 className="text-caption font-semibold uppercase tracking-[0.04em] text-text-3">
+          {title}
+        </h4>
         {action}
       </div>
       {children}
@@ -134,7 +178,9 @@ export function StylePanel() {
       const prepared = await prepareLogo(file)
       const hadLogo = !!style.logo
       const prevEcc = style.ecc
-      setStyle({ logo: { ...prepared, scale: style.logo?.scale ?? 0.2, plate: style.logo?.plate ?? true } })
+      setStyle({
+        logo: { ...prepared, scale: style.logo?.scale ?? 0.2, plate: style.logo?.plate ?? true },
+      })
       if (!hadLogo && prevEcc !== 'H') {
         toast.info(t('qr.style.logoUpgraded'), { description: t('qr.style.logoUpgradedDesc') })
       }
@@ -295,9 +341,18 @@ export function StylePanel() {
               value={style.shape}
               onChange={(shape) => setStyle({ shape })}
               options={[
-                { value: 'square', label: optLabel(<ModuleIcon shape="square" />, t('qr.style.shapeSquare')) },
-                { value: 'rounded', label: optLabel(<ModuleIcon shape="rounded" />, t('qr.style.shapeRounded')) },
-                { value: 'dots', label: optLabel(<ModuleIcon shape="dots" />, t('qr.style.shapeDots')) },
+                {
+                  value: 'square',
+                  label: optLabel(<ModuleIcon shape="square" />, t('qr.style.shapeSquare')),
+                },
+                {
+                  value: 'rounded',
+                  label: optLabel(<ModuleIcon shape="rounded" />, t('qr.style.shapeRounded')),
+                },
+                {
+                  value: 'dots',
+                  label: optLabel(<ModuleIcon shape="dots" />, t('qr.style.shapeDots')),
+                },
               ]}
             />
           </div>
@@ -330,7 +385,12 @@ export function StylePanel() {
                   <img src={style.logo.src} alt="" className="max-h-12 max-w-12 object-contain" />
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  <Button size="sm" variant="secondary" loading={logoBusy} onClick={() => fileRef.current?.click()}>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    loading={logoBusy}
+                    onClick={() => fileRef.current?.click()}
+                  >
                     {t('qr.style.logoReplace')}
                   </Button>
                   <Button
@@ -366,7 +426,9 @@ export function StylePanel() {
                   step={1}
                   warnAbove={Math.round(LOGO_WARN * 100)}
                   format={(v) => `${v}%`}
-                  onChange={(v) => style.logo && setStyle({ logo: { ...style.logo, scale: v / 100 } })}
+                  onChange={(v) =>
+                    style.logo && setStyle({ logo: { ...style.logo, scale: v / 100 } })
+                  }
                 />
                 <Switch
                   checked={style.logo.plate}

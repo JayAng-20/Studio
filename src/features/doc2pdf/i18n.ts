@@ -177,11 +177,13 @@ export const zh = {
   errors: {
     canceled: '已取消轉換',
     fontsTitle: '中文字型下載失敗',
-    fontsDesc: '可能是網路中斷，或瀏覽器封鎖了下載。確認網路後按「重試」；字型下載完成後就能離線使用。',
+    fontsDesc:
+      '可能是網路中斷，或瀏覽器封鎖了下載。確認網路後按「重試」；字型下載完成後就能離線使用。',
     retry: '重試',
     back: '返回設定',
     failed: '轉換失敗',
-    failedDesc: '這份文件的內容可能有排版引擎無法處理的部分。可以試試另一個主題，或把檔案存成純文字再轉換。',
+    failedDesc:
+      '這份文件的內容可能有排版引擎無法處理的部分。可以試試另一個主題，或把檔案存成純文字再轉換。',
     memory: '記憶體不夠',
     memoryDesc: '文件太大，瀏覽器記憶體不足。可以分成幾個檔案、或改用「各自輸出」再試一次。',
     zip: '無法打包 ZIP',
@@ -197,7 +199,8 @@ export const en: DeepString<typeof zh> = {
   pastedName: 'Pasted text {n}',
   pastedToast: 'Pasted text added',
   pasteHint: 'You can also paste text or files ({shortcut})',
-  emptyHint: 'Headings, tables, lists and code keep their formatting, with an automatic table of contents and bookmarks.',
+  emptyHint:
+    'Headings, tables, lists and code keep their formatting, with an automatic table of contents and bookmarks.',
 
   files: {
     title: 'Files',
@@ -214,16 +217,19 @@ export const en: DeepString<typeof zh> = {
     mode: 'Structure',
     modeDetect: 'Detect',
     modeRaw: 'Keep as is',
-    modeRawHint: 'Keep as is: monospaced, every space and line break preserved, no heading or table detection.',
+    modeRawHint:
+      'Keep as is: monospaced, every space and line break preserved, no heading or table detection.',
     stats: 'Headings {headings} · Tables {tables} · {chars} characters',
     errors: {
       empty: 'This file is empty — there is nothing to convert.',
       decode: 'This file could not be decoded. Try another encoding.',
-      notRtf: 'This is not a valid RTF file (it does not start with {\\rtf). Save it as RTF or plain text and try again.',
+      notRtf:
+        'This is not a valid RTF file (it does not start with {\\rtf). Save it as RTF or plain text and try again.',
       parse: 'This file’s format could not be analyzed. Save it as plain text and try again.',
     },
     images: 'Images added with the files',
-    imagesHint: 'Images referenced by relative paths in Markdown are matched by file name and embedded.',
+    imagesHint:
+      'Images referenced by relative paths in Markdown are matched by file name and embedded.',
     removeImage: 'Remove {name}',
     remove: 'Remove {name}',
   },
@@ -253,9 +259,11 @@ export const en: DeepString<typeof zh> = {
     selected: '{n} of {total} selected',
     all: 'Select all',
     none: 'Select none',
-    noHeadings: 'No headings detected. The PDF will have no table of contents, but all content and formatting are kept.',
+    noHeadings:
+      'No headings detected. The PDF will have no table of contents, but all content and formatting are kept.',
     noHeadingsRaw: '“Keep as is” mode does not detect headings.',
-    beyondLevel: 'Deeper than the contents level, so it won’t be listed (change the level on the right)',
+    beyondLevel:
+      'Deeper than the contents level, so it won’t be listed (change the level on the right)',
     fileEntry: 'File',
     level: 'Level {n}',
     waiting: 'Analyzing files…',
@@ -263,8 +271,10 @@ export const en: DeepString<typeof zh> = {
     toggle: 'Include in contents: {name}',
     imagesTitle: 'Images',
     imagesOk: 'Images to embed in the PDF: {n}',
-    imagesExternal: 'Images from web addresses: {n}. They aren’t downloaded; a placeholder with the alt text is shown instead.',
-    imagesMissing: 'Image files not found: {n}. Drop them together with the text file to embed them.',
+    imagesExternal:
+      'Images from web addresses: {n}. They aren’t downloaded; a placeholder with the alt text is shown instead.',
+    imagesMissing:
+      'Image files not found: {n}. Drop them together with the text file to embed them.',
   },
 
   panel: {
@@ -318,7 +328,8 @@ export const en: DeepString<typeof zh> = {
     cover: 'Cover page',
     coverDesc: 'A first page with the centered title',
     coverDate: 'Date on cover',
-    fontNotice: 'The first conversion downloads a Chinese font (about 14 MB). It is cached afterwards.',
+    fontNotice:
+      'The first conversion downloads a Chinese font (about 14 MB). It is cached afterwards.',
     fontCached: 'The Chinese font is already on this device — ready to convert.',
     start: 'Convert',
     startMany: 'Convert {n} files',
@@ -353,7 +364,8 @@ export const en: DeepString<typeof zh> = {
     page: 'Page {n}',
     showAll: 'Show all {n} pages',
     showLess: 'Show fewer pages',
-    previewFailed: 'The preview could not be created, but the PDF is finished and ready to download.',
+    previewFailed:
+      'The preview could not be created, but the PDF is finished and ready to download.',
     missing: 'Characters not in the font (such as emoji): {n}. They were replaced with □.',
     pageLabel: 'Page {n} of {total}',
     prev: 'Previous page',
@@ -366,13 +378,16 @@ export const en: DeepString<typeof zh> = {
   errors: {
     canceled: 'Conversion canceled',
     fontsTitle: 'The Chinese font could not be downloaded',
-    fontsDesc: 'The connection may have dropped, or the browser blocked the download. Check your connection and tap Retry; once downloaded, the font works offline.',
+    fontsDesc:
+      'The connection may have dropped, or the browser blocked the download. Check your connection and tap Retry; once downloaded, the font works offline.',
     retry: 'Retry',
     back: 'Back to settings',
     failed: 'Conversion failed',
-    failedDesc: 'Part of this document could not be laid out. Try another style, or save the file as plain text and convert again.',
+    failedDesc:
+      'Part of this document could not be laid out. Try another style, or save the file as plain text and convert again.',
     memory: 'Not enough memory',
-    memoryDesc: 'The document is too large for the browser’s memory. Split it into several files or use “One PDF each”, then try again.',
+    memoryDesc:
+      'The document is too large for the browser’s memory. Split it into several files or use “One PDF each”, then try again.',
     zip: 'Could not create the ZIP',
     zipDesc: 'Download each PDF separately instead.',
   },

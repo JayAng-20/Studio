@@ -16,7 +16,12 @@ import {
   useFileIntake,
   usePasteFiles,
 } from '@/components/ui'
-import { ModulePage, StageContainer, TopBarActions, Workspace } from '@/components/layout/ModulePage'
+import {
+  ModulePage,
+  StageContainer,
+  TopBarActions,
+  Workspace,
+} from '@/components/layout/ModulePage'
 import { EmptyIllustration } from '@/design/illustrations'
 import { duration as dur, sec, spring } from '@/design/motion'
 import { splitExt } from '@/lib/filename'
@@ -28,7 +33,12 @@ import { addFiles, clearSnapshot, loadSubtitle, stopIdleTimer, takeSnapshot } fr
 import { disposeFFmpeg } from './export'
 import { usePlayerShortcuts } from './keyboard'
 import { Stage } from './components/Stage'
-import { MEDIA_ACCEPT, PlaylistList, PlaylistPanel, SavedPlaylists } from './components/PlaylistPanel'
+import {
+  MEDIA_ACCEPT,
+  PlaylistList,
+  PlaylistPanel,
+  SavedPlaylists,
+} from './components/PlaylistPanel'
 import { SubtitlePanel } from './components/SubtitlePanel'
 import { AbPanel } from './components/AbPanel'
 import { AudioPanel, InfoPanel } from './components/InfoAudioPanels'
@@ -47,7 +57,12 @@ function EmptyView({ onOpenUrl }: { onOpenUrl: () => void }) {
         formats={t('player.empty.formats')}
         illustration={<EmptyIllustration module="player" />}
       >
-        <Button variant="ghost" className="mt-2" leading={<Link2 size={16} aria-hidden />} onClick={onOpenUrl}>
+        <Button
+          variant="ghost"
+          className="mt-2"
+          leading={<Link2 size={16} aria-hidden />}
+          onClick={onOpenUrl}
+        >
           {t('player.empty.openUrl')}
         </Button>
       </DropZone>
@@ -96,18 +111,35 @@ function NowPlaying({ onLoadSub, onAdd }: { onLoadSub: () => void; onAdd: () => 
         </AnimatePresence>
       </div>
       <div className="flex shrink-0 items-center gap-1.5">
-        <Button variant="secondary" size="sm" leading={<Captions size={15} aria-hidden />} onClick={onLoadSub}>
+        <Button
+          variant="secondary"
+          size="sm"
+          leading={<Captions size={15} aria-hidden />}
+          onClick={onLoadSub}
+        >
           {t('player.actions.loadSubtitle')}
         </Button>
         {item.kind === 'video' && !item.noVideo && (
           <Tooltip content={t('player.actions.screenshot')} shortcut="S">
-            <Button variant="secondary" size="sm" icon aria-label={t('player.actions.screenshot')} onClick={() => void takeSnapshot()}>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon
+              aria-label={t('player.actions.screenshot')}
+              onClick={() => void takeSnapshot()}
+            >
               <Camera size={16} aria-hidden />
             </Button>
           </Tooltip>
         )}
         <Tooltip content={t('player.actions.addFiles')}>
-          <Button variant="secondary" size="sm" icon aria-label={t('player.actions.addFiles')} onClick={onAdd}>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon
+            aria-label={t('player.actions.addFiles')}
+            onClick={onAdd}
+          >
             <Plus size={16} aria-hidden />
           </Button>
         </Tooltip>
@@ -166,16 +198,22 @@ export default function PlayerPage() {
 
   useIncomingFiles('player', (p) => void addFiles(p.files, { range: p.meta?.range }))
   usePlayerShortcuts(hasItems)
-  const intake = useFileIntake({ accept: MEDIA_ACCEPT, onFiles: (f) => void addFiles(f, { play: false }) })
+  const intake = useFileIntake({
+    accept: MEDIA_ACCEPT,
+    onFiles: (f) => void addFiles(f, { play: false }),
+  })
   usePasteFiles(intake.intake, hasItems)
 
   useEffect(
     () => () => {
       stopIdleTimer()
       clearSnapshot()
-      usePlayer.getState().set({ drawerOpen: false, infoOverlay: false, fullscreen: false, controlsVisible: true })
+      usePlayer
+        .getState()
+        .set({ drawerOpen: false, infoOverlay: false, fullscreen: false, controlsVisible: true })
       // 沒有進行中的匯出才釋放 ffmpeg
-      if (!useTasks.getState().tasks.some((x) => x.module === 'player' && isActive(x))) disposeFFmpeg()
+      if (!useTasks.getState().tasks.some((x) => x.module === 'player' && isActive(x)))
+        disposeFFmpeg()
     },
     [],
   )
@@ -193,11 +231,23 @@ export default function PlayerPage() {
   return (
     <ModulePage
       module="player"
-      status={hasItems ? <Badge tone="accent" className="tabular-nums">{t('player.status.count', { count })}</Badge> : undefined}
+      status={
+        hasItems ? (
+          <Badge tone="accent" className="tabular-nums">
+            {t('player.status.count', { count })}
+          </Badge>
+        ) : undefined
+      }
     >
       <TopBarActions>
         <Tooltip content={t('player.actions.openUrl')}>
-          <Button variant="ghost" size="sm" icon aria-label={t('player.actions.openUrl')} onClick={() => setUrlOpen(true)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon
+            aria-label={t('player.actions.openUrl')}
+            onClick={() => setUrlOpen(true)}
+          >
             <Link2 size={17} aria-hidden />
           </Button>
         </Tooltip>
@@ -207,9 +257,17 @@ export default function PlayerPage() {
           <Workspace
             main={
               <DropTarget onFiles={(f) => void addFiles(f, { play: false })} accept={MEDIA_ACCEPT}>
-                <Stage onChooseFile={() => fileInput.current?.click()} onOpenPlaylist={openPlaylist} />
-                <NowPlaying onLoadSub={() => subInput.current?.click()} onAdd={() => fileInput.current?.click()} />
-                <p className="mt-2 text-caption text-text-3 [@media(hover:hover)]:hidden">{t('player.touch.hint')}</p>
+                <Stage
+                  onChooseFile={() => fileInput.current?.click()}
+                  onOpenPlaylist={openPlaylist}
+                />
+                <NowPlaying
+                  onLoadSub={() => subInput.current?.click()}
+                  onAdd={() => fileInput.current?.click()}
+                />
+                <p className="mt-2 text-caption text-text-3 [@media(hover:hover)]:hidden">
+                  {t('player.touch.hint')}
+                </p>
               </DropTarget>
             }
             panel={

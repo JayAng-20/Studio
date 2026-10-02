@@ -30,8 +30,38 @@ export interface Diagnosis {
 /** MediaError 的代碼（不依賴執行環境的常數） */
 export const MEDIA_ERR = { aborted: 1, network: 2, decode: 3, srcNotSupported: 4 } as const
 
-const LEGACY_VIDEO = new Set(['wmv', 'flv', 'rmvb', 'rm', 'asf', 'vob', 'mpg', 'mpeg', 'ts', 'mts', 'm2ts', '3gp', 'divx', 'f4v'])
-const LEGACY_AUDIO = new Set(['wma', 'ape', 'ac3', 'eac3', 'dts', 'amr', 'mka', 'aiff', 'aif', 'alac', 'tta', 'wv', 'mid', 'midi'])
+const LEGACY_VIDEO = new Set([
+  'wmv',
+  'flv',
+  'rmvb',
+  'rm',
+  'asf',
+  'vob',
+  'mpg',
+  'mpeg',
+  'ts',
+  'mts',
+  'm2ts',
+  '3gp',
+  'divx',
+  'f4v',
+])
+const LEGACY_AUDIO = new Set([
+  'wma',
+  'ape',
+  'ac3',
+  'eac3',
+  'dts',
+  'amr',
+  'mka',
+  'aiff',
+  'aif',
+  'alac',
+  'tta',
+  'wv',
+  'mid',
+  'midi',
+])
 
 /** 依副檔名猜測要用 canPlayType 檢查的 MIME */
 export function probeMimes(name: string, type: string): string[] {
@@ -78,15 +108,26 @@ export function diagnose(input: {
   }))
   const base = { probe }
   if (input.isUrl && input.errorCode === MEDIA_ERR.network) {
-    return { ...base, reason: input.isHls ? 'hls' : 'network', format: ext.toUpperCase(), tips: ['checkUrl'] }
+    return {
+      ...base,
+      reason: input.isHls ? 'hls' : 'network',
+      format: ext.toUpperCase(),
+      tips: ['checkUrl'],
+    }
   }
   if (input.isHls) return { ...base, reason: 'hls', format: 'HLS', tips: ['checkUrl'] }
   if (ext === 'mkv') return { ...base, reason: 'mkv', format: 'MKV', tips: ['remux', 'convertMp4'] }
   if (ext === 'avi') return { ...base, reason: 'avi', format: 'AVI', tips: ['convertMp4'] }
-  if (LEGACY_VIDEO.has(ext)) return { ...base, reason: 'legacy', format: ext.toUpperCase(), tips: ['convertMp4'] }
+  if (LEGACY_VIDEO.has(ext))
+    return { ...base, reason: 'legacy', format: ext.toUpperCase(), tips: ['convertMp4'] }
   if (LEGACY_AUDIO.has(ext)) {
     const dolby = ext === 'ac3' || ext === 'eac3'
-    return { ...base, reason: dolby ? 'dolby' : 'audioCodec', format: ext.toUpperCase(), tips: ['audioConvert'] }
+    return {
+      ...base,
+      reason: dolby ? 'dolby' : 'audioCodec',
+      format: ext.toUpperCase(),
+      tips: ['audioConvert'],
+    }
   }
   if (input.noVideoTrack || ext === 'mov' || ext === 'heic' || ext === 'hevc') {
     // iPhone 影片：HEVC 畫面、杜比視界或空間音訊（APAC）
@@ -108,7 +149,12 @@ export function diagnose(input: {
   if (input.errorCode === MEDIA_ERR.decode) {
     return { ...base, reason: 'decode', format: ext.toUpperCase(), tips: ['convertMp4'] }
   }
-  return { ...base, reason: 'unknown', format: ext.toUpperCase(), tips: ['convertMp4', 'otherDevice'] }
+  return {
+    ...base,
+    reason: 'unknown',
+    format: ext.toUpperCase(),
+    tips: ['convertMp4', 'otherDevice'],
+  }
 }
 
 function safeCanPlay(fn: (m: string) => string, mime: string): string {

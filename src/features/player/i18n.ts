@@ -99,7 +99,8 @@ export const zh = {
     stream: '串流',
     save: '儲存清單',
     saveTitle: '儲存播放清單',
-    saveDesc: '只會記住檔名與順序，不會儲存檔案內容。之後要再選一次檔案，系統會依檔名排回原本順序。',
+    saveDesc:
+      '只會記住檔名與順序，不會儲存檔案內容。之後要再選一次檔案，系統會依檔名排回原本順序。',
     saveName: '清單名稱',
     saveDefault: '我的播放清單',
     saved: '已儲存「{name}」',
@@ -265,7 +266,8 @@ export const zh = {
     },
     tipsTitle: '可以這樣做',
     tips: {
-      convertMp4: '用轉檔軟體（例如 HandBrake）轉成 MP4（H.264 畫面＋AAC 聲音），幾乎所有瀏覽器都能播。',
+      convertMp4:
+        '用轉檔軟體（例如 HandBrake）轉成 MP4（H.264 畫面＋AAC 聲音），幾乎所有瀏覽器都能播。',
       iphoneCompat: 'iPhone 錄影：到「設定 → 相機 → 格式」選「最相容」，之後錄的影片就能直接播放。',
       otherDevice: '改用支援 HEVC 與杜比的裝置或瀏覽器開啟。',
       checkUrl: '確認網址可以在新分頁直接開啟，並且來源允許跨來源存取。',
@@ -413,13 +415,15 @@ export const en: DeepString<typeof zh> = {
     remove: 'Remove from playlist',
     clear: 'Clear playlist',
     clearConfirm: 'Clear the playlist?',
-    clearConfirmDesc: 'Items are only removed from the list. Files on your computer are not deleted.',
+    clearConfirmDesc:
+      'Items are only removed from the list. Files on your computer are not deleted.',
     current: 'Now playing',
     unsupported: 'May not play',
     stream: 'Stream',
     save: 'Save playlist',
     saveTitle: 'Save playlist',
-    saveDesc: 'Only file names and order are saved, not the files. Next time, choose the files again and they will be sorted back into this order.',
+    saveDesc:
+      'Only file names and order are saved, not the files. Next time, choose the files again and they will be sorted back into this order.',
     saveName: 'Playlist name',
     saveDefault: 'My playlist',
     saved: 'Saved “{name}”',
@@ -454,7 +458,8 @@ export const en: DeepString<typeof zh> = {
     remove: 'Remove these subtitles',
     loaded: 'Loaded “{name}” ({count} lines)',
     empty: 'No usable subtitles in “{name}”',
-    emptyDesc: 'Make sure the file is SRT or WebVTT. If the text looks garbled, try another encoding below.',
+    emptyDesc:
+      'Make sure the file is SRT or WebVTT. If the text looks garbled, try another encoding below.',
     needMedia: 'Open a video first, then load subtitles',
     fallback: 'This file is not UTF‑8; read as {enc} instead',
     cues: '{count} lines',
@@ -476,16 +481,19 @@ export const en: DeepString<typeof zh> = {
     tooShort: 'The range is too short',
     jumpA: 'Jump to A',
     export: 'Export this range',
-    exportDesc: 'By default the data is copied as-is (fast), but the start snaps to the nearest keyframe and may begin slightly early.',
+    exportDesc:
+      'By default the data is copied as-is (fast), but the start snaps to the nearest keyframe and may begin slightly early.',
     precise: 'Precise cut',
     preciseDesc: 'Re-encodes to MP4 for exact start and end. Slower.',
     exporting: 'Exporting…',
     exportTask: 'Export range: {name}',
     exportDone: 'Exported “{name}”',
     exportFailed: 'Export failed',
-    exportFailedDesc: 'The file may be too large or use an unusual format. Try “Precise cut”, or a shorter range.',
+    exportFailedDesc:
+      'The file may be too large or use an unusual format. Try “Precise cut”, or a shorter range.',
     exportNoFile: 'Stream URLs cannot be exported. Use a local file instead.',
-    exportLoading: 'The first export loads the converter (about 30 MB); later ones are much faster.',
+    exportLoading:
+      'The first export loads the converter (about 30 MB); later ones are much faster.',
     makeGif: 'Make a GIF from this range',
     gifTooLong: 'The range is over 30 seconds, so the GIF will be large. Consider shortening it.',
     result: 'Exported file',
@@ -538,7 +546,8 @@ export const en: DeepString<typeof zh> = {
     tracksNone: 'This file has a single audio track',
     tracksUnsupported: 'Your browser cannot switch audio tracks',
     track: 'Track {n}',
-    noWebAudio: 'Your browser does not support Web Audio, so the equalizer and 200% volume are unavailable',
+    noWebAudio:
+      'Your browser does not support Web Audio, so the equalizer and 200% volume are unavailable',
     visualizer: 'Visualizer',
     bars: 'Bars',
     wave: 'Wave',
@@ -558,7 +567,8 @@ export const en: DeepString<typeof zh> = {
     sendTools: 'Send to Image Tools',
     taken: 'Captured the frame at {time}',
     failed: 'Could not capture this frame',
-    failedDesc: 'The video is not ready yet, or the stream does not allow capture. Try again once the picture appears.',
+    failedDesc:
+      'The video is not ready yet, or the stream does not allow capture. Try again once the picture appears.',
     close: 'Close screenshot',
   },
   resume: {
@@ -578,17 +588,21 @@ export const en: DeepString<typeof zh> = {
       dolby: 'This file uses Dolby audio (AC‑3/E‑AC‑3), which most browsers can’t play.',
       apac: 'The browser doesn’t recognize the video or audio codec — for example HEVC video, a Dolby track, or iPhone spatial audio (APAC).',
       audioCodec: '{format} audio is not supported by browsers.',
-      network: 'Couldn’t read this URL. The connection may have dropped, the URL may be wrong, or the server doesn’t allow cross-origin (CORS) access.',
+      network:
+        'Couldn’t read this URL. The connection may have dropped, the URL may be wrong, or the server doesn’t allow cross-origin (CORS) access.',
       hls: 'Couldn’t load this HLS stream. It must be on the same site, or the server must allow cross-origin (CORS) access.',
       decode: 'An error occurred while decoding. The file may be damaged or incomplete.',
       unknown: 'The browser can’t play this kind of file.',
     },
     tipsTitle: 'What you can do',
     tips: {
-      convertMp4: 'Convert it to MP4 (H.264 video + AAC audio) with a tool such as HandBrake — nearly every browser plays that.',
-      iphoneCompat: 'iPhone videos: go to Settings → Camera → Formats and choose “Most Compatible” for future recordings.',
+      convertMp4:
+        'Convert it to MP4 (H.264 video + AAC audio) with a tool such as HandBrake — nearly every browser plays that.',
+      iphoneCompat:
+        'iPhone videos: go to Settings → Camera → Formats and choose “Most Compatible” for future recordings.',
       otherDevice: 'Open it on a device or browser that supports HEVC and Dolby.',
-      checkUrl: 'Check that the URL opens in a new tab and that the source allows cross-origin access.',
+      checkUrl:
+        'Check that the URL opens in a new tab and that the source allows cross-origin access.',
       remux: 'If it contains H.264 + AAC, just remux it to MP4 — no re-encoding needed.',
       audioConvert: 'Convert it to MP3, AAC (M4A) or WAV first.',
     },

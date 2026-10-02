@@ -1,7 +1,25 @@
 import { motion } from 'motion/react'
-import { ChevronLeft, ChevronRight, Download, FileArchive, FileText, RotateCcw, SlidersHorizontal, TriangleAlert } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  FileArchive,
+  FileText,
+  RotateCcw,
+  SlidersHorizontal,
+  TriangleAlert,
+} from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Button, Callout, Dialog, FileName, Skeleton, SuccessCheck, Tooltip, toast } from '@/components/ui'
+import {
+  Button,
+  Callout,
+  Dialog,
+  FileName,
+  Skeleton,
+  SuccessCheck,
+  Tooltip,
+  toast,
+} from '@/components/ui'
 import { duration, sec, spring, staggerDelay } from '@/design/motion'
 import { saveLargeBlob } from '@/lib/download'
 import { formatBytes } from '@/lib/format'
@@ -132,15 +150,24 @@ export function Result({
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-36 opacity-70"
-        style={{ background: 'radial-gradient(60% 100% at 18% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent)' }}
+        style={{
+          background:
+            'radial-gradient(60% 100% at 18% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent)',
+        }}
       />
       <div className="relative flex flex-col gap-5 sm:flex-row sm:items-start">
         {/* 招牌動畫：紙張飛入結果卡 */}
         <div className="relative mx-auto shrink-0 sm:mx-0">
           {multi && (
             <>
-              <span aria-hidden className="d2p-paper absolute inset-0 translate-x-2.5 translate-y-1.5 rotate-[6deg] rounded-[3px] border border-black/10 shadow-e1" />
-              <span aria-hidden className="d2p-paper absolute inset-0 translate-x-1 translate-y-0.5 rotate-[3deg] rounded-[3px] border border-black/10 shadow-e1" />
+              <span
+                aria-hidden
+                className="d2p-paper absolute inset-0 translate-x-2.5 translate-y-1.5 rotate-[6deg] rounded-[3px] border border-black/10 shadow-e1"
+              />
+              <span
+                aria-hidden
+                className="d2p-paper absolute inset-0 translate-x-1 translate-y-0.5 rotate-[3deg] rounded-[3px] border border-black/10 shadow-e1"
+              />
             </>
           )}
           <motion.div
@@ -160,21 +187,41 @@ export function Result({
           <h3 className="text-h2 font-semibold">{t('doc2pdf.result.title')}</h3>
           <p className="mt-1 text-body tabular-nums text-text-2">
             {multi
-              ? t('doc2pdf.result.summaryMany', { count: outputs.length, pages: totalPages, size: formatBytes(totalSize) })
-              : t('doc2pdf.result.summaryOne', { pages: output.pages, size: formatBytes(output.blob.size) })}
+              ? t('doc2pdf.result.summaryMany', {
+                  count: outputs.length,
+                  pages: totalPages,
+                  size: formatBytes(totalSize),
+                })
+              : t('doc2pdf.result.summaryOne', {
+                  pages: output.pages,
+                  size: formatBytes(output.blob.size),
+                })}
           </p>
           {!multi && <FileName name={output.name} className="mt-0.5 text-small text-text-3" />}
           <div className="mt-4 flex flex-wrap items-center gap-2">
             {multi ? (
-              <Button variant="primary" loading={zipping} leading={<FileArchive size={16} aria-hidden />} onClick={downloadZip}>
+              <Button
+                variant="primary"
+                loading={zipping}
+                leading={<FileArchive size={16} aria-hidden />}
+                onClick={downloadZip}
+              >
                 {t('doc2pdf.result.downloadZip')}
               </Button>
             ) : (
-              <Button variant="primary" leading={<Download size={16} aria-hidden />} onClick={() => download(output)}>
+              <Button
+                variant="primary"
+                leading={<Download size={16} aria-hidden />}
+                onClick={() => download(output)}
+              >
                 {t('doc2pdf.result.download')}
               </Button>
             )}
-            <Button variant="secondary" leading={<SlidersHorizontal size={16} aria-hidden />} onClick={onEdit}>
+            <Button
+              variant="secondary"
+              leading={<SlidersHorizontal size={16} aria-hidden />}
+              onClick={onEdit}
+            >
               {t('doc2pdf.result.edit')}
             </Button>
             <Button variant="ghost" leading={<RotateCcw size={16} aria-hidden />} onClick={onReset}>
@@ -185,7 +232,11 @@ export function Result({
       </div>
 
       {missing > 0 && (
-        <Callout tone="warning" className="relative mt-5" icon={<TriangleAlert size={16} aria-hidden />}>
+        <Callout
+          tone="warning"
+          className="relative mt-5"
+          icon={<TriangleAlert size={16} aria-hidden />}
+        >
           {t('doc2pdf.result.missing', { n: missing })}
         </Callout>
       )}
@@ -200,7 +251,9 @@ export function Result({
               transition={{ ...spring.smooth, delay: staggerDelay(i, 0.15) }}
               className={cn(
                 'flex min-w-0 items-center gap-1 rounded-md py-1 pl-1 pr-1',
-                i === sel ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : 'bg-[color-mix(in_srgb,var(--text)_3%,transparent)]',
+                i === sel
+                  ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
+                  : 'bg-[color-mix(in_srgb,var(--text)_3%,transparent)]',
               )}
             >
               <button
@@ -216,7 +269,13 @@ export function Result({
                 </span>
               </button>
               <Tooltip content={t('common.download')}>
-                <Button icon size="sm" variant="ghost" aria-label={`${t('common.download')} ${o.name}`} onClick={() => download(o)}>
+                <Button
+                  icon
+                  size="sm"
+                  variant="ghost"
+                  aria-label={`${t('common.download')} ${o.name}`}
+                  onClick={() => download(o)}
+                >
                   <Download size={15} aria-hidden />
                 </Button>
               </Tooltip>
@@ -225,7 +284,13 @@ export function Result({
         </ul>
       )}
 
-      <PreviewSection key={output.name} output={output} heading={multi ? t('doc2pdf.result.previewOf', { name: output.name }) : t('doc2pdf.result.preview')} />
+      <PreviewSection
+        key={output.name}
+        output={output}
+        heading={
+          multi ? t('doc2pdf.result.previewOf', { name: output.name }) : t('doc2pdf.result.preview')
+        }
+      />
     </section>
   )
 }
@@ -249,10 +314,17 @@ function PreviewSection({ output, heading }: { output: Output; heading: string }
     <div className="relative mt-6">
       <div className="mb-3 flex items-baseline justify-between gap-2">
         <h4 className="min-w-0 truncate text-h3 font-semibold">{heading}</h4>
-        <span className="shrink-0 text-caption tabular-nums text-text-3">{t('doc2pdf.result.summaryOne', { pages: output.pages, size: formatBytes(output.blob.size) })}</span>
+        <span className="shrink-0 text-caption tabular-nums text-text-3">
+          {t('doc2pdf.result.summaryOne', {
+            pages: output.pages,
+            size: formatBytes(output.blob.size),
+          })}
+        </span>
       </div>
       {failed ? (
-        <p className="rounded-md bg-surface-2 px-4 py-6 text-center text-small text-text-2">{t('doc2pdf.result.previewFailed')}</p>
+        <p className="rounded-md bg-surface-2 px-4 py-6 text-center text-small text-text-2">
+          {t('doc2pdf.result.previewFailed')}
+        </p>
       ) : (
         <ul className="grid grid-cols-[repeat(auto-fill,minmax(112px,1fr))] gap-3 sm:grid-cols-[repeat(auto-fill,minmax(132px,1fr))]">
           {Array.from({ length: Math.min(limit, output.pages) }, (_, i) => {
@@ -273,7 +345,11 @@ function PreviewSection({ output, heading }: { output: Output; heading: string }
                   className="d2p-paper relative block w-full overflow-hidden rounded-[3px] border border-black/10 shadow-e1 transition-shadow duration-(--dur-fast) hover:shadow-e3"
                   style={{ aspectRatio: th ? `1 / ${th.ratio}` : '1 / 1.414' }}
                 >
-                  {th ? <img src={th.url} alt="" className="size-full object-contain" /> : <Skeleton className="absolute inset-0 rounded-none" />}
+                  {th ? (
+                    <img src={th.url} alt="" className="size-full object-contain" />
+                  ) : (
+                    <Skeleton className="absolute inset-0 rounded-none" />
+                  )}
                 </button>
                 <span className="text-caption tabular-nums text-text-3">{i + 1}</span>
               </motion.li>
@@ -288,7 +364,13 @@ function PreviewSection({ output, heading }: { output: Output; heading: string }
           </Button>
         </div>
       )}
-      <Lightbox open={lightbox !== null} page={lightbox ?? 0} total={output.pages} onChange={setLightbox} render={renderLarge} />
+      <Lightbox
+        open={lightbox !== null}
+        page={lightbox ?? 0}
+        total={output.pages}
+        onChange={setLightbox}
+        render={renderLarge}
+      />
     </div>
   )
 }
@@ -307,7 +389,10 @@ function Lightbox({
   render: (page: number, width: number) => Promise<Thumb>
 }) {
   const t = useT()
-  const go = useCallback((d: number) => onChange(Math.max(0, Math.min(total - 1, page + d))), [onChange, page, total])
+  const go = useCallback(
+    (d: number) => onChange(Math.max(0, Math.min(total - 1, page + d))),
+    [onChange, page, total],
+  )
   // 方向鍵／Page Up/Down 翻頁
   useEffect(() => {
     if (!open) return
@@ -328,13 +413,25 @@ function Lightbox({
       <div className="flex flex-col items-center gap-3">
         <LightboxPage key={page} page={page} render={render} />
         <div className="flex items-center gap-3">
-          <Button icon variant="secondary" aria-label={t('doc2pdf.result.prev')} disabled={page <= 0} onClick={() => go(-1)}>
+          <Button
+            icon
+            variant="secondary"
+            aria-label={t('doc2pdf.result.prev')}
+            disabled={page <= 0}
+            onClick={() => go(-1)}
+          >
             <ChevronLeft size={18} aria-hidden />
           </Button>
           <span className="min-w-20 text-center text-small tabular-nums text-text-2">
             {page + 1} / {total}
           </span>
-          <Button icon variant="secondary" aria-label={t('doc2pdf.result.next')} disabled={page >= total - 1} onClick={() => go(1)}>
+          <Button
+            icon
+            variant="secondary"
+            aria-label={t('doc2pdf.result.next')}
+            disabled={page >= total - 1}
+            onClick={() => go(1)}
+          >
             <ChevronRight size={18} aria-hidden />
           </Button>
         </div>
@@ -343,7 +440,13 @@ function Lightbox({
   )
 }
 
-function LightboxPage({ page, render }: { page: number; render: (page: number, width: number) => Promise<Thumb> }) {
+function LightboxPage({
+  page,
+  render,
+}: {
+  page: number
+  render: (page: number, width: number) => Promise<Thumb>
+}) {
   const t = useT()
   const [img, setImg] = useState<Thumb | null>(null)
   useEffect(() => {

@@ -3,7 +3,9 @@ import type { ImageData } from '../engine/model'
 
 const MAX_SIDE = 3000
 
-async function decode(blob: Blob): Promise<{ source: CanvasImageSource; w: number; h: number; close: () => void }> {
+async function decode(
+  blob: Blob,
+): Promise<{ source: CanvasImageSource; w: number; h: number; close: () => void }> {
   if (blob.type !== 'image/svg+xml' && typeof createImageBitmap === 'function') {
     try {
       const bmp = await createImageBitmap(blob)
@@ -27,7 +29,10 @@ async function decode(blob: Blob): Promise<{ source: CanvasImageSource; w: numbe
   }
 }
 
-export async function convertImageToPng(bytes: Uint8Array, mime: string): Promise<ImageData | null> {
+export async function convertImageToPng(
+  bytes: Uint8Array,
+  mime: string,
+): Promise<ImageData | null> {
   const blob = new Blob([bytes as Uint8Array<ArrayBuffer>], { type: mime })
   const d = await decode(blob)
   try {

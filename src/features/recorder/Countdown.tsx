@@ -54,7 +54,14 @@ export function CountdownOverlay() {
                 className="absolute inset-0 -rotate-90"
                 aria-hidden
               >
-                <circle cx={110} cy={110} r={R} fill="none" stroke="rgba(255,255,255,.16)" strokeWidth={8} />
+                <circle
+                  cx={110}
+                  cy={110}
+                  r={R}
+                  fill="none"
+                  stroke="rgba(255,255,255,.16)"
+                  strokeWidth={8}
+                />
                 <motion.circle
                   cx={110}
                   cy={110}

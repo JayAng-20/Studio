@@ -176,7 +176,8 @@ export const useGifStore = create<GifState>()(
       setCrop: (crop) => set({ crop }),
       setCropRatio: (cropRatio) => set({ cropRatio }),
       setTexts: (texts) => set({ texts }),
-      updateText: (id, p) => set((s) => ({ texts: s.texts.map((t) => (t.id === id ? { ...t, ...p } : t)) })),
+      updateText: (id, p) =>
+        set((s) => ({ texts: s.texts.map((t) => (t.id === id ? { ...t, ...p } : t)) })),
       setChroma: (p) => set((s) => ({ chroma: { ...s.chroma, ...p } })),
       setCustomPlan: (customPlan) => set({ customPlan }),
       setStage: (stage) => set({ stage }),

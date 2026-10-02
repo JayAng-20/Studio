@@ -10,18 +10,35 @@ import { formatSpeed } from '../logic/speed'
 export function useInfoRows(item: PlayItem | null) {
   const t = useT()
   if (!item) return []
-  const res = item.width && item.height ? `${item.width} × ${item.height}` : t('player.info.unknown')
-  const fps = item.kind === 'video' && item.frameDur ? t('player.info.fps', { value: (1 / item.frameDur).toFixed(item.frameDur > 0.03 ? 0 : 2).replace(/\.00$/, '') }) : null
+  const res =
+    item.width && item.height ? `${item.width} × ${item.height}` : t('player.info.unknown')
+  const fps =
+    item.kind === 'video' && item.frameDur
+      ? t('player.info.fps', {
+          value: (1 / item.frameDur).toFixed(item.frameDur > 0.03 ? 0 : 2).replace(/\.00$/, ''),
+        })
+      : null
   const rows: Array<[string, string, boolean?]> = [
     [t('player.info.name'), item.name, false],
-    [t('player.info.size'), item.size !== undefined ? formatBytes(item.size) : t('player.info.unknown'), true],
-    [t('player.info.duration'), item.duration ? formatTime(item.duration) : t('player.info.unknown'), true],
+    [
+      t('player.info.size'),
+      item.size !== undefined ? formatBytes(item.size) : t('player.info.unknown'),
+      true,
+    ],
+    [
+      t('player.info.duration'),
+      item.duration ? formatTime(item.duration) : t('player.info.unknown'),
+      true,
+    ],
     [t('player.info.resolution'), item.kind === 'video' ? res : t('player.info.unknown'), true],
     [
       t('player.info.type'),
       `${item.kind === 'video' ? t('player.info.video') : t('player.info.audio')}${item.type ? `（${item.type}）` : ''}`,
     ],
-    [t('player.info.source'), item.source === 'file' ? t('player.info.sourceFile') : t('player.info.sourceUrl')],
+    [
+      t('player.info.source'),
+      item.source === 'file' ? t('player.info.sourceFile') : t('player.info.sourceUrl'),
+    ],
   ]
   if (fps) rows.push([t('player.info.frameRate'), fps, true])
   if (item.meta?.title) rows.push([t('player.info.titleTag'), item.meta.title])
@@ -52,7 +69,12 @@ export function InfoOverlay() {
         >
           <div className="mb-1.5 flex items-center justify-between">
             <h3 className="text-small font-semibold">{t('player.info.title')}</h3>
-            <button type="button" className="stage-btn h-7! min-w-7! p-0" aria-label={t('common.close')} onClick={() => usePlayer.getState().set({ infoOverlay: false })}>
+            <button
+              type="button"
+              className="stage-btn h-7! min-w-7! p-0"
+              aria-label={t('common.close')}
+              onClick={() => usePlayer.getState().set({ infoOverlay: false })}
+            >
               <X size={15} aria-hidden />
             </button>
           </div>

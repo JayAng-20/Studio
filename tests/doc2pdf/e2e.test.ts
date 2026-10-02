@@ -7,7 +7,11 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { PDFArray, PDFDict, PDFDocument, PDFName, PDFNumber, PDFRef } from 'pdf-lib'
 import { describe, expect, it } from 'vitest'
-import { convertDocs, DEFAULT_OPTIONS, type ConvertOptions } from '@/features/doc2pdf/engine/convert'
+import {
+  convertDocs,
+  DEFAULT_OPTIONS,
+  type ConvertOptions,
+} from '@/features/doc2pdf/engine/convert'
 import { parseMarkdown } from '@/features/doc2pdf/engine/markdown'
 import { parseTxt } from '@/features/doc2pdf/engine/txt'
 import { parseRtf } from '@/features/doc2pdf/engine/rtf'
@@ -15,15 +19,30 @@ import { resolveImages } from '@/features/doc2pdf/engine/resolve'
 
 const root = resolve(__dirname, '../..')
 const fonts = {
-  regular: new Uint8Array(readFileSync(resolve(root, 'node_modules/@expo-google-fonts/noto-sans-tc/400Regular/NotoSansTC_400Regular.ttf'))),
-  bold: new Uint8Array(readFileSync(resolve(root, 'node_modules/@expo-google-fonts/noto-sans-tc/700Bold/NotoSansTC_700Bold.ttf'))),
+  regular: new Uint8Array(
+    readFileSync(
+      resolve(
+        root,
+        'node_modules/@expo-google-fonts/noto-sans-tc/400Regular/NotoSansTC_400Regular.ttf',
+      ),
+    ),
+  ),
+  bold: new Uint8Array(
+    readFileSync(
+      resolve(root, 'node_modules/@expo-google-fonts/noto-sans-tc/700Bold/NotoSansTC_700Bold.ttf'),
+    ),
+  ),
 }
 const fixture = (n: string) => readFileSync(resolve(__dirname, 'fixtures', n))
 const OUT = process.env.DOC2PDF_OUT
 
 async function extractText(bytes: Uint8Array): Promise<{ pages: string[] }> {
   const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs')
-  const task = pdfjs.getDocument({ data: bytes.slice(), useSystemFonts: false, disableFontFace: true })
+  const task = pdfjs.getDocument({
+    data: bytes.slice(),
+    useSystemFonts: false,
+    disableFontFace: true,
+  })
   const doc = await task.promise
   const pages: string[] = []
   for (let i = 1; i <= doc.numPages; i++) {
@@ -38,11 +57,17 @@ async function extractText(bytes: Uint8Array): Promise<{ pages: string[] }> {
 async function sampleDoc() {
   const md = fixture('sample.md').toString('utf8')
   const doc = parseMarkdown(md, 'sample.md', 'a')
-  await resolveImages(doc, [{ name: 'pic.png', bytes: new Uint8Array(fixture('pic.png')), mime: 'image/png' }])
+  await resolveImages(doc, [
+    { name: 'pic.png', bytes: new Uint8Array(fixture('pic.png')), mime: 'image/png' },
+  ])
   return doc
 }
 
-const opts = (o: Partial<ConvertOptions> = {}): ConvertOptions => ({ ...DEFAULT_OPTIONS, date: Date.UTC(2026, 9, 2), ...o })
+const opts = (o: Partial<ConvertOptions> = {}): ConvertOptions => ({
+  ...DEFAULT_OPTIONS,
+  date: Date.UTC(2026, 9, 2),
+  ...o,
+})
 
 describe('端對端轉檔', () => {
   it('Markdown → PDF：可重新載入、含書籤、目錄頁碼正確、抽得出中文', async () => {
@@ -93,7 +118,9 @@ describe('端對端轉檔', () => {
 
   it('合併多檔：目錄涵蓋全部檔案、每份從新頁開始', async () => {
     const a = await sampleDoc()
-    const b = parseTxt(new TextDecoder('big5').decode(fixture('big5.txt')), 'big5.txt', { idPrefix: 'b' })
+    const b = parseTxt(new TextDecoder('big5').decode(fixture('big5.txt')), 'big5.txt', {
+      idPrefix: 'b',
+    })
     const c = parseRtf(new Uint8Array(fixture('sample.rtf')), 'sample.rtf', 'c')
     const r = await convertDocs([a, b, c], fonts, opts({ theme: 'academic', tocLevel: 2 }))
     if (OUT) writeFileSync(resolve(OUT, 'merged.pdf'), r.bytes)
@@ -110,7 +137,18 @@ describe('端對端轉檔', () => {
 
   it('其他主題與版面：現代主題、Letter 橫向、目錄放最後', async () => {
     const doc = await sampleDoc()
-    const r = await convertDocs([doc], fonts, opts({ theme: 'modern', paper: 'letter', orientation: 'landscape', tocPosition: 'end', margin: 'narrow', baseSize: 12 }))
+    const r = await convertDocs(
+      [doc],
+      fonts,
+      opts({
+        theme: 'modern',
+        paper: 'letter',
+        orientation: 'landscape',
+        tocPosition: 'end',
+        margin: 'narrow',
+        baseSize: 12,
+      }),
+    )
     if (OUT) writeFileSync(resolve(OUT, 'modern.pdf'), r.bytes)
     const pdf = await PDFDocument.load(r.bytes)
     const { width, height } = pdf.getPage(0).getSize()

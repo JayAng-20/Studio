@@ -1,14 +1,23 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { parseMarkdown } from '@/features/doc2pdf/engine/markdown'
-import { collectHeadings, runsText, type Block, type ListBlock, type ParagraphBlock, type TableBlock } from '@/features/doc2pdf/engine/model'
+import {
+  collectHeadings,
+  runsText,
+  type Block,
+  type ListBlock,
+  type ParagraphBlock,
+  type TableBlock,
+} from '@/features/doc2pdf/engine/model'
 
 const md = (s: string) => parseMarkdown(s, 'test.md')
 const types = (bs: Block[]) => bs.map((b) => b.type)
 
 describe('Markdown → 文件模型', () => {
   it('標題 H1–H6、id 與 slug、文件標題取第一個 H1', () => {
-    const doc = md('# 主標題\n\n## 第二節 Intro\n\n### 3\n\n#### 4\n\n##### 5\n\n###### 6\n\n## 第二節 Intro')
+    const doc = md(
+      '# 主標題\n\n## 第二節 Intro\n\n### 3\n\n#### 4\n\n##### 5\n\n###### 6\n\n## 第二節 Intro',
+    )
     const hs = collectHeadings(doc)
     expect(hs.map((h) => h.level)).toEqual([1, 2, 3, 4, 5, 6, 2])
     expect(doc.title).toBe('主標題')
@@ -47,7 +56,9 @@ describe('Markdown → 文件模型', () => {
   })
 
   it('表格：欄位對齊、表頭、行內樣式', () => {
-    const doc = md('| 左 | 中 | 右 | 無 |\n|:---|:---:|---:|---|\n| a | **b** | 1 | x |\n| c | d | 2 |')
+    const doc = md(
+      '| 左 | 中 | 右 | 無 |\n|:---|:---:|---:|---|\n| a | **b** | 1 | x |\n| c | d | 2 |',
+    )
     const t = doc.blocks[0] as TableBlock
     expect(t.type).toBe('table')
     expect(t.align).toEqual(['left', 'center', 'right', null])
@@ -78,8 +89,17 @@ describe('Markdown → 文件模型', () => {
   })
 
   it('程式碼、引用、水平線、HTML 區塊去標籤、分頁符號', () => {
-    const doc = md('```js\nconst a = 1\n```\n\n> 引用\n\n---\n\n<div>區塊 <b>HTML</b></div>\n\n<!-- pagebreak -->\n\n後')
-    expect(types(doc.blocks)).toEqual(['code', 'quote', 'hr', 'paragraph', 'pageBreak', 'paragraph'])
+    const doc = md(
+      '```js\nconst a = 1\n```\n\n> 引用\n\n---\n\n<div>區塊 <b>HTML</b></div>\n\n<!-- pagebreak -->\n\n後',
+    )
+    expect(types(doc.blocks)).toEqual([
+      'code',
+      'quote',
+      'hr',
+      'paragraph',
+      'pageBreak',
+      'paragraph',
+    ])
     const c = doc.blocks[0]
     expect(c.type === 'code' && c.lang).toBe('js')
     expect(c.type === 'code' && c.text).toBe('const a = 1')

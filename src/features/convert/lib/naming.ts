@@ -2,7 +2,16 @@
 import { applyTemplate, sanitizeFilename, splitExt } from '@/lib/filename'
 
 /** 模板可用的變數 */
-export const TEMPLATE_VARS = ['name', 'w', 'h', 'format', 'quality', 'index', 'date', 'action'] as const
+export const TEMPLATE_VARS = [
+  'name',
+  'w',
+  'h',
+  'format',
+  'quality',
+  'index',
+  'date',
+  'action',
+] as const
 export type TemplateVar = (typeof TEMPLATE_VARS)[number]
 
 export interface NameContext {

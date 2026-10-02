@@ -34,7 +34,13 @@ describe('結果類型解析', () => {
   it('Wi‑Fi：含跳脫字元的來回', () => {
     const v = { ssid: 'My;Net:"5G"', password: 'p\\a,ss', security: 'WPA' as const, hidden: true }
     const r = parseScan(buildWifi(v))
-    expect(r).toMatchObject({ kind: 'wifi', ssid: v.ssid, password: v.password, security: 'WPA', hidden: true })
+    expect(r).toMatchObject({
+      kind: 'wifi',
+      ssid: v.ssid,
+      password: v.password,
+      security: 'WPA',
+      hidden: true,
+    })
   })
   it('Wi‑Fi：欄位順序不同、不加密', () => {
     expect(parseScan('WIFI:S:Cafe;T:nopass;;')).toMatchObject({
@@ -70,8 +76,15 @@ describe('結果類型解析', () => {
     })
   })
   it('vCard：折行與 LF 換行、無 FN 時用 N', () => {
-    const r = parseScan('BEGIN:VCARD\nVERSION:3.0\nN:Doe;Jane;;;\nTEL;TYPE=CELL:123\nNOTE:long\n  line\nEND:VCARD')
-    expect(r).toMatchObject({ kind: 'contact', name: 'Jane Doe', phones: ['123'], note: 'long line' })
+    const r = parseScan(
+      'BEGIN:VCARD\nVERSION:3.0\nN:Doe;Jane;;;\nTEL;TYPE=CELL:123\nNOTE:long\n  line\nEND:VCARD',
+    )
+    expect(r).toMatchObject({
+      kind: 'contact',
+      name: 'Jane Doe',
+      phones: ['123'],
+      note: 'long line',
+    })
   })
   it('MECARD', () => {
     expect(parseScan('MECARD:N:Doe,John;TEL:0912345678;EMAIL:j@d.com;;')).toMatchObject({
@@ -84,8 +97,15 @@ describe('結果類型解析', () => {
   })
 
   it('mailto 來回', () => {
-    const r = parseScan(buildMailto({ to: 'a@b.com', subject: '主旨 & 測試', body: '第一行\n第二行' }))
-    expect(r).toMatchObject({ kind: 'email', to: 'a@b.com', subject: '主旨 & 測試', body: '第一行\n第二行' })
+    const r = parseScan(
+      buildMailto({ to: 'a@b.com', subject: '主旨 & 測試', body: '第一行\n第二行' }),
+    )
+    expect(r).toMatchObject({
+      kind: 'email',
+      to: 'a@b.com',
+      subject: '主旨 & 測試',
+      body: '第一行\n第二行',
+    })
   })
   it('MATMSG', () => {
     expect(parseScan('MATMSG:TO:a@b.com;SUB:Hi;BODY:Yo;;')).toMatchObject({
@@ -112,7 +132,11 @@ describe('結果類型解析', () => {
     })
   })
   it('geo', () => {
-    expect(parseScan('geo:25.033964,121.564472')).toMatchObject({ kind: 'geo', lat: 25.033964, lng: 121.564472 })
+    expect(parseScan('geo:25.033964,121.564472')).toMatchObject({
+      kind: 'geo',
+      lat: 25.033964,
+      lng: 121.564472,
+    })
     expect(parseScan('geo:25,121,10?q=Taipei')).toMatchObject({ kind: 'geo', query: 'Taipei' })
     expect(parseScan('geo:999,0').kind).toBe('text')
   })

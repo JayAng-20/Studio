@@ -10,7 +10,8 @@ export const fakeMeasurer: Measurer = {
     return isCJK(cp) ? 1 : 0.5
   },
   has(font: FontKey, cp: number) {
-    if (font === 'mono' || font === 'monoBold' || font.startsWith('serif')) return cp >= 0x20 && cp < 0x7f
+    if (font === 'mono' || font === 'monoBold' || font.startsWith('serif'))
+      return cp >= 0x20 && cp < 0x7f
     // 假裝思源黑體沒有表情符號
     return cp < 0x1f000
   },

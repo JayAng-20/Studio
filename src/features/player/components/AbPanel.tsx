@@ -1,5 +1,15 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { Bookmark, Crosshair, Download, Film, ListPlus, Repeat, Scissors, Trash2, X } from 'lucide-react'
+import {
+  Bookmark,
+  Crosshair,
+  Download,
+  Film,
+  ListPlus,
+  Repeat,
+  Scissors,
+  Trash2,
+  X,
+} from 'lucide-react'
 import { useEffect, useId, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import {
@@ -64,7 +74,10 @@ function TimeField({
         <input
           id={id}
           inputMode="decimal"
-          className={cn('field min-w-0 flex-1 px-2.5! font-mono text-small! tabular-nums', error && 'shake border-danger!')}
+          className={cn(
+            'field min-w-0 flex-1 px-2.5! font-mono text-small! tabular-nums',
+            error && 'shake border-danger!',
+          )}
           value={shown}
           placeholder={t('player.ab.notSet')}
           aria-invalid={error || undefined}
@@ -83,7 +96,12 @@ function TimeField({
           }}
         />
         <Tooltip content={setNowLabel}>
-          <Button variant="secondary" icon aria-label={`${label}：${setNowLabel}`} onClick={onSetNow}>
+          <Button
+            variant="secondary"
+            icon
+            aria-label={`${label}：${setNowLabel}`}
+            onClick={onSetNow}
+          >
             <Crosshair size={16} aria-hidden />
           </Button>
         </Tooltip>
@@ -131,7 +149,9 @@ export function AbPanel() {
 
   const commitA = (v: number) => {
     if (ab.b !== null && v > ab.b - 0.2) return false
-    usePlayer.getState().updateItem(item.id, { ab: dragHandle({ ...ab, a: ab.a ?? 0 }, 'a', v, duration) })
+    usePlayer
+      .getState()
+      .updateItem(item.id, { ab: dragHandle({ ...ab, a: ab.a ?? 0 }, 'a', v, duration) })
     return true
   }
   const commitB = (v: number) => {
@@ -197,8 +217,22 @@ export function AbPanel() {
     <div className="flex flex-col gap-4">
       <p className="text-small text-text-2">{t('player.ab.desc')}</p>
       <div className="grid grid-cols-2 gap-3">
-        <TimeField key={`a-${item.id}`} label={t('player.ab.a')} value={ab.a} onCommit={commitA} onSetNow={() => setAPoint()} setNowLabel={t('player.ab.setA')} />
-        <TimeField key={`b-${item.id}`} label={t('player.ab.b')} value={ab.b} onCommit={commitB} onSetNow={() => setBPoint()} setNowLabel={t('player.ab.setB')} />
+        <TimeField
+          key={`a-${item.id}`}
+          label={t('player.ab.a')}
+          value={ab.a}
+          onCommit={commitA}
+          onSetNow={() => setAPoint()}
+          setNowLabel={t('player.ab.setA')}
+        />
+        <TimeField
+          key={`b-${item.id}`}
+          label={t('player.ab.b')}
+          value={ab.b}
+          onCommit={commitB}
+          onSetNow={() => setBPoint()}
+          setNowLabel={t('player.ab.setB')}
+        />
       </div>
       <AnimatePresence initial={false}>
         {full && (
@@ -210,12 +244,19 @@ export function AbPanel() {
             transition={spring.smooth}
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-small font-medium tabular-nums text-text">{t('player.ab.length', { value: formatPrecise(len) })}</span>
+              <span className="text-small font-medium tabular-nums text-text">
+                {t('player.ab.length', { value: formatPrecise(len) })}
+              </span>
               <div className="flex gap-1">
                 <Button size="sm" variant="ghost" onClick={() => seek(ab.a)}>
                   {t('player.ab.jumpA')}
                 </Button>
-                <Button size="sm" variant="ghost" leading={<X size={14} aria-hidden />} onClick={clearAB}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  leading={<X size={14} aria-hidden />}
+                  onClick={clearAB}
+                >
                   {t('player.ab.clear')}
                 </Button>
               </div>
@@ -232,7 +273,10 @@ export function AbPanel() {
       </AnimatePresence>
 
       {/* 匯出 */}
-      <section className="flex flex-col gap-3 border-t border-border pt-3" aria-labelledby="ab-export-title">
+      <section
+        className="flex flex-col gap-3 border-t border-border pt-3"
+        aria-labelledby="ab-export-title"
+      >
         <h4 id="ab-export-title" className="text-h3 font-semibold">
           {t('player.ab.export')}
         </h4>
@@ -247,7 +291,13 @@ export function AbPanel() {
           disabled={busy}
         />
         <div className="flex flex-wrap gap-2">
-          <Button variant="primary" leading={<Scissors size={16} aria-hidden />} loading={busy} disabled={!canExport} onClick={() => void doExport()}>
+          <Button
+            variant="primary"
+            leading={<Scissors size={16} aria-hidden />}
+            loading={busy}
+            disabled={!canExport}
+            onClick={() => void doExport()}
+          >
             {t('player.ab.export')}
           </Button>
           {busy && (
@@ -260,7 +310,9 @@ export function AbPanel() {
           <div className="flex flex-col gap-1.5" aria-live="polite">
             <ProgressBar value={progress} label={t('player.ab.exporting')} />
             <p className="text-caption tabular-nums text-text-3">
-              {progress === null && !isFFmpegLoaded() ? t('player.ab.exportLoading') : t('player.ab.exporting')}
+              {progress === null && !isFFmpegLoaded()
+                ? t('player.ab.exportLoading')
+                : t('player.ab.exporting')}
               {progress !== null && ` ${Math.round(progress * 100)}%`}
             </p>
           </div>
@@ -278,25 +330,49 @@ export function AbPanel() {
               <div className="flex min-w-0 items-center gap-2">
                 <Film size={16} className="shrink-0 text-accent-ink" aria-hidden />
                 <FileName name={result.name} className="text-body font-medium" />
-                <span className="ml-auto shrink-0 text-caption tabular-nums text-text-3">{formatBytes(result.blob.size)}</span>
+                <span className="ml-auto shrink-0 text-caption tabular-nums text-text-3">
+                  {formatBytes(result.blob.size)}
+                </span>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                <Button size="sm" variant="primary" leading={<Download size={15} aria-hidden />} onClick={() => void saveLargeBlob(result.blob, result.name)}>
+                <Button
+                  size="sm"
+                  variant="primary"
+                  leading={<Download size={15} aria-hidden />}
+                  onClick={() => void saveLargeBlob(result.blob, result.name)}
+                >
                   {t('common.download')}
                 </Button>
-                <Button size="sm" variant="secondary" leading={<ListPlus size={15} aria-hidden />} onClick={() => void addFiles([asFile(result.blob, result.name)], { play: false })}>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  leading={<ListPlus size={15} aria-hidden />}
+                  onClick={() => void addFiles([asFile(result.blob, result.name)], { play: false })}
+                >
                   {t('player.ab.addToPlaylist')}
                 </Button>
-                <SendToMenu size="sm" from="player" targets={['gif']} getFiles={() => [asFile(result.blob, result.name)]} />
+                <SendToMenu
+                  size="sm"
+                  from="player"
+                  targets={['gif']}
+                  getFiles={() => [asFile(result.blob, result.name)]}
+                />
               </div>
             </motion.div>
           )}
         </AnimatePresence>
         <div className="flex flex-col gap-1.5 border-t border-border pt-3">
-          <Button variant="secondary" disabled={!full || !item.file} onClick={makeGif} leading={<GifGlyph />}>
+          <Button
+            variant="secondary"
+            disabled={!full || !item.file}
+            onClick={makeGif}
+            leading={<GifGlyph />}
+          >
             {t('player.ab.makeGif')}
           </Button>
-          {full && len > 30 && <p className="text-caption text-warning-ink">{t('player.ab.gifTooLong')}</p>}
+          {full && len > 30 && (
+            <p className="text-caption text-warning-ink">{t('player.ab.gifTooLong')}</p>
+          )}
         </div>
       </section>
 
@@ -307,7 +383,10 @@ export function AbPanel() {
 
 function GifGlyph() {
   return (
-    <span aria-hidden className="grid h-4 w-5 place-items-center rounded-[4px] border-[1.5px] border-current text-[7px] font-extrabold leading-none">
+    <span
+      aria-hidden
+      className="grid h-4 w-5 place-items-center rounded-[4px] border-[1.5px] border-current text-[7px] font-extrabold leading-none"
+    >
       GIF
     </span>
   )
@@ -319,16 +398,28 @@ function Chapters() {
   const item = useCurrent()
   if (!item) return null
   const update = (id: string, name: string) =>
-    usePlayer.getState().updateItem(item.id, (it) => ({ chapters: it.chapters.map((c) => (c.id === id ? { ...c, name } : c)) }))
+    usePlayer.getState().updateItem(item.id, (it) => ({
+      chapters: it.chapters.map((c) => (c.id === id ? { ...c, name } : c)),
+    }))
   const remove = (id: string) =>
-    usePlayer.getState().updateItem(item.id, (it) => ({ chapters: it.chapters.filter((c) => c.id !== id) }))
+    usePlayer
+      .getState()
+      .updateItem(item.id, (it) => ({ chapters: it.chapters.filter((c) => c.id !== id) }))
   return (
-    <section className="flex flex-col gap-2 border-t border-border pt-3" aria-labelledby="chapters-title">
+    <section
+      className="flex flex-col gap-2 border-t border-border pt-3"
+      aria-labelledby="chapters-title"
+    >
       <div className="flex items-center justify-between gap-2">
         <h4 id="chapters-title" className="text-h3 font-semibold">
           {t('player.ab.chapters')}
         </h4>
-        <Button size="sm" variant="secondary" leading={<Bookmark size={15} aria-hidden />} onClick={addChapter}>
+        <Button
+          size="sm"
+          variant="secondary"
+          leading={<Bookmark size={15} aria-hidden />}
+          onClick={addChapter}
+        >
           {t('player.ab.addChapter')}
         </Button>
       </div>

@@ -125,7 +125,13 @@ export class LineBreaker {
           }
           atoms.push({
             kind: 'space',
-            chars: raw === '\t' ? [{ ch: ' ', style: span.style }, { ch: ' ', style: span.style }] : [c],
+            chars:
+              raw === '\t'
+                ? [
+                    { ch: ' ', style: span.style },
+                    { ch: ' ', style: span.style },
+                  ]
+                : [c],
             pieces: [],
             width: 0,
           })
@@ -218,14 +224,21 @@ export class LineBreaker {
         skew = choice.skewFallback
         if (!m.has(font, cp)) {
           // 變體選擇符、零寬字元直接略過；其他以 □ 代替
-          if ((cp >= 0xfe00 && cp <= 0xfe0f) || cp === 0x200d || cp === 0x200b || cp === 0xfeff) continue
+          if ((cp >= 0xfe00 && cp <= 0xfe0f) || cp === 0x200d || cp === 0x200b || cp === 0xfeff)
+            continue
           this.missing++
           text = MISSING_GLYPH
         }
       }
       w ??= m.advance(font, text) * st.size
       const last = out[out.length - 1]
-      if (last && last.font === font && last.size === st.size && last.skew === skew && last.style === style) {
+      if (
+        last &&
+        last.font === font &&
+        last.size === st.size &&
+        last.skew === skew &&
+        last.style === style
+      ) {
         last.text += text
         last.width += w
       } else out.push({ text, font, size: st.size, skew, style, width: w })
@@ -362,7 +375,13 @@ export class LineBreaker {
     return a
   }
 
-  private place(atoms: Atom[], width: number, avail: number, hard: boolean, justify: boolean): LineBox {
+  private place(
+    atoms: Atom[],
+    width: number,
+    avail: number,
+    hard: boolean,
+    justify: boolean,
+  ): LineBox {
     const pieces: PlacedPiece[] = []
     let size = 0
     for (const a of atoms) for (const p of a.pieces) size = Math.max(size, p.size)

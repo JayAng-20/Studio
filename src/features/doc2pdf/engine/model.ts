@@ -164,13 +164,28 @@ export function walkBlocks(blocks: Block[], fn: (b: Block) => void) {
 export function collectHeadings(doc: DocModel): HeadingInfo[] {
   const out: HeadingInfo[] = []
   walkBlocks(doc.blocks, (b) => {
-    if (b.type === 'heading') out.push({ id: b.id, level: b.level, text: runsText(b.runs).replace(/[ \t\r\n]+/g, ' ').trim() })
+    if (b.type === 'heading')
+      out.push({
+        id: b.id,
+        level: b.level,
+        text: runsText(b.runs)
+          .replace(/[ \t\r\n]+/g, ' ')
+          .trim(),
+      })
   })
   return out
 }
 
 export function docStats(doc: DocModel): DocStats {
-  const s: DocStats = { headings: 0, tables: 0, lists: 0, codeBlocks: 0, images: 0, paragraphs: 0, chars: 0 }
+  const s: DocStats = {
+    headings: 0,
+    tables: 0,
+    lists: 0,
+    codeBlocks: 0,
+    images: 0,
+    paragraphs: 0,
+    chars: 0,
+  }
   walkBlocks(doc.blocks, (b) => {
     switch (b.type) {
       case 'heading':
@@ -205,7 +220,10 @@ export function slugify(text: string): string {
   return text
     .trim()
     .toLowerCase()
-    .replace(/[\u2000-\u206f\u2e00-\u2e7f\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~\u3000-\u3003\u3008-\u3011\uff01-\uff0f\uff1a-\uff20]/g, '')
+    .replace(
+      /[\u2000-\u206f\u2e00-\u2e7f\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~\u3000-\u3003\u3008-\u3011\uff01-\uff0f\uff1a-\uff20]/g,
+      '',
+    )
     .replace(/\s/g, '-')
 }
 

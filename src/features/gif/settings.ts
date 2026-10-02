@@ -107,7 +107,8 @@ export function matchPreset(s: GifSettings): PresetId | null {
 /** 正規化：補上新版本加入的欄位、修正超出範圍的值（讀取 localStorage 時使用） */
 export function normalizeSettings(raw: Partial<GifSettings> | undefined): GifSettings {
   const s = { ...DEFAULT_SETTINGS, ...(raw ?? {}) }
-  if (s.width !== 'original') s.width = Math.round(Math.min(WIDTH_MAX, Math.max(WIDTH_MIN, Number(s.width) || 480)))
+  if (s.width !== 'original')
+    s.width = Math.round(Math.min(WIDTH_MAX, Math.max(WIDTH_MIN, Number(s.width) || 480)))
   s.colors = Math.round(Math.min(COLORS_MAX, Math.max(COLORS_MIN, Number(s.colors) || 128)))
   s.speed = Math.min(3, Math.max(0.5, Number(s.speed) || 1))
   if (s.loop !== 'infinite') s.loop = Math.round(Math.min(99, Math.max(1, Number(s.loop) || 1)))
@@ -172,7 +173,12 @@ export function cropRatioValue(r: CropRatio, baseW: number, baseH: number): numb
 }
 
 /** 依比例在原始畫面中置中取最大範圍 */
-export function fitCropToRatio(ratio: number | null, baseW: number, baseH: number, prev: CropRect): CropRect {
+export function fitCropToRatio(
+  ratio: number | null,
+  baseW: number,
+  baseH: number,
+  prev: CropRect,
+): CropRect {
   if (ratio === null) return prev
   // 正規化座標的寬高比 = ratio × baseH / baseW
   const k = (ratio * baseH) / baseW

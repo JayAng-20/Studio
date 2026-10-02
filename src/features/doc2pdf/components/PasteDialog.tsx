@@ -77,7 +77,9 @@ export function PasteDialog({
           />
           {text.trim() && kind === null && (
             <span className="text-caption text-text-3" aria-live="polite">
-              {t('doc2pdf.paste.detected', { format: detected === 'md' ? 'Markdown' : t('doc2pdf.paste.plain') })}
+              {t('doc2pdf.paste.detected', {
+                format: detected === 'md' ? 'Markdown' : t('doc2pdf.paste.plain'),
+              })}
             </span>
           )}
         </div>

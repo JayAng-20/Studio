@@ -31,7 +31,8 @@ export function encodeBmp(img: RgbaImage, opts: { alpha?: boolean | 'auto' } = {
   const { data, width, height } = img
   if (width < 1 || height < 1) throw new Error('BMP 尺寸無效')
   if (data.length < width * height * 4) throw new Error('像素資料長度不足')
-  const alpha = opts.alpha === undefined || opts.alpha === 'auto' ? hasTransparency(data) : opts.alpha
+  const alpha =
+    opts.alpha === undefined || opts.alpha === 'auto' ? hasTransparency(data) : opts.alpha
   const bitCount: 24 | 32 = alpha ? 32 : 24
   const dib = alpha ? V4_HEADER : INFO_HEADER
   const row = bmpRowSize(width, bitCount)

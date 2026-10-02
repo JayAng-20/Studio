@@ -1,7 +1,14 @@
 /** 單檔前後對比：CompareSlider＋縮放檢視（符合視窗／100%／200%） */
 import { Download } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Button, CompareSlider, Dialog, SegmentedControl, SendToMenu, Spinner } from '@/components/ui'
+import {
+  Button,
+  CompareSlider,
+  Dialog,
+  SegmentedControl,
+  SendToMenu,
+  Spinner,
+} from '@/components/ui'
 import { formatBytes, percentChange } from '@/lib/format'
 import { downloadBlob } from '@/lib/download'
 import { asFile } from '@/stores/fileBus'
@@ -31,13 +38,21 @@ function useBeforeUrl(item: ConvertItem | undefined, maxSide: number) {
     void (async () => {
       try {
         if (DISPLAYABLE.has(fmt)) {
-          url = URL.createObjectURL(fmt === 'svg' ? new Blob([item.file], { type: 'image/svg+xml' }) : item.file)
+          url = URL.createObjectURL(
+            fmt === 'svg' ? new Blob([item.file], { type: 'image/svg+xml' }) : item.file,
+          )
           await Promise.resolve()
           if (alive) setState({ id: item.id, url })
           return
         }
         const bitmap = fmt === 'heic' ? await decodeHeic(item.file) : undefined
-        const r = await getPool().thumb({ file: bitmap ? undefined : item.file, bitmap, source: fmt, maxSide, lossless: true })
+        const r = await getPool().thumb({
+          file: bitmap ? undefined : item.file,
+          bitmap,
+          source: fmt,
+          maxSide,
+          lossless: true,
+        })
         if (!alive) return
         url = URL.createObjectURL(new Blob([r.buffer], { type: r.mime }))
         setState({ id: item.id, url })
@@ -77,7 +92,6 @@ export function CompareDialog({ id, onClose }: { id: string | null; onClose: () 
   const maxSide = Math.min(4096, Math.max(result?.width ?? 0, result?.height ?? 0) || 2048)
   const beforeUrl = useBeforeUrl(open ? item : undefined, maxSide)
 
-
   if (!item || !result) return <Dialog open={false} onOpenChange={() => onClose()} title="" />
 
   const ratio = result.width / result.height
@@ -90,7 +104,12 @@ export function CompareDialog({ id, onClose }: { id: string | null; onClose: () 
 
   const img = (src: string | null, label: string) =>
     src ? (
-      <img src={src} alt={label} draggable={false} className="absolute inset-0 size-full object-contain" />
+      <img
+        src={src}
+        alt={label}
+        draggable={false}
+        className="absolute inset-0 size-full object-contain"
+      />
     ) : (
       <span className="absolute inset-0 grid place-items-center">
         <Spinner size={28} />
@@ -131,11 +150,12 @@ export function CompareDialog({ id, onClose }: { id: string | null; onClose: () 
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-small tabular-nums text-text-2">
             <span>
-              {t('common.before')}：{sourceLabel(item.probe?.format, item.name)} · {item.probe?.width ?? '?'}×
-              {item.probe?.height ?? '?'} · {formatBytes(item.size)}
+              {t('common.before')}：{sourceLabel(item.probe?.format, item.name)} ·{' '}
+              {item.probe?.width ?? '?'}×{item.probe?.height ?? '?'} · {formatBytes(item.size)}
             </span>
             <span>
-              {t('common.after')}：{OUTPUT_LABEL[result.format]} · {result.width}×{result.height} · {formatBytes(result.size)}
+              {t('common.after')}：{OUTPUT_LABEL[result.format]} · {result.width}×{result.height} ·{' '}
+              {formatBytes(result.size)}
             </span>
             <SavingsBadge pct={pct} />
           </div>
@@ -161,8 +181,14 @@ export function CompareDialog({ id, onClose }: { id: string | null; onClose: () 
           <div className="mx-auto" style={{ width: w, height: h }}>
             <CompareSlider
               className="size-full rounded-none"
-              before={img(beforeUrl, t('convert.compare.before', { format: sourceLabel(item.probe?.format, item.name) }))}
-              after={img(result.url, t('convert.compare.after', { format: FORMATS[result.format].ext.toUpperCase() }))}
+              before={img(
+                beforeUrl,
+                t('convert.compare.before', { format: sourceLabel(item.probe?.format, item.name) }),
+              )}
+              after={img(
+                result.url,
+                t('convert.compare.after', { format: FORMATS[result.format].ext.toUpperCase() }),
+              )}
               beforeLabel={t('common.before')}
               afterLabel={t('common.after')}
             />

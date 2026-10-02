@@ -138,7 +138,10 @@ export function countFrames(o: TimelineOptions): number {
  * 把手吸附：距離整數秒小於 threshold 時吸到整數秒。
  * 回傳 { value, snapped }，snapped 為吸附到的秒數（未吸附為 null）。
  */
-export function snapToSecond(v: number, threshold: number): { value: number; snapped: number | null } {
+export function snapToSecond(
+  v: number,
+  threshold: number,
+): { value: number; snapped: number | null } {
   const r = Math.round(v)
   if (Math.abs(v - r) <= threshold) return { value: r, snapped: r }
   return { value: v, snapped: null }

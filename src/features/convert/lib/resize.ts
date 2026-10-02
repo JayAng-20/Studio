@@ -107,7 +107,11 @@ export function stepDownPlan(src: Size, dst: Size): Size[] {
     h = Math.max(dst.height, Math.round(h / 2))
     steps.push({ width: w, height: h })
   }
-  if (!steps.length || steps[steps.length - 1].width !== dst.width || steps[steps.length - 1].height !== dst.height)
+  if (
+    !steps.length ||
+    steps[steps.length - 1].width !== dst.width ||
+    steps[steps.length - 1].height !== dst.height
+  )
     steps.push({ ...dst })
   return steps
 }

@@ -4,7 +4,8 @@
  */
 
 const ascii = (b: Uint8Array, o: number, n: number) => String.fromCharCode(...b.subarray(o, o + n))
-const u32le = (b: Uint8Array, o: number) => (b[o] | (b[o + 1] << 8) | (b[o + 2] << 16) | (b[o + 3] << 24)) >>> 0
+const u32le = (b: Uint8Array, o: number) =>
+  (b[o] | (b[o + 1] << 8) | (b[o + 2] << 16) | (b[o + 3] << 24)) >>> 0
 
 export interface WebpFrame {
   /** ALPH／VP8／VP8L chunk（含 chunk 標頭） */
@@ -81,7 +82,12 @@ function chunk(type: string, body: Uint8Array): Uint8Array {
 /** 組成動態 WebP；每格都是完整畫面，所以不混合（blend）也不處置 */
 export function muxAnimatedWebp(
   frames: WebpFrame[],
-  opts: { width: number; height: number; loop?: number; background?: [number, number, number, number] },
+  opts: {
+    width: number
+    height: number
+    loop?: number
+    background?: [number, number, number, number]
+  },
 ): Uint8Array {
   if (!frames.length) throw new Error('沒有影格')
   const { width, height, loop = 0, background = [0, 0, 0, 0] } = opts

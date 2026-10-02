@@ -53,7 +53,17 @@ export type Op =
       r?: number
       dash?: number[]
     }
-  | { t: 'line'; x1: number; y1: number; x2: number; y2: number; color: RGB; w: number; dash?: number[]; round?: boolean }
+  | {
+      t: 'line'
+      x1: number
+      y1: number
+      x2: number
+      y2: number
+      color: RGB
+      w: number
+      dash?: number[]
+      round?: boolean
+    }
   | { t: 'circle'; x: number; y: number; r: number; fill?: RGB; stroke?: RGB; lw?: number }
   | { t: 'image'; x: number; y: number; w: number; h: number; image: ImageData }
   | { t: 'link'; x: number; y: number; w: number; h: number; uri?: string; dest?: string }
@@ -163,7 +173,6 @@ interface BlockCtx {
   tight?: boolean
 }
 
-
 /* ---------- 文字行 → 項目 ---------- */
 
 /** em 框：基線在 em 框頂端往下 0.88 em（思源黑體的表意字框） */
@@ -231,7 +240,12 @@ export function runsToSpans(
 }
 
 /** 把一行的片段轉成繪圖指令（文字、底線、刪除線、行內程式碼底色、連結區域） */
-export function lineOps(fc: FlowContext, line: LineBox, x0: number, lineH: number): { ops: Op[]; baseline: number } {
+export function lineOps(
+  fc: FlowContext,
+  line: LineBox,
+  x0: number,
+  lineH: number,
+): { ops: Op[]; baseline: number } {
   const ops: Op[] = []
   const size = line.size || fc.o.baseSize
   const top = (lineH - size) / 2
@@ -272,11 +286,27 @@ export function lineOps(fc: FlowContext, line: LineBox, x0: number, lineH: numbe
     }
     if (st.underline) {
       const uy = pBase + p.size * 0.13
-      ops.push({ t: 'line', x1: x, y1: uy, x2: x + p.width, y2: uy, color: st.color, w: Math.max(0.5, p.size * 0.055) })
+      ops.push({
+        t: 'line',
+        x1: x,
+        y1: uy,
+        x2: x + p.width,
+        y2: uy,
+        color: st.color,
+        w: Math.max(0.5, p.size * 0.055),
+      })
     }
     if (st.strike) {
       const sy = pBase - p.size * 0.32
-      ops.push({ t: 'line', x1: x, y1: sy, x2: x + p.width, y2: sy, color: st.color, w: Math.max(0.5, p.size * 0.06) })
+      ops.push({
+        t: 'line',
+        x1: x,
+        y1: sy,
+        x2: x + p.width,
+        y2: sy,
+        color: st.color,
+        w: Math.max(0.5, p.size * 0.06),
+      })
     }
     if (st.uri || st.dest) {
       const last = links[links.length - 1]
@@ -295,9 +325,13 @@ export function lineOps(fc: FlowContext, line: LineBox, x0: number, lineH: numbe
   return { ops: [...deco, ...ops, ...links], baseline }
 }
 
-
 /** 文字區塊 → 每行一個項目 */
-function textItems(fc: FlowContext, spans: Span[], ctx: BlockCtx, o: TextItemOptions): { items: FlowItem[]; baselines: number[] } {
+function textItems(
+  fc: FlowContext,
+  spans: Span[],
+  ctx: BlockCtx,
+  o: TextItemOptions,
+): { items: FlowItem[]; baselines: number[] } {
   const firstIndent = o.firstIndent ?? 0
   const { lines } = fc.breaker.break(spans, {
     width: ctx.width,
@@ -413,10 +447,19 @@ export class DocLayout {
   }
 
   private bodyBase(ctx: BlockCtx) {
-    return { family: this.th.body, bold: false, size: this.base, color: ctx.color ?? this.th.colors.text }
+    return {
+      family: this.th.body,
+      bold: false,
+      size: this.base,
+      color: ctx.color ?? this.th.colors.text,
+    }
   }
 
-  private block(b: Block, ctx: BlockCtx, prevType: Block['type'] | null): { items: FlowItem[]; before: number; after: number } {
+  private block(
+    b: Block,
+    ctx: BlockCtx,
+    prevType: Block['type'] | null,
+  ): { items: FlowItem[]; before: number; after: number } {
     const gap = this.base * this.th.paraGap
     switch (b.type) {
       case 'heading':
@@ -426,7 +469,12 @@ export class DocLayout {
         const cjk = hasCJK(runsText(b.runs))
         const indent =
           (b.indent ||
-            (this.th.cjkIndent && cjk && prevType === 'paragraph' && ctx.listDepth === 0 && !ctx.tight && !ctx.color)) &&
+            (this.th.cjkIndent &&
+              cjk &&
+              prevType === 'paragraph' &&
+              ctx.listDepth === 0 &&
+              !ctx.tight &&
+              !ctx.color)) &&
           !b.align
             ? this.base * 2
             : 0
@@ -445,7 +493,14 @@ export class DocLayout {
       case 'code':
         return this.code(b.text, b.lang, !!b.plain, ctx)
       case 'quote': {
-        const bar = this.fc.container({ kind: 'bar', x: ctx.x, w: 3, pad: 2, fill: this.th.colors.quoteBar, r: 1.5 })
+        const bar = this.fc.container({
+          kind: 'bar',
+          x: ctx.x,
+          w: 3,
+          pad: 2,
+          fill: this.th.colors.quoteBar,
+          r: 1.5,
+        })
         const inner: BlockCtx = {
           ...ctx,
           x: ctx.x + 14,
@@ -469,7 +524,17 @@ export class DocLayout {
             {
               h,
               before: gap,
-              ops: [{ t: 'line', x1: ctx.x, y1: h / 2, x2: ctx.x + ctx.width, y2: h / 2, color: this.th.colors.rule, w: 0.75 }],
+              ops: [
+                {
+                  t: 'line',
+                  x1: ctx.x,
+                  y1: h / 2,
+                  x2: ctx.x + ctx.width,
+                  y2: h / 2,
+                  color: this.th.colors.rule,
+                  w: 0.75,
+                },
+              ],
               containers: ctx.containers,
             },
           ],
@@ -485,12 +550,21 @@ export class DocLayout {
   /* ----- 標題 ----- */
 
   headingNumber(id: string, level: number): string {
-    if (!this.th.numbering || !this.autoNumber || level < this.numbers.numberFrom || level > this.numbers.numberFrom + 2) return ''
+    if (
+      !this.th.numbering ||
+      !this.autoNumber ||
+      level < this.numbers.numberFrom ||
+      level > this.numbers.numberFrom + 2
+    )
+      return ''
     const idx = level - this.numbers.numberFrom
     const n = this.numbers.numbers
     n[idx]++
     for (let k = idx + 1; k < n.length; k++) n[k] = 0
-    const label = n.slice(0, idx + 1).map((v) => v || 1).join('.')
+    const label = n
+      .slice(0, idx + 1)
+      .map((v) => v || 1)
+      .join('.')
     this.headingNumbers.set(id, label)
     return label
   }
@@ -502,7 +576,12 @@ export class DocLayout {
     const num = this.headingNumber(b.id, lvl)
     const runs: Run[] = num ? [{ text: `${num}\u2002` }, ...b.runs] : b.runs
     const color = lvl >= 5 ? (ctx.color ?? th.colors.text) : th.colors.heading
-    const spans = runsToSpans(this.fc, runs, { family: th.heading, bold: lvl <= 4 || lvl === 5, size, color }, ctx.slugs)
+    const spans = runsToSpans(
+      this.fc,
+      runs,
+      { family: th.heading, bold: lvl <= 4 || lvl === 5, size, color },
+      ctx.slugs,
+    )
     const before = lvl === 1 ? size * 0.9 : lvl === 2 ? size * 1.0 : size * 0.95
     const after = lvl <= 2 ? size * 0.55 : size * 0.45
     const modernBar = th.h1Band && lvl === 2 && ctx.listDepth === 0
@@ -535,12 +614,28 @@ export class DocLayout {
     }
     if (th.h1Band && lvl === 1) {
       last.h += size * 0.22
-      last.ops.push({ t: 'rect', x: align === 'center' ? ctx.x + ctx.width / 2 - 22 : ctx.x, y: last.h, w: 44, h: 3.2, fill: th.colors.accent, r: 1.6 })
+      last.ops.push({
+        t: 'rect',
+        x: align === 'center' ? ctx.x + ctx.width / 2 - 22 : ctx.x,
+        y: last.h,
+        w: 44,
+        h: 3.2,
+        fill: th.colors.accent,
+        r: 1.6,
+      })
       last.h += 3.2
     }
     if (modernBar) {
       const total = items.reduce((s, it) => s + it.h, 0)
-      items[0].ops.push({ t: 'rect', x: ctx.x, y: size * 0.18, w: 3.5, h: total - size * 0.36, fill: th.colors.accent, r: 1.75 })
+      items[0].ops.push({
+        t: 'rect',
+        x: ctx.x,
+        y: size * 0.18,
+        w: 3.5,
+        h: total - size * 0.36,
+        fill: th.colors.accent,
+        r: 1.75,
+      })
     }
     return { items, before, after }
   }
@@ -616,11 +711,13 @@ export class DocLayout {
     const tight = b.items.every((it) => it.blocks.length <= 2)
     // 標記欄寬：有序清單依最寬的編號
     const markerStyle = this.fc.style({ family: th.body, bold: false, italic: false, size, color })
-    const markers = b.items.map((it, i) => (it.marker ?? (b.ordered ? `${b.start + i}.` : '')))
+    const markers = b.items.map((it, i) => it.marker ?? (b.ordered ? `${b.start + i}.` : ''))
     let gutter = size * 1.5
     const hasTask = b.items.some((it) => it.task !== null)
     if (b.ordered || markers.some(Boolean)) {
-      const widest = Math.max(...markers.map((m) => this.fc.breaker.measure([{ text: m, style: markerStyle }]).max))
+      const widest = Math.max(
+        ...markers.map((m) => this.fc.breaker.measure([{ text: m, style: markerStyle }]).max),
+      )
       gutter = Math.max(gutter, widest + size * 0.55)
     }
     if (hasTask) gutter = Math.max(gutter, size * 1.6)
@@ -639,24 +736,54 @@ export class DocLayout {
       sub[0].before = i === 0 ? 0 : tight ? size * 0.22 : gap * 0.6
       // 標記與第一行基線對齊
       const first = sub[0]
-      const firstText = first.ops.find((o) => o.t === 'text') as Extract<Op, { t: 'text' }> | undefined
+      const firstText = first.ops.find((o) => o.t === 'text') as
+        Extract<Op, { t: 'text' }> | undefined
       const baseline = firstText ? firstText.y : this.lh / 2 + size * 0.35
       const mx = ctx.x
       if (it.task !== null) {
         const s = size * 0.82
         const bx = mx + 1
         const by = baseline - s * 0.86
-        first.ops.push({ t: 'rect', x: bx, y: by, w: s, h: s, stroke: it.task ? th.colors.accent : th.colors.muted, lw: 0.9, r: s * 0.18, fill: it.task ? th.colors.accent : undefined })
+        first.ops.push({
+          t: 'rect',
+          x: bx,
+          y: by,
+          w: s,
+          h: s,
+          stroke: it.task ? th.colors.accent : th.colors.muted,
+          lw: 0.9,
+          r: s * 0.18,
+          fill: it.task ? th.colors.accent : undefined,
+        })
         if (it.task) {
           first.ops.push(
-            { t: 'line', x1: bx + s * 0.22, y1: by + s * 0.52, x2: bx + s * 0.42, y2: by + s * 0.72, color: [1, 1, 1], w: 1.2, round: true },
-            { t: 'line', x1: bx + s * 0.42, y1: by + s * 0.72, x2: bx + s * 0.8, y2: by + s * 0.3, color: [1, 1, 1], w: 1.2, round: true },
+            {
+              t: 'line',
+              x1: bx + s * 0.22,
+              y1: by + s * 0.52,
+              x2: bx + s * 0.42,
+              y2: by + s * 0.72,
+              color: [1, 1, 1],
+              w: 1.2,
+              round: true,
+            },
+            {
+              t: 'line',
+              x1: bx + s * 0.42,
+              y1: by + s * 0.72,
+              x2: bx + s * 0.8,
+              y2: by + s * 0.3,
+              color: [1, 1, 1],
+              w: 1.2,
+              round: true,
+            },
           )
         }
       } else if (markers[i]) {
         const m = markers[i]
         const w = this.fc.breaker.measure([{ text: m, style: markerStyle }]).max
-        const line = this.fc.breaker.break([{ text: m, style: markerStyle }], { width: gutter * 2 }).lines[0]
+        const line = this.fc.breaker.break([{ text: m, style: markerStyle }], { width: gutter * 2 })
+          .lines[0]
         // 編號靠右對齊在標記欄
         const ops = lineOps(this.fc, line, mx + gutter - size * 0.45 - w, this.lh).ops
         const dy = baseline - lineOps(this.fc, line, 0, this.lh).baseline
@@ -669,8 +796,17 @@ export class DocLayout {
         const kind = depth % 3
         const bulletColor = th.id === 'modern' ? th.colors.accent : color
         if (kind === 0) first.ops.push({ t: 'circle', x: cx, y: cy, r, fill: bulletColor })
-        else if (kind === 1) first.ops.push({ t: 'circle', x: cx, y: cy, r: r * 0.95, stroke: bulletColor, lw: 0.8 })
-        else first.ops.push({ t: 'rect', x: cx - r * 0.9, y: cy - r * 0.9, w: r * 1.8, h: r * 1.8, fill: bulletColor })
+        else if (kind === 1)
+          first.ops.push({ t: 'circle', x: cx, y: cy, r: r * 0.95, stroke: bulletColor, lw: 0.8 })
+        else
+          first.ops.push({
+            t: 'rect',
+            x: cx - r * 0.9,
+            y: cy - r * 0.9,
+            w: r * 1.8,
+            h: r * 1.8,
+            fill: bulletColor,
+          })
       }
       items.push(...sub)
     })
@@ -742,7 +878,9 @@ export class DocLayout {
       const header = r < b.headerRows
       const cellLines: { lines: LineBox[]; align: Align | null }[] = []
       for (let c = 0; c < cols; c++) {
-        const { lines } = fc.breaker.break(spansOf(r, c), { width: Math.max(4, widths[c] - padX * 2) })
+        const { lines } = fc.breaker.break(spansOf(r, c), {
+          width: Math.max(4, widths[c] - padX * 2),
+        })
         cellLines.push({ lines, align: b.rows[r][c]?.align ?? b.align[c] ?? null })
       }
       const rowH = Math.max(...cellLines.map((cl) => cl.lines.length)) * lineH + padY * 2
@@ -754,10 +892,14 @@ export class DocLayout {
         const ops: Op[] = []
         const from = k * linesPerChunk
         const to = chunks === 1 ? Infinity : from + linesPerChunk
-        const nLines = Math.max(1, ...cellLines.map((cl) => Math.max(0, Math.min(cl.lines.length, to) - from)))
+        const nLines = Math.max(
+          1,
+          ...cellLines.map((cl) => Math.max(0, Math.min(cl.lines.length, to) - from)),
+        )
         const h = (chunks === 1 ? rowH - padY * 2 : nLines * lineH) + padY * 2
         // 底色
-        if (header && th.colors.tableHeaderBg) ops.push({ t: 'rect', x: ctx.x, y: 0, w: tableW, h, fill: th.colors.tableHeaderBg })
+        if (header && th.colors.tableHeaderBg)
+          ops.push({ t: 'rect', x: ctx.x, y: 0, w: tableW, h, fill: th.colors.tableHeaderBg })
         else if (!header && th.colors.tableStripe && (r - b.headerRows) % 2 === 1)
           ops.push({ t: 'rect', x: ctx.x, y: 0, w: tableW, h, fill: th.colors.tableStripe })
         // 文字
@@ -774,15 +916,68 @@ export class DocLayout {
         }
         // 框線
         if (th.table === 'grid') {
-          ops.push({ t: 'line', x1: ctx.x, y1: 0, x2: ctx.x + tableW, y2: 0, color: border, w: 0.6 })
-          ops.push({ t: 'line', x1: ctx.x, y1: h, x2: ctx.x + tableW, y2: h, color: border, w: 0.6 })
-          for (const x of xs) ops.push({ t: 'line', x1: x, y1: 0, x2: x, y2: h, color: border, w: 0.6 })
+          ops.push({
+            t: 'line',
+            x1: ctx.x,
+            y1: 0,
+            x2: ctx.x + tableW,
+            y2: 0,
+            color: border,
+            w: 0.6,
+          })
+          ops.push({
+            t: 'line',
+            x1: ctx.x,
+            y1: h,
+            x2: ctx.x + tableW,
+            y2: h,
+            color: border,
+            w: 0.6,
+          })
+          for (const x of xs)
+            ops.push({ t: 'line', x1: x, y1: 0, x2: x, y2: h, color: border, w: 0.6 })
         } else if (th.table === 'booktabs') {
-          if (r === 0 && k === 0) ops.push({ t: 'line', x1: ctx.x, y1: 0, x2: ctx.x + tableW, y2: 0, color: border, w: 1.1 })
-          if (header && r === b.headerRows - 1) ops.push({ t: 'line', x1: ctx.x, y1: h, x2: ctx.x + tableW, y2: h, color: border, w: 0.6 })
-          if (r === nRows - 1 && k === chunks - 1) ops.push({ t: 'line', x1: ctx.x, y1: h, x2: ctx.x + tableW, y2: h, color: border, w: 1.1 })
+          if (r === 0 && k === 0)
+            ops.push({
+              t: 'line',
+              x1: ctx.x,
+              y1: 0,
+              x2: ctx.x + tableW,
+              y2: 0,
+              color: border,
+              w: 1.1,
+            })
+          if (header && r === b.headerRows - 1)
+            ops.push({
+              t: 'line',
+              x1: ctx.x,
+              y1: h,
+              x2: ctx.x + tableW,
+              y2: h,
+              color: border,
+              w: 0.6,
+            })
+          if (r === nRows - 1 && k === chunks - 1)
+            ops.push({
+              t: 'line',
+              x1: ctx.x,
+              y1: h,
+              x2: ctx.x + tableW,
+              y2: h,
+              color: border,
+              w: 1.1,
+            })
         } else {
-          if (!header) ops.push({ t: 'line', x1: ctx.x, y1: h, x2: ctx.x + tableW, y2: h, color: border, w: 0.6 })
+          if (!header)
+            ops.push({
+              t: 'line',
+              x1: ctx.x,
+              y1: h,
+              x2: ctx.x + tableW,
+              y2: h,
+              color: border,
+              w: 0.6,
+            })
         }
         items.push({
           h,
@@ -817,10 +1012,23 @@ export class DocLayout {
         w = (h * d.width) / d.height
       }
       const x = ctx.x + (ctx.width - w) / 2
-      const items: FlowItem[] = [{ h, before: gap, ops: [{ t: 'image', x, y: 0, w, h, image: d }], containers: ctx.containers }]
+      const items: FlowItem[] = [
+        {
+          h,
+          before: gap,
+          ops: [{ t: 'image', x, y: 0, w, h, image: d }],
+          containers: ctx.containers,
+        },
+      ]
       const caption = b.title || ''
       if (caption) {
-        const style = fc.style({ family: th.body, bold: false, italic: false, size: this.base * 0.85, color: th.colors.muted })
+        const style = fc.style({
+          family: th.body,
+          bold: false,
+          italic: false,
+          size: this.base * 0.85,
+          color: th.colors.muted,
+        })
         const { items: cap } = textItems(fc, [{ text: caption, style }], ctx, {
           lineHeight: this.base * 0.85 * 1.5,
           size: this.base * 0.85,
@@ -842,13 +1050,30 @@ export class DocLayout {
           : fc.o.labels.imageNotFound
     const pad = 10
     const inner: BlockCtx = { ...ctx, x: ctx.x + pad + 22, width: ctx.width - pad * 2 - 22 }
-    const titleStyle = fc.style({ family: th.body, bold: true, italic: false, size: this.base * 0.92, color: th.colors.text })
-    const noteStyle = fc.style({ family: th.body, bold: false, italic: false, size: this.base * 0.8, color: th.colors.muted })
-    const t1 = textItems(fc, [{ text: b.alt || fc.o.labels.imageLabel, style: titleStyle }], inner, {
-      lineHeight: this.base * 0.92 * 1.45,
+    const titleStyle = fc.style({
+      family: th.body,
+      bold: true,
+      italic: false,
       size: this.base * 0.92,
-      before: 0,
-    }).items
+      color: th.colors.text,
+    })
+    const noteStyle = fc.style({
+      family: th.body,
+      bold: false,
+      italic: false,
+      size: this.base * 0.8,
+      color: th.colors.muted,
+    })
+    const t1 = textItems(
+      fc,
+      [{ text: b.alt || fc.o.labels.imageLabel, style: titleStyle }],
+      inner,
+      {
+        lineHeight: this.base * 0.92 * 1.45,
+        size: this.base * 0.92,
+        before: 0,
+      },
+    ).items
     const src = b.src.length > 160 ? `${b.src.slice(0, 157)}…` : b.src
     const t2 = textItems(fc, [{ text: src ? `${note}\n${src}` : note, style: noteStyle }], inner, {
       lineHeight: this.base * 0.8 * 1.45,
@@ -866,13 +1091,46 @@ export class DocLayout {
     const ix = ctx.x + pad + 2
     const iy = pad + 2
     const placeholder: Op[] = [
-      { t: 'rect', x: ctx.x, y: 0, w: ctx.width, h, fill: th.colors.placeholderBg, stroke: th.colors.rule, lw: 0.8, r: 4, dash: [3, 2] },
+      {
+        t: 'rect',
+        x: ctx.x,
+        y: 0,
+        w: ctx.width,
+        h,
+        fill: th.colors.placeholderBg,
+        stroke: th.colors.rule,
+        lw: 0.8,
+        r: 4,
+        dash: [3, 2],
+      },
       { t: 'rect', x: ix, y: iy, w: 14, h: 11, stroke: th.colors.muted, lw: 0.9, r: 1.5 },
       { t: 'circle', x: ix + 4, y: iy + 3.6, r: 1.3, fill: th.colors.muted },
-      { t: 'line', x1: ix + 2, y1: iy + 9, x2: ix + 6.5, y2: iy + 5.5, color: th.colors.muted, w: 0.9, round: true },
-      { t: 'line', x1: ix + 6.5, y1: iy + 5.5, x2: ix + 12, y2: iy + 9, color: th.colors.muted, w: 0.9, round: true },
+      {
+        t: 'line',
+        x1: ix + 2,
+        y1: iy + 9,
+        x2: ix + 6.5,
+        y2: iy + 5.5,
+        color: th.colors.muted,
+        w: 0.9,
+        round: true,
+      },
+      {
+        t: 'line',
+        x1: ix + 6.5,
+        y1: iy + 5.5,
+        x2: ix + 12,
+        y2: iy + 9,
+        color: th.colors.muted,
+        w: 0.9,
+        round: true,
+      },
     ]
-    return { items: [{ h, before: gap, ops: [...placeholder, ...ops], containers: ctx.containers }], before: gap, after: gap }
+    return {
+      items: [{ h, before: gap, ops: [...placeholder, ...ops], containers: ctx.containers }],
+      before: gap,
+      after: gap,
+    }
   }
 }
 
@@ -917,11 +1175,18 @@ export function paginate(items: FlowItem[], fc: FlowContext): PageFlow[] {
     }
   })
   const startPad = (i: number) =>
-    (items[i].containers ?? []).reduce((s, c) => s + (firstOf.get(c) === i ? fc.containers[c].pad : 0), 0)
+    (items[i].containers ?? []).reduce(
+      (s, c) => s + (firstOf.get(c) === i ? fc.containers[c].pad : 0),
+      0,
+    )
   const endPad = (i: number) =>
-    (items[i].containers ?? []).reduce((s, c) => s + (lastOf.get(c) === i ? fc.containers[c].pad : 0), 0)
+    (items[i].containers ?? []).reduce(
+      (s, c) => s + (lastOf.get(c) === i ? fc.containers[c].pad : 0),
+      0,
+    )
   const headers = new Map<number, FlowItem[]>()
-  for (const it of items) if (it.table?.header) headers.set(it.table.id, [...(headers.get(it.table.id) ?? []), it])
+  for (const it of items)
+    if (it.table?.header) headers.set(it.table.id, [...(headers.get(it.table.id) ?? []), it])
 
   let page: PageFlow = { placements: [] }
   let y = top

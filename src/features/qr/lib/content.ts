@@ -174,9 +174,7 @@ export function isValidUrl(input: string): boolean {
 
 /** 電話正規化：只留數字、開頭的 +、* 與 #；全形數字轉半形 */
 export function normalizePhone(input: string): string {
-  const half = input.replace(/[０-９＋]/g, (c) =>
-    String.fromCharCode(c.charCodeAt(0) - 0xfee0),
-  )
+  const half = input.replace(/[０-９＋]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xfee0))
   const trimmed = half.trim()
   const plus = trimmed.startsWith('+') ? '+' : ''
   return plus + trimmed.replace(/[^0-9*#]/g, '')

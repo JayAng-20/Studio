@@ -92,7 +92,13 @@ function GestureLayer() {
       if (Math.abs(dx) > 6 || Math.abs(dy) > 6) clearTimeout(s.hold)
       const el = usePlayer.getState().el
       const d = usePlayer.getState().duration
-      if (e.pointerType !== 'mouse' && el && d && Math.abs(dx) > DRAG_START_PX && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      if (
+        e.pointerType !== 'mouse' &&
+        el &&
+        d &&
+        Math.abs(dx) > DRAG_START_PX &&
+        Math.abs(dx) > Math.abs(dy) * 1.2
+      ) {
         s.mode = 'drag'
         s.startTime = el.currentTime
         ref.current?.setPointerCapture(e.pointerId)
@@ -179,8 +185,13 @@ function GestureLayer() {
             exit={{ opacity: 0 }}
             transition={spring.snappy}
           >
-            <div className="stage-glass flex flex-col items-center rounded-xl px-5 py-2.5" role="status">
-              <span className="text-h2 font-semibold tabular-nums">{formatTime(dragInfo.target)}</span>
+            <div
+              className="stage-glass flex flex-col items-center rounded-xl px-5 py-2.5"
+              role="status"
+            >
+              <span className="text-h2 font-semibold tabular-nums">
+                {formatTime(dragInfo.target)}
+              </span>
               <span className="text-small tabular-nums text-[var(--stage-fg-2)]">
                 {t('player.osd.seconds', { value: formatDelta(dragInfo.delta) })}
               </span>
@@ -245,7 +256,12 @@ function FullscreenDrawer() {
         >
           <div className="flex items-center justify-between px-4 pb-1 pt-3">
             <h3 className="text-h3 font-semibold">{t('player.playlist.title')}</h3>
-            <button type="button" className="stage-btn" aria-label={t('common.close')} onClick={() => usePlayer.getState().set({ drawerOpen: false })}>
+            <button
+              type="button"
+              className="stage-btn"
+              aria-label={t('common.close')}
+              onClick={() => usePlayer.getState().set({ drawerOpen: false })}
+            >
               <X size={18} aria-hidden />
             </button>
           </div>
@@ -258,7 +274,13 @@ function FullscreenDrawer() {
   )
 }
 
-export function Stage({ onChooseFile, onOpenPlaylist }: { onChooseFile: () => void; onOpenPlaylist: () => void }) {
+export function Stage({
+  onChooseFile,
+  onOpenPlaylist,
+}: {
+  onChooseFile: () => void
+  onOpenPlaylist: () => void
+}) {
   const t = useT()
   const item = useCurrent()
   const visible = usePlayer((s) => s.controlsVisible)
@@ -275,7 +297,10 @@ export function Stage({ onChooseFile, onOpenPlaylist }: { onChooseFile: () => vo
     }
     s.set({ el })
   }, [])
-  const setStage = useCallback((el: HTMLDivElement | null) => usePlayer.getState().set({ stageEl: el }), [])
+  const setStage = useCallback(
+    (el: HTMLDivElement | null) => usePlayer.getState().set({ stageEl: el }),
+    [],
+  )
   useMediaEngine()
   useMediaSession()
   useWaveform()

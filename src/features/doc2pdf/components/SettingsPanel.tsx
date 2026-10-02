@@ -14,7 +14,9 @@ import { useDoc2Pdf } from '../store'
 export function Section({ title, children }: { title: ReactNode; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-3 border-t border-border pt-4 first:border-t-0 first:pt-0">
-      <h4 className="text-caption font-semibold uppercase tracking-[0.04em] text-text-3">{title}</h4>
+      <h4 className="text-caption font-semibold uppercase tracking-[0.04em] text-text-3">
+        {title}
+      </h4>
       {children}
     </section>
   )
@@ -26,18 +28,31 @@ const THEMES: ThemeId[] = ['clean', 'academic', 'modern']
 function ThemeThumb({ id }: { id: ThemeId }) {
   const accent = id === 'modern' ? '#ea580c' : id === 'academic' ? '#111' : '#111827'
   return (
-    <span aria-hidden className="relative block h-[62px] w-full overflow-hidden rounded-[5px] border border-black/10 bg-white p-1.5 shadow-e1">
+    <span
+      aria-hidden
+      className="relative block h-[62px] w-full overflow-hidden rounded-[5px] border border-black/10 bg-white p-1.5 shadow-e1"
+    >
       {/* 標題 */}
       <span
-        className={cn('block h-[5px] rounded-[1px]', id === 'academic' ? 'mx-auto w-[60%]' : 'w-[70%]')}
+        className={cn(
+          'block h-[5px] rounded-[1px]',
+          id === 'academic' ? 'mx-auto w-[60%]' : 'w-[70%]',
+        )}
         style={{ background: accent }}
       />
       {id === 'clean' && <span className="mt-[3px] block h-px w-full bg-[#d9dde5]" />}
       {id === 'modern' && <span className="mt-[3px] block h-[2px] w-[22%] rounded bg-[#ea580c]" />}
       {/* 內文 */}
       <span className="mt-[4px] block space-y-[2.5px]">
-        <span className={cn('block h-[2px] bg-[#9aa3b2]', id === 'academic' ? 'ml-[10%] w-[90%]' : 'w-full')} />
-        <span className={cn('block h-[2px] bg-[#9aa3b2]', id === 'academic' ? 'w-full' : 'w-[85%]')} />
+        <span
+          className={cn(
+            'block h-[2px] bg-[#9aa3b2]',
+            id === 'academic' ? 'ml-[10%] w-[90%]' : 'w-full',
+          )}
+        />
+        <span
+          className={cn('block h-[2px] bg-[#9aa3b2]', id === 'academic' ? 'w-full' : 'w-[85%]')}
+        />
       </span>
       {/* 表格／程式碼 */}
       {id === 'clean' && (
@@ -88,12 +103,20 @@ function ThemePicker() {
               aria-describedby={`${id}-${th}`}
               onClick={() => setOption('theme', th)}
               onKeyDown={(e) => {
-                const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
+                const dir =
+                  e.key === 'ArrowRight' || e.key === 'ArrowDown'
+                    ? 1
+                    : e.key === 'ArrowLeft' || e.key === 'ArrowUp'
+                      ? -1
+                      : 0
                 if (!dir) return
                 e.preventDefault()
                 const next = THEMES[(THEMES.indexOf(th) + dir + THEMES.length) % THEMES.length]
                 setOption('theme', next)
-                ;(e.currentTarget.parentElement?.children[THEMES.indexOf(next)] as HTMLElement | undefined)?.focus()
+                ;(
+                  e.currentTarget.parentElement?.children[THEMES.indexOf(next)] as
+                    HTMLElement | undefined
+                )?.focus()
               }}
               tabIndex={on ? 0 : -1}
               className={cn(
@@ -119,7 +142,11 @@ function ThemePicker() {
         })}
       </div>
       {THEMES.map((th) => (
-        <p key={th} id={`${id}-${th}`} className={cn('text-caption text-text-3', theme !== th && 'hidden')}>
+        <p
+          key={th}
+          id={`${id}-${th}`}
+          className={cn('text-caption text-text-3', theme !== th && 'hidden')}
+        >
           {t(`doc2pdf.panel.themes.${th}Desc`)}
         </p>
       ))}
@@ -212,7 +239,9 @@ export function SettingsPanel({
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <span className="text-small font-medium text-text-2">{t('doc2pdf.panel.orientation')}</span>
+          <span className="text-small font-medium text-text-2">
+            {t('doc2pdf.panel.orientation')}
+          </span>
           <SegmentedControl<Orientation>
             full
             label={t('doc2pdf.panel.orientation')}
@@ -251,7 +280,9 @@ export function SettingsPanel({
           format={(v) => `${v} pt`}
         />
         <div className="flex flex-col gap-1.5">
-          <span className="text-small font-medium text-text-2">{t('doc2pdf.panel.lineHeight')}</span>
+          <span className="text-small font-medium text-text-2">
+            {t('doc2pdf.panel.lineHeight')}
+          </span>
           <SegmentedControl<LineKey>
             full
             label={t('doc2pdf.panel.lineHeight')}
@@ -290,7 +321,10 @@ export function SettingsPanel({
               label={t('doc2pdf.panel.tocLevel')}
               value={String(o.tocLevel) as '1' | '2' | '3'}
               onChange={(v) => setOption('tocLevel', Number(v))}
-              options={(['1', '2', '3'] as const).map((n) => ({ value: n, label: t('doc2pdf.panel.tocLevelN', { n }) }))}
+              options={(['1', '2', '3'] as const).map((n) => ({
+                value: n,
+                label: t('doc2pdf.panel.tocLevelN', { n }),
+              }))}
             />
           </div>
         )}
@@ -322,7 +356,11 @@ export function SettingsPanel({
           description={t('doc2pdf.panel.coverDesc')}
         />
         {o.cover && (
-          <Switch checked={o.coverDate} onChange={(v) => setOption('coverDate', v)} label={t('doc2pdf.panel.coverDate')} />
+          <Switch
+            checked={o.coverDate}
+            onChange={(v) => setOption('coverDate', v)}
+            label={t('doc2pdf.panel.coverDate')}
+          />
         )}
       </Section>
 
@@ -330,7 +368,11 @@ export function SettingsPanel({
         {cached !== null && (
           <p className="flex items-start gap-2 text-caption text-text-3">
             {cached ? (
-              <HardDriveDownload size={14} className="mt-px shrink-0 text-success-ink" aria-hidden />
+              <HardDriveDownload
+                size={14}
+                className="mt-px shrink-0 text-success-ink"
+                aria-hidden
+              />
             ) : (
               <CloudDownload size={14} className="mt-px shrink-0 text-accent-ink" aria-hidden />
             )}

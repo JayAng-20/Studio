@@ -47,7 +47,9 @@ export function createMeasurer(regular: GlyphSource, bold: GlyphSource): Measure
   const stdFor = (k: FontKey) => {
     let e = std.get(k)
     if (!e) {
-      e = StandardFontEmbedder.for(STANDARD_FONT[k]! as unknown as Parameters<typeof StandardFontEmbedder.for>[0])
+      e = StandardFontEmbedder.for(
+        STANDARD_FONT[k]! as unknown as Parameters<typeof StandardFontEmbedder.for>[0],
+      )
       std.set(k, e)
     }
     return e
@@ -64,7 +66,9 @@ export function createMeasurer(regular: GlyphSource, bold: GlyphSource): Measure
       if (w === undefined) {
         if (STANDARD_FONT[font]) {
           const e = stdFor(font)
-          w = e.encoding.canEncodeUnicodeCodePoint(ch.codePointAt(0)!) ? e.widthOfTextAtSize(ch, 1) : 0
+          w = e.encoding.canEncodeUnicodeCodePoint(ch.codePointAt(0)!)
+            ? e.widthOfTextAtSize(ch, 1)
+            : 0
         } else {
           const f = noto(font)
           w = f.glyphForCodePoint(ch.codePointAt(0)!).advanceWidth / f.unitsPerEm
@@ -98,11 +102,22 @@ export interface FontChoice {
 export function chooseFont(family: FontFamily, bold: boolean, italic: boolean): FontChoice {
   const sans: FontKey = bold ? 'sansBold' : 'sans'
   if (family === 'serif') {
-    const primary: FontKey = bold ? (italic ? 'serifBoldItalic' : 'serifBold') : italic ? 'serifItalic' : 'serif'
+    const primary: FontKey = bold
+      ? italic
+        ? 'serifBoldItalic'
+        : 'serifBold'
+      : italic
+        ? 'serifItalic'
+        : 'serif'
     return { primary, fallback: sans, skewPrimary: false, skewFallback: italic }
   }
   if (family === 'mono') {
-    return { primary: bold ? 'monoBold' : 'mono', fallback: sans, skewPrimary: italic, skewFallback: italic }
+    return {
+      primary: bold ? 'monoBold' : 'mono',
+      fallback: sans,
+      skewPrimary: italic,
+      skewFallback: italic,
+    }
   }
   return { primary: sans, fallback: sans, skewPrimary: italic, skewFallback: italic }
 }

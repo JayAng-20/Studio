@@ -79,14 +79,7 @@ function decodeBytes(bytes: number[], cp: number): string {
   return d.decode(new Uint8Array(bytes))
 }
 
-type Dest =
-  | 'normal'
-  | 'skip'
-  | 'fonttbl'
-  | 'stylesheet'
-  | 'pict'
-  | 'fldinst'
-  | 'listtext'
+type Dest = 'normal' | 'skip' | 'fonttbl' | 'stylesheet' | 'pict' | 'fldinst' | 'listtext'
 
 interface Field {
   instr: string
@@ -210,7 +203,12 @@ export function parseRtf(input: string | Uint8Array, name: string, idPrefix = 'h
   const items = p.run()
   const blocks = buildBlocks(items, idPrefix)
   const firstH1 = blocks.find((b): b is HeadingBlock => b.type === 'heading' && b.level === 1)
-  return { name, kind: 'rtf', title: firstH1 ? runsText(firstH1.runs).trim() : splitExt(name).base, blocks }
+  return {
+    name,
+    kind: 'rtf',
+    title: firstH1 ? runsText(firstH1.runs).trim() : splitExt(name).base,
+    blocks,
+  }
 }
 
 export class RtfError extends Error {
@@ -273,7 +271,8 @@ class RtfParser {
   private curStyle: { num: number; name: string; outline: number | null } | null = null
   private styleDepth = -1
   // \pict
-  private pict: { hex: string[]; fmt: 'png' | 'jpg' | null; wgoal: number; hgoal: number } | null = null
+  private pict: { hex: string[]; fmt: 'png' | 'jpg' | null; wgoal: number; hgoal: number } | null =
+    null
 
   constructor(src: string) {
     this.src = src
@@ -311,7 +310,15 @@ class RtfParser {
         }
         // 一般文字：一次讀一段
         let j = this.pos
-        while (j < n && s[j] !== '{' && s[j] !== '}' && s[j] !== '\\' && s[j] !== '\r' && s[j] !== '\n') j++
+        while (
+          j < n &&
+          s[j] !== '{' &&
+          s[j] !== '}' &&
+          s[j] !== '\\' &&
+          s[j] !== '\r' &&
+          s[j] !== '\n'
+        )
+          j++
         this.text(s.slice(this.pos, j))
         this.pos = j
       }
@@ -324,7 +331,8 @@ class RtfParser {
 
   private endGroup() {
     const closing = this.st
-    if (closing.dest === 'pict' && this.pict && (this.stack[this.stack.length - 1]?.dest !== 'pict')) this.finishPict()
+    if (closing.dest === 'pict' && this.pict && this.stack[this.stack.length - 1]?.dest !== 'pict')
+      this.finishPict()
     if (this.curStyle && this.stack.length === this.styleDepth) {
       const name = this.curStyle.name.replace(/;\s*$/, '').trim()
       if (name) this.styles.set(this.curStyle.num, { name, outline: this.curStyle.outline })
@@ -337,7 +345,8 @@ class RtfParser {
       this.st = {
         ...prev,
         align: closing.dest === 'normal' && prev.dest === 'normal' ? closing.align : prev.align,
-        outline: closing.dest === 'normal' && prev.dest === 'normal' ? closing.outline : prev.outline,
+        outline:
+          closing.dest === 'normal' && prev.dest === 'normal' ? closing.outline : prev.outline,
         style: closing.dest === 'normal' && prev.dest === 'normal' ? closing.style : prev.style,
         intbl: closing.dest === 'normal' && prev.dest === 'normal' ? closing.intbl : prev.intbl,
         ls: closing.dest === 'normal' && prev.dest === 'normal' ? closing.ls : prev.ls,
@@ -431,7 +440,14 @@ class RtfParser {
     // 多位元組編碼：結尾若是孤立的前導位元組，下一個 ASCII 字元就是尾位元組（有些寫入器不跳脫尾位元組）
     if (lookahead && isDbcs(cp) && this.pendingLead(cp)) {
       const nextCh = this.src[this.pos]
-      if (nextCh && nextCh !== '\\' && nextCh !== '{' && nextCh !== '}' && nextCh.charCodeAt(0) >= 0x40 && nextCh.charCodeAt(0) < 0x7f) {
+      if (
+        nextCh &&
+        nextCh !== '\\' &&
+        nextCh !== '{' &&
+        nextCh !== '}' &&
+        nextCh.charCodeAt(0) >= 0x40 &&
+        nextCh.charCodeAt(0) < 0x7f
+      ) {
         this.bytes.push(nextCh.charCodeAt(0))
         this.pos++
       }
@@ -817,7 +833,9 @@ function paraText(p: RawPara) {
 function toRuns(p: RawPara, bodyFs: number, keepScale: boolean): Run[] {
   const runs = p.runs.map(({ fs, ...r }) => {
     const scale = fs / bodyFs
-    return keepScale && Math.abs(scale - 1) > 0.08 ? { ...r, scale: Math.max(0.6, Math.min(2.4, scale)) } : r
+    return keepScale && Math.abs(scale - 1) > 0.08
+      ? { ...r, scale: Math.max(0.6, Math.min(2.4, scale)) }
+      : r
   })
   // 頭尾空白
   const merged = mergeRuns(runs.map((r) => ({ ...r, text: r.text.replace(/\t/g, '    ') })))
@@ -856,14 +874,21 @@ function buildBlocks(items: Item[], idPrefix: string): Block[] {
     if (!text) return
     paraCount++
     const styleLevel = HEADING_STYLE.exec(p.styleName)?.[2]
-    if (p.outline !== null && p.outline < 9) return cands.push({ idx, level: p.outline + 1, size: 0, bold: false })
-    if (p.styleOutline !== null && p.styleOutline < 9) return cands.push({ idx, level: p.styleOutline + 1, size: 0, bold: false })
+    if (p.outline !== null && p.outline < 9)
+      return cands.push({ idx, level: p.outline + 1, size: 0, bold: false })
+    if (p.styleOutline !== null && p.styleOutline < 9)
+      return cands.push({ idx, level: p.styleOutline + 1, size: 0, bold: false })
     if (styleLevel) return cands.push({ idx, level: Number(styleLevel), size: 0, bold: false })
-    if (/^title$|^標題$/i.test(p.styleName)) return cands.push({ idx, level: 1, size: 0, bold: false })
+    if (/^title$|^標題$/i.test(p.styleName))
+      return cands.push({ idx, level: 1, size: 0, bold: false })
     const visible = p.runs.filter((r) => r.text.trim())
     const maxFs = Math.max(...visible.map((r) => r.fs))
     const allBold = visible.every((r) => r.b)
-    const short = displayWidth(text) <= 80 && !text.includes('\n') && !SENTENCE_END.test(text) && !/[，,：:]$/.test(text)
+    const short =
+      displayWidth(text) <= 80 &&
+      !text.includes('\n') &&
+      !SENTENCE_END.test(text) &&
+      !/[，,：:]$/.test(text)
     if (!short) return
     if (maxFs >= bodyFs * 1.15) cands.push({ idx, level: null, size: maxFs, bold: allBold })
     else if (allBold) {
@@ -873,13 +898,19 @@ function buildBlocks(items: Item[], idPrefix: string): Block[] {
   })
   // 粗體短段落太多（例如整份都粗體）時不當標題
   const allowBoldOnly = paraCount > 0 && boldShort / paraCount <= 0.35
-  const heuristicSizes = [...new Set(cands.filter((c) => c.level === null && c.size > bodyFs).map((c) => c.size))].sort((a, b) => b - a)
+  const heuristicSizes = [
+    ...new Set(cands.filter((c) => c.level === null && c.size > bodyFs).map((c) => c.size)),
+  ].sort((a, b) => b - a)
   const explicitMax = Math.max(0, ...cands.filter((c) => c.level !== null).map((c) => c.level!))
   const levelByIdx = new Map<number, number>()
   for (const c of cands) {
     if (c.level !== null) levelByIdx.set(c.idx, Math.min(6, c.level))
     else if (c.size > bodyFs) levelByIdx.set(c.idx, Math.min(6, heuristicSizes.indexOf(c.size) + 1))
-    else if (allowBoldOnly) levelByIdx.set(c.idx, Math.min(6, Math.max(heuristicSizes.length + 1, explicitMax ? explicitMax + 1 : 1)))
+    else if (allowBoldOnly)
+      levelByIdx.set(
+        c.idx,
+        Math.min(6, Math.max(heuristicSizes.length + 1, explicitMax ? explicitMax + 1 : 1)),
+      )
   }
 
   const slug = createSlugger()
@@ -900,7 +931,8 @@ function buildBlocks(items: Item[], idPrefix: string): Block[] {
     }
     if (it.k === 'row') {
       const rows: RawRow[] = []
-      while (i < items.length && items[i].k === 'row') rows.push((items[i++] as { k: 'row'; r: RawRow }).r)
+      while (i < items.length && items[i].k === 'row')
+        rows.push((items[i++] as { k: 'row'; r: RawRow }).r)
       out.push(buildTable(rows, bodyFs))
       continue
     }
@@ -934,7 +966,11 @@ function buildBlocks(items: Item[], idPrefix: string): Block[] {
         align: p.align === 'center' || p.align === 'right' ? p.align : undefined,
       })
     } else {
-      out.push({ type: 'paragraph', runs: toRuns(p, bodyFs, true), align: p.align === 'left' ? undefined : p.align })
+      out.push({
+        type: 'paragraph',
+        runs: toRuns(p, bodyFs, true),
+        align: p.align === 'left' ? undefined : p.align,
+      })
     }
   }
   return out
@@ -949,7 +985,10 @@ function buildTable(rows: RawRow[], bodyFs: number): Block {
         runs.push(...toRuns(p, bodyFs, false))
       })
       const al = paras[0]?.align
-      return { runs: mergeRuns(runs), align: al && al !== 'left' && al !== 'justify' ? al : undefined }
+      return {
+        runs: mergeRuns(runs),
+        align: al && al !== 'left' && al !== 'justify' ? al : undefined,
+      }
     }),
   )
   const cols = Math.max(...cells.map((r) => r.length))
@@ -958,17 +997,26 @@ function buildTable(rows: RawRow[], bodyFs: number): Block {
   let headerRows = 0
   while (headerRows < rows.length - 1 && rows[headerRows].header) headerRows++
   if (!headerRows && rows.length > 1) {
-    const first = rows[0].cells.flat().flatMap((p) => p.runs).filter((r) => r.text.trim())
+    const first = rows[0].cells
+      .flat()
+      .flatMap((p) => p.runs)
+      .filter((r) => r.text.trim())
     if (first.length && first.every((r) => r.b)) headerRows = 1
   }
   // 表頭的粗體交給主題處理
-  if (headerRows) for (let r = 0; r < headerRows; r++) for (const c of cells[r]) c.runs = c.runs.map(({ b: _b, ...x }) => x)
+  if (headerRows)
+    for (let r = 0; r < headerRows; r++)
+      for (const c of cells[r]) c.runs = c.runs.map(({ b: _b, ...x }) => x)
   return { type: 'table', rows: cells, headerRows, align: new Array(cols).fill(null) }
 }
 
 function buildList(paras: RawPara[], bodyFs: number): ListBlock {
   const ordered = (m: string) => /^[(（]?(\d+|[a-zA-Z]|[ivxIVX]+)[.)）、]/.test(m)
-  const flat = paras.map((p) => ({ indent: p.ilvl, marker: p.listText, runs: toRuns(p, bodyFs, true) }))
+  const flat = paras.map((p) => ({
+    indent: p.ilvl,
+    marker: p.listText,
+    runs: toRuns(p, bodyFs, true),
+  }))
   const build = (from: number, to: number): ListBlock => {
     const base = flat[from]
     const isOrdered = ordered(base.marker)

@@ -57,15 +57,22 @@ export function CropOverlay({ geom }: { geom: Geometry }) {
   const crop = useGifStore((s) => s.crop)
   const ratio = useGifStore((s) => s.cropRatio)
   const setCrop = useGifStore((s) => s.setCrop)
-  const drag = useRef<{ h: Handle; px: number; py: number; start: CropRect; w: number; hgt: number } | null>(
-    null,
-  )
+  const drag = useRef<{
+    h: Handle
+    px: number
+    py: number
+    start: CropRect
+    w: number
+    hgt: number
+  } | null>(null)
   const r = cropRatioValue(ratio, geom.baseW, geom.baseH)
   const k = r === null ? null : (r * geom.baseH) / geom.baseW
 
   const down = (e: PointerEvent<HTMLElement>, h: Handle) => {
     e.stopPropagation()
-    const box = (e.currentTarget.closest('[data-crop-root]') as HTMLElement | null)?.getBoundingClientRect()
+    const box = (
+      e.currentTarget.closest('[data-crop-root]') as HTMLElement | null
+    )?.getBoundingClientRect()
     if (!box) return
     e.currentTarget.setPointerCapture(e.pointerId)
     drag.current = { h, px: e.clientX, py: e.clientY, start: crop, w: box.width, hgt: box.height }
@@ -103,8 +110,14 @@ export function CropOverlay({ geom }: { geom: Geometry }) {
     <div data-crop-root className="absolute inset-0 touch-none select-none">
       {/* 外部變暗 */}
       <div className={shade} style={{ left: 0, top: 0, right: 0, height: pct(crop.y) }} />
-      <div className={shade} style={{ left: 0, bottom: 0, right: 0, height: pct(1 - crop.y - crop.h) }} />
-      <div className={shade} style={{ left: 0, top: pct(crop.y), width: pct(crop.x), height: pct(crop.h) }} />
+      <div
+        className={shade}
+        style={{ left: 0, bottom: 0, right: 0, height: pct(1 - crop.y - crop.h) }}
+      />
+      <div
+        className={shade}
+        style={{ left: 0, top: pct(crop.y), width: pct(crop.x), height: pct(crop.h) }}
+      />
       <div
         className={shade}
         style={{ right: 0, top: pct(crop.y), width: pct(1 - crop.x - crop.w), height: pct(crop.h) }}

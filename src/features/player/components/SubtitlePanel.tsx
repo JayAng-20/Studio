@@ -46,8 +46,15 @@ export function SubtitlePanel() {
             <p className="text-small text-text-3">{t('player.subtitle.noneDesc')}</p>
           </div>
         ) : (
-          <div role="radiogroup" aria-label={t('player.subtitle.track')} className="flex flex-col gap-1">
-            {[{ id: 'off', name: t('player.subtitle.off'), count: null as number | null }, ...tracks.map((s) => ({ id: s.id, name: s.name, count: s.cues.length }))].map((o) => {
+          <div
+            role="radiogroup"
+            aria-label={t('player.subtitle.track')}
+            className="flex flex-col gap-1"
+          >
+            {[
+              { id: 'off', name: t('player.subtitle.off'), count: null as number | null },
+              ...tracks.map((s) => ({ id: s.id, name: s.name, count: s.cues.length })),
+            ].map((o) => {
               const checked = selected === o.id
               return (
                 <div key={o.id} className="flex items-center gap-1">
@@ -65,14 +72,25 @@ export function SubtitlePanel() {
                     }}
                     className={cn(
                       'flex min-h-11 min-w-0 flex-1 items-center gap-2.5 rounded-md px-2.5 text-left transition-colors',
-                      checked ? 'bg-[color-mix(in_srgb,var(--accent)_11%,transparent)] ring-1 ring-[color-mix(in_srgb,var(--accent)_35%,transparent)]' : 'hover:bg-surface-2',
+                      checked
+                        ? 'bg-[color-mix(in_srgb,var(--accent)_11%,transparent)] ring-1 ring-[color-mix(in_srgb,var(--accent)_35%,transparent)]'
+                        : 'hover:bg-surface-2',
                     )}
                   >
-                    <span className={cn('grid size-4 shrink-0 place-items-center rounded-full border-2', checked ? 'border-accent' : 'border-border-strong')}>
+                    <span
+                      className={cn(
+                        'grid size-4 shrink-0 place-items-center rounded-full border-2',
+                        checked ? 'border-accent' : 'border-border-strong',
+                      )}
+                    >
                       {checked && <span className="size-2 rounded-full bg-accent" />}
                     </span>
                     <span className="min-w-0 flex-1 truncate text-body">{o.name}</span>
-                    {o.count !== null && <span className="shrink-0 text-caption tabular-nums text-text-3">{t('player.subtitle.cues', { count: o.count })}</span>}
+                    {o.count !== null && (
+                      <span className="shrink-0 text-caption tabular-nums text-text-3">
+                        {t('player.subtitle.cues', { count: o.count })}
+                      </span>
+                    )}
                   </button>
                   {o.id !== 'off' && item && (
                     <Tooltip content={t('player.subtitle.remove')}>
@@ -91,7 +109,14 @@ export function SubtitlePanel() {
             })}
           </div>
         )}
-        <Button variant="secondary" size="sm" className="self-start" leading={<Upload size={15} aria-hidden />} onClick={() => input.current?.click()} disabled={!item}>
+        <Button
+          variant="secondary"
+          size="sm"
+          className="self-start"
+          leading={<Upload size={15} aria-hidden />}
+          onClick={() => input.current?.click()}
+          disabled={!item}
+        >
           {t('player.subtitle.load')}
         </Button>
         <input
@@ -115,9 +140,14 @@ export function SubtitlePanel() {
           label={t('player.subtitle.encoding')}
           value={active.encoding}
           onChange={(v) => setSubtitleEncoding(item.id, active.id, v)}
-          options={MANUAL_ENCODINGS.concat(MANUAL_ENCODINGS.includes(active.detected) ? [] : [active.detected]).map((e) => ({
+          options={MANUAL_ENCODINGS.concat(
+            MANUAL_ENCODINGS.includes(active.detected) ? [] : [active.detected],
+          ).map((e) => ({
             value: e,
-            label: e === active.detected ? t('player.subtitle.encodingAuto', { enc: ENC_LABEL[e] }) : ENC_LABEL[e],
+            label:
+              e === active.detected
+                ? t('player.subtitle.encodingAuto', { enc: ENC_LABEL[e] })
+                : ENC_LABEL[e],
           }))}
         />
       )}
@@ -152,7 +182,9 @@ export function SubtitlePanel() {
           onChange={(v) => set({ subStyle: { ...style, position: v } })}
         />
         <div className="flex flex-col gap-1.5">
-          <span className="text-small font-medium text-text-2">{t('player.subtitle.background')}</span>
+          <span className="text-small font-medium text-text-2">
+            {t('player.subtitle.background')}
+          </span>
           <SegmentedControl<SubBg>
             label={t('player.subtitle.background')}
             value={style.bg}

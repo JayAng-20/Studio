@@ -21,8 +21,17 @@ const THUMB_W = 160
 const THUMB_H = 90
 
 /** hover 時間軸的縮圖預覽：另一個隱藏的 <video> 依序 seek 後畫到 canvas */
-function useThumbnails(item: PlayItem | null, canvasRef: React.RefObject<HTMLCanvasElement | null>) {
-  const st = useRef<{ v: HTMLVideoElement | null; busy: boolean; pending: number | null; url: string | null; ready: boolean }>({
+function useThumbnails(
+  item: PlayItem | null,
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+) {
+  const st = useRef<{
+    v: HTMLVideoElement | null
+    busy: boolean
+    pending: number | null
+    url: string | null
+    ready: boolean
+  }>({
     v: null,
     busy: false,
     pending: null,
@@ -100,7 +109,15 @@ function useThumbnails(item: PlayItem | null, canvasRef: React.RefObject<HTMLCan
 }
 
 /** 波形（取代細軌道）：已播放部分用強調色 */
-function WaveCanvas({ peaks, progress, ab }: { peaks: Float32Array; progress: number; ab: { a: number; b: number } | null }) {
+function WaveCanvas({
+  peaks,
+  progress,
+  ab,
+}: {
+  peaks: Float32Array
+  progress: number
+  ab: { a: number; b: number } | null
+}) {
   const ref = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
     const c = ref.current
@@ -156,7 +173,10 @@ export function Timeline() {
   const [hover, setHover] = useState<number | null>(null)
   const [active, setActive] = useState<null | 'seek' | 'a' | 'b'>(null)
   const [dragT, setDragT] = useState<number | null>(null)
-  const drag = useRef<{ wasPlaying: boolean; pending: number | null }>({ wasPlaying: false, pending: null })
+  const drag = useRef<{ wasPlaying: boolean; pending: number | null }>({
+    wasPlaying: false,
+    pending: null,
+  })
   const bubbleX = useMotionValue(0)
   const bubbleSpring = useSpring(bubbleX, spring.snappy)
   const thumbCanvas = useRef<HTMLCanvasElement>(null)
@@ -240,7 +260,8 @@ export function Timeline() {
 
   const end = (e: RPointerEvent<HTMLDivElement>) => {
     if (!active) return
-    if (rootRef.current?.hasPointerCapture(e.pointerId)) rootRef.current.releasePointerCapture(e.pointerId)
+    if (rootRef.current?.hasPointerCapture(e.pointerId))
+      rootRef.current.releasePointerCapture(e.pointerId)
     if (active === 'seek') {
       const loc = locate(e.clientX)
       drag.current.pending = null
@@ -284,7 +305,12 @@ export function Timeline() {
     const cur = which === 'a' ? item.ab.a : item.ab.b
     if (cur === null) return
     const step = e.shiftKey ? 1 : 0.1
-    const delta = e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -step : e.key === 'ArrowRight' || e.key === 'ArrowUp' ? step : 0
+    const delta =
+      e.key === 'ArrowLeft' || e.key === 'ArrowDown'
+        ? -step
+        : e.key === 'ArrowRight' || e.key === 'ArrowUp'
+          ? step
+          : 0
     if (!delta) return
     e.preventDefault()
     e.stopPropagation()
@@ -307,7 +333,11 @@ export function Timeline() {
         <motion.div
           className="stage-glass absolute bottom-0 flex -translate-x-1/2 flex-col items-center gap-1 rounded-md p-1"
           initial={false}
-          animate={{ opacity: showBubble ? 1 : 0, scale: showBubble ? 1 : 0.92, y: showBubble ? 0 : 4 }}
+          animate={{
+            opacity: showBubble ? 1 : 0,
+            scale: showBubble ? 1 : 0.92,
+            y: showBubble ? 0 : 4,
+          }}
           transition={{ ...spring.snappy, opacity: { duration: sec(dur.fast) } }}
         >
           {thumbs.enabled && (
@@ -338,7 +368,10 @@ export function Timeline() {
         aria-valuemin={0}
         aria-valuemax={Math.round(d)}
         aria-valuenow={Math.round(shown)}
-        aria-valuetext={t('player.controls.timelineValue', { current: formatTime(shown), total: formatTime(d) })}
+        aria-valuetext={t('player.controls.timelineValue', {
+          current: formatTime(shown),
+          total: formatTime(d),
+        })}
         data-active={!!active}
         className={`tl-root relative flex w-full cursor-pointer touch-none select-none items-center outline-none ${tall ? 'h-9' : 'h-6'}`}
         onPointerDown={onPointerDown}
@@ -417,7 +450,8 @@ export function Timeline() {
                   background: tall
                     ? 'linear-gradient(90deg, color-mix(in srgb, var(--accent-2) 30%, transparent), color-mix(in srgb, var(--accent) 30%, transparent))'
                     : 'linear-gradient(90deg, color-mix(in srgb, var(--accent-2) 75%, transparent), color-mix(in srgb, var(--accent) 85%, transparent))',
-                  boxShadow: '0 0 0 1px color-mix(in srgb, var(--accent) 60%, white), 0 0 14px color-mix(in srgb, var(--accent) 55%, transparent)',
+                  boxShadow:
+                    '0 0 0 1px color-mix(in srgb, var(--accent) 60%, white), 0 0 14px color-mix(in srgb, var(--accent) 55%, transparent)',
                   borderRadius: tall ? 6 : 999,
                   opacity: 0.9,
                 }}
@@ -432,18 +466,25 @@ export function Timeline() {
 
         {/* 播放頭（只用 transform 移動） */}
         {!tall && (
-          <div className="pointer-events-none absolute inset-0" style={{ transform: `translateX(${p * 100}%)` }}>
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{ transform: `translateX(${p * 100}%)` }}
+          >
             <span className="tl-thumb absolute left-0 top-1/2 size-3.5 rounded-full bg-white shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_45%,transparent),0_2px_6px_rgba(0,0,0,.5)]" />
           </div>
         )}
         {tall && (
-          <div className="pointer-events-none absolute inset-0" style={{ transform: `translateX(${p * 100}%)` }}>
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{ transform: `translateX(${p * 100}%)` }}
+          >
             <span className="absolute inset-y-0 left-0 w-0.5 -translate-x-1/2 rounded-full bg-white shadow-[0_0_6px_rgba(0,0,0,.6)]" />
           </div>
         )}
 
         {/* A／B 把手 */}
-        {ab && d > 0 &&
+        {ab &&
+          d > 0 &&
           (['a', 'b'] as const).map((which) => {
             const v = ab[which]
             if (v === null) return null
@@ -452,7 +493,9 @@ export function Timeline() {
                 key={which}
                 role="slider"
                 tabIndex={0}
-                aria-label={t(which === 'a' ? 'player.controls.handleA' : 'player.controls.handleB')}
+                aria-label={t(
+                  which === 'a' ? 'player.controls.handleA' : 'player.controls.handleB',
+                )}
                 aria-valuemin={0}
                 aria-valuemax={Math.round(d)}
                 aria-valuenow={Math.round(v * 10) / 10}
@@ -460,7 +503,10 @@ export function Timeline() {
                 onPointerDown={startHandleDrag(which)}
                 onKeyDown={handleKey(which)}
                 className="absolute bottom-full z-[1] -mb-1 grid h-5 min-w-5 -translate-x-1/2 cursor-ew-resize touch-none place-items-center rounded-[6px] px-1 text-[11px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,.5)] outline-none focus-visible:ring-2 focus-visible:ring-white pointer-coarse:h-7 pointer-coarse:min-w-7"
-                style={{ left: `${(v / d) * 100}%`, background: 'linear-gradient(135deg, var(--accent-2), var(--accent))' }}
+                style={{
+                  left: `${(v / d) * 100}%`,
+                  background: 'linear-gradient(135deg, var(--accent-2), var(--accent))',
+                }}
                 initial={{ scale: 0, y: 6 }}
                 animate={{ scale: 1, y: 0 }}
                 transition={spring.bouncy}

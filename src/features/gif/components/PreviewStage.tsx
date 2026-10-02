@@ -233,9 +233,7 @@ export function PreviewStage({
 
   const ratio = view.outW / view.outH
   const relTime = video ? Math.max(0, clock - range[0]) : (starts[imgIndex] ?? 0)
-  const totalTime = video
-    ? range[1] - range[0]
-    : plan.reduce((a, p) => a + p.delayCs, 0) / 100
+  const totalTime = video ? range[1] - range[0] : plan.reduce((a, p) => a + p.delayCs, 0) / 100
 
   return (
     <div className="flex flex-col gap-3">
@@ -297,8 +295,12 @@ export function PreviewStage({
         {video && (reverse || pingpong) && (
           <span className="text-caption text-text-3">{t('preview.hintForward')}</span>
         )}
-        {mode === 'pick' && <span className="text-caption text-accent-ink">{t('preview.pickHint')}</span>}
-        {mode === 'crop' && <span className="text-caption text-text-3">{t('preview.cropHint')}</span>}
+        {mode === 'pick' && (
+          <span className="text-caption text-accent-ink">{t('preview.pickHint')}</span>
+        )}
+        {mode === 'crop' && (
+          <span className="text-caption text-text-3">{t('preview.cropHint')}</span>
+        )}
       </div>
     </div>
   )

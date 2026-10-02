@@ -49,7 +49,9 @@ export function parseMarkdown(src: string, name: string, idPrefix = 'h'): DocMod
   let n = 0
   const ctx: Ctx = { slug: createSlugger(), nextId: () => `${idPrefix}${n++}` }
   // 把分頁符號換成獨立的 HTML 區塊標記，lexer 會原樣保留
-  const normalized = src.replace(/\r\n?/g, '\n').replace(/^\s*(\\newpage|\\pagebreak)\s*$/gim, '<!-- pagebreak -->')
+  const normalized = src
+    .replace(/\r\n?/g, '\n')
+    .replace(/^\s*(\\newpage|\\pagebreak)\s*$/gim, '<!-- pagebreak -->')
   const tokens = new Lexer({ gfm: true, breaks: false }).lex(normalized)
   const blocks = convertBlocks(tokens, ctx)
   const firstH1 = findTitle(blocks)
@@ -80,7 +82,8 @@ function convertBlocks(tokens: Token[], ctx: Ctx): Block[] {
         // 緊湊清單中的文字（有行內 token）
         const t = tok as Tokens.Text
         if (t.tokens) pushParagraphWithImages(out, t.tokens, ctx)
-        else if (t.text.trim()) out.push({ type: 'paragraph', runs: [{ text: decodeEntities(t.text) }] })
+        else if (t.text.trim())
+          out.push({ type: 'paragraph', runs: [{ text: decodeEntities(t.text) }] })
         break
       }
       case 'code': {
@@ -107,7 +110,9 @@ function convertBlocks(tokens: Token[], ctx: Ctx): Block[] {
       case 'table': {
         const t = tok as Tokens.Table
         const align: (Align | null)[] = t.align.map((a) => a ?? null)
-        const cell = (c: Tokens.TableCell): TableCell => ({ runs: trimRuns(inline(c.tokens, {}, ctx)) })
+        const cell = (c: Tokens.TableCell): TableCell => ({
+          runs: trimRuns(inline(c.tokens, {}, ctx)),
+        })
         const rows = [t.header.map(cell), ...t.rows.map((r) => r.map(cell))]
         // 補齊欄數不一致的列
         const cols = Math.max(...rows.map((r) => r.length))
@@ -165,12 +170,26 @@ function pushParagraphWithImages(out: Block[], tokens: Token[], ctx: Ctx) {
     if (tok.type === 'image') {
       flush()
       const t = tok as Tokens.Image
-      out.push({ type: 'image', src: t.href, alt: decodeEntities(t.text), title: t.title ?? undefined })
-    } else if (tok.type === 'link' && (tok as Tokens.Link).tokens.length === 1 && (tok as Tokens.Link).tokens[0].type === 'image') {
+      out.push({
+        type: 'image',
+        src: t.href,
+        alt: decodeEntities(t.text),
+        title: t.title ?? undefined,
+      })
+    } else if (
+      tok.type === 'link' &&
+      (tok as Tokens.Link).tokens.length === 1 &&
+      (tok as Tokens.Link).tokens[0].type === 'image'
+    ) {
       // [![alt](img)](url)：只保留圖片
       flush()
       const img = (tok as Tokens.Link).tokens[0] as Tokens.Image
-      out.push({ type: 'image', src: img.href, alt: decodeEntities(img.text), title: img.title ?? undefined })
+      out.push({
+        type: 'image',
+        src: img.href,
+        alt: decodeEntities(img.text),
+        title: img.title ?? undefined,
+      })
     } else buf.push(tok)
   }
   flush()
@@ -289,8 +308,14 @@ export function trimRuns(runs: Run[]): Run[] {
     base += r.text.length
     const text = r.text.replace(/[ \t]*\n[ \t]*/g, (m: string, off: number) => {
       if (r.code) return ' '
-      const before = all.slice(0, offset + off).trimEnd().slice(-1)
-      const after = all.slice(offset + off + m.length).trimStart().slice(0, 1)
+      const before = all
+        .slice(0, offset + off)
+        .trimEnd()
+        .slice(-1)
+      const after = all
+        .slice(offset + off + m.length)
+        .trimStart()
+        .slice(0, 1)
       return CJK_CHAR.test(before) && CJK_CHAR.test(after) ? '' : ' '
     })
     return { ...r, text: text.replace(/\u2028/g, '\n') }

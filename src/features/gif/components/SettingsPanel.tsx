@@ -45,7 +45,9 @@ export function SettingsPanel({ geom }: { geom: Geometry }) {
   const widthPreset: WidthPreset | 'original' | '' =
     settings.width === 'original'
       ? 'original'
-      : ((Object.keys(WIDTH_PRESETS) as WidthPreset[]).find((k) => WIDTH_PRESETS[k] === settings.width) ?? '')
+      : ((Object.keys(WIDTH_PRESETS) as WidthPreset[]).find(
+          (k) => WIDTH_PRESETS[k] === settings.width,
+        ) ?? '')
 
   return (
     <section className="card flex flex-col gap-4 p-4" aria-label={t('panel.preset')}>
@@ -242,7 +244,9 @@ export function SettingsPanel({ geom }: { geom: Geometry }) {
                         label: t(`panel.dithers.${d}`),
                       }))}
                     />
-                    <p className="text-caption text-text-3">{t(`panel.ditherHints.${settings.dither}`)}</p>
+                    <p className="text-caption text-text-3">
+                      {t(`panel.ditherHints.${settings.dither}`)}
+                    </p>
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <span className="text-small font-medium text-text-2">{t('panel.palette')}</span>

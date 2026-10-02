@@ -85,7 +85,10 @@ export function RangeTimeline({
       }
       lastSnap.current = s.snapped
     }
-    const out: [number, number] = moved === 0 ? [Math.min(v, value[1] - 0.1), value[1]] : [value[0], Math.max(v, value[0] + 0.1)]
+    const out: [number, number] =
+      moved === 0
+        ? [Math.min(v, value[1] - 0.1), value[1]]
+        : [value[0], Math.max(v, value[0] + 0.1)]
     out[0] = Math.max(0, roundTime(out[0]))
     out[1] = Math.min(roundTime(max), roundTime(out[1]))
     onChange(out)
@@ -103,7 +106,10 @@ export function RangeTimeline({
       {Array.from({ length: thumbCount }, (_, i) => {
         const th = thumbs[i]
         return (
-          <div key={i} className="relative h-full min-w-0 flex-1 overflow-hidden [perspective:400px]">
+          <div
+            key={i}
+            className="relative h-full min-w-0 flex-1 overflow-hidden [perspective:400px]"
+          >
             {th ? (
               <motion.img
                 src={th.url}
@@ -161,7 +167,11 @@ export function RangeTimeline({
           </div>
         )}
         {/* 刻度、吸附閃光、播放頭（不攔截指標事件） */}
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2" style={{ height: TRACK_H }} aria-hidden>
+        <div
+          className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2"
+          style={{ height: TRACK_H }}
+          aria-hidden
+        >
           {ticks.map((s) => (
             <span
               key={s}
@@ -202,11 +212,12 @@ export function RangeTimeline({
           <div className="flex min-w-[88px] flex-col items-center pb-1" aria-live="polite">
             <span className="text-caption text-text-3">{t('range.length')}</span>
             <span className="text-h3 font-semibold tabular-nums text-text">
-              <AnimatedNumber value={len} format={(v) => t('range.seconds', { value: v.toFixed(1) })} />
+              <AnimatedNumber
+                value={len}
+                format={(v) => t('range.seconds', { value: v.toFixed(1) })}
+              />
             </span>
-            <span className="sr-only">
-              {flash ? t('range.snapped', { value: flash.v }) : ''}
-            </span>
+            <span className="sr-only">{flash ? t('range.snapped', { value: flash.v }) : ''}</span>
           </div>
           <NumberField
             label={t('range.end')}

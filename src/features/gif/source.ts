@@ -81,7 +81,8 @@ export async function resolveDuration(v: HTMLVideoElement, fallback?: number): P
     v.currentTime = 1e101
     await changed
     // 有些瀏覽器第一次 durationchange 仍為 Infinity，再等 seeked
-    if (!Number.isFinite(v.duration)) await once(v, 'seeked', ['error'], 8000).catch(() => undefined)
+    if (!Number.isFinite(v.duration))
+      await once(v, 'seeked', ['error'], 8000).catch(() => undefined)
   } catch {
     /* 退回下方的估計 */
   }

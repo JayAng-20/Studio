@@ -11,7 +11,11 @@ function toReact(node: SvgNode, key?: number): ReactNode {
     if (k === 'xmlns') continue
     props[reactAttr(k)] = v
   }
-  return createElement(node.tag, props, node.children?.map((c, i) => toReact(c, i)))
+  return createElement(
+    node.tag,
+    props,
+    node.children?.map((c, i) => toReact(c, i)),
+  )
 }
 
 /** 漣漪動畫：模組由中心向外依序浮現；總長＝擴散 slow＋單點 fast（≤ 600 ms） */
@@ -54,7 +58,11 @@ export function QrArt({ geo, style, idPrefix, ripple, onRippleEnd, label, classN
   }
 
   if (!ripple) {
-    return createElement('svg', rootProps, tree.children?.map((c, i) => toReact(c, i)))
+    return createElement(
+      'svg',
+      rootProps,
+      tree.children?.map((c, i) => toReact(c, i)),
+    )
   }
 
   const parts = svgParts(geo, style, idPrefix)

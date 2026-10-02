@@ -3,10 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { bmpRowSize, encodeBmp, hasTransparency } from '@/lib/convert-bmp'
 
 /** 2×2：左上紅、右上綠、左下藍、右下白 */
-const rgba2x2 = new Uint8Array([
-  255, 0, 0, 255, 0, 255, 0, 255,
-  0, 0, 255, 255, 255, 255, 255, 255,
-])
+const rgba2x2 = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 255])
 
 describe('BMP 編碼', () => {
   it('24 位元標頭：BM、檔案大小、像素位移 54、BITMAPINFOHEADER', () => {
@@ -62,8 +59,17 @@ describe('BMP 編碼', () => {
 
   it('不透明時自動用 24 位元；可強制指定', () => {
     expect(hasTransparency(rgba2x2)).toBe(false)
-    expect(new DataView(encodeBmp({ data: rgba2x2, width: 2, height: 2 }, { alpha: true }).buffer).getUint16(28, true)).toBe(32)
-    expect(new DataView(encodeBmp({ data: new Uint8Array([1, 2, 3, 0]), width: 1, height: 1 }, { alpha: false }).buffer).getUint16(28, true)).toBe(24)
+    expect(
+      new DataView(
+        encodeBmp({ data: rgba2x2, width: 2, height: 2 }, { alpha: true }).buffer,
+      ).getUint16(28, true),
+    ).toBe(32)
+    expect(
+      new DataView(
+        encodeBmp({ data: new Uint8Array([1, 2, 3, 0]), width: 1, height: 1 }, { alpha: false })
+          .buffer,
+      ).getUint16(28, true),
+    ).toBe(24)
   })
 
   it('錯誤輸入', () => {

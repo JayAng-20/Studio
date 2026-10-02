@@ -60,7 +60,12 @@ export function useQr(): QrComputed {
       .catch((e: unknown) => {
         if (!alive) return
         if (!(e instanceof QrTooLongError)) console.error(e)
-        setResult({ key, type: forType, matrix: null, error: e instanceof QrTooLongError ? 'tooLong' : 'failed' })
+        setResult({
+          key,
+          type: forType,
+          matrix: null,
+          error: e instanceof QrTooLongError ? 'tooLong' : 'failed',
+        })
       })
     return () => {
       alive = false

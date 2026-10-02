@@ -225,7 +225,9 @@ function parseVCard(raw: string): ContactResult {
   }
   if (!r.name && n) {
     const [last = '', first = ''] = splitEscaped(n, ';').map(unescapeVText)
-    r.name = /[㐀-鿿]/.test(first + last) ? `${last}${first}` : [first, last].filter(Boolean).join(' ')
+    r.name = /[㐀-鿿]/.test(first + last)
+      ? `${last}${first}`
+      : [first, last].filter(Boolean).join(' ')
   }
   return r
 }
@@ -303,9 +305,10 @@ function parseSms(raw: string): SmsResult {
 }
 
 function parseGeo(raw: string): GeoResult | null {
-  const m = /^geo:\s*([-+]?\d+(?:\.\d+)?)\s*,\s*([-+]?\d+(?:\.\d+)?)(?:,[-+]?\d+(?:\.\d+)?)?(?:\?(.*))?$/i.exec(
-    raw.trim(),
-  )
+  const m =
+    /^geo:\s*([-+]?\d+(?:\.\d+)?)\s*,\s*([-+]?\d+(?:\.\d+)?)(?:,[-+]?\d+(?:\.\d+)?)?(?:\?(.*))?$/i.exec(
+      raw.trim(),
+    )
   if (!m) return null
   const lat = Number(m[1])
   const lng = Number(m[2])
@@ -401,7 +404,10 @@ export function parseScan(raw: string): ScanResult {
   if (upper.startsWith('WIFI:')) return parseWifi(s)
   if (upper.startsWith('BEGIN:VCARD')) return parseVCard(s)
   if (upper.startsWith('MECARD:')) return parseMecard(s)
-  if (upper.startsWith('BEGIN:VEVENT') || (upper.startsWith('BEGIN:VCALENDAR') && /BEGIN:VEVENT/i.test(s)))
+  if (
+    upper.startsWith('BEGIN:VEVENT') ||
+    (upper.startsWith('BEGIN:VCALENDAR') && /BEGIN:VEVENT/i.test(s))
+  )
     return parseEvent(s)
   if (upper.startsWith('MAILTO:')) return parseMailto(s)
   if (upper.startsWith('MATMSG:')) return parseMatmsg(s)

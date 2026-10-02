@@ -35,7 +35,10 @@ const MIME: Partial<Record<ConvertJob['source'], string>> = {
 
 type Env = {
   createSurface: (w: number, h: number) => Surface
-  ctxOf: (s: Surface, willRead?: boolean) => OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D
+  ctxOf: (
+    s: Surface,
+    willRead?: boolean,
+  ) => OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D
   surfaceToBlob: (s: Surface, type: string, q?: number) => Promise<Blob>
   canvasCanEncode: (mime: string) => Promise<boolean>
   releaseSurface: (s: Surface | null | undefined) => void
@@ -120,7 +123,11 @@ function drawFrame(env: Env, target: Surface, image: CanvasImageSource) {
 /**
  * 轉換動畫；來源不是動畫或無法逐格解碼時回傳 null（呼叫端改轉第一格）。
  */
-export async function convertAnimated(job: ConvertJob, env: Env, report: Report): Promise<ConvertResult | null> {
+export async function convertAnimated(
+  job: ConvertJob,
+  env: Env,
+  report: Report,
+): Promise<ConvertResult | null> {
   const opts = job.options
   const src = (await imageDecoderSource(job)) ?? (await gifJsSource(job, env))
   if (!src) return null
@@ -176,11 +183,20 @@ export async function convertAnimated(job: ConvertJob, env: Env, report: Report)
           bytes = await encodeWebpWasm(c.getImageData(0, 0, size.width, size.height), opts.quality)
         }
         const fr = extractFrameChunks(bytes)
-        frames.push({ ...fr, width: size.width, height: size.height, duration: normDelay(f.duration) })
+        frames.push({
+          ...fr,
+          width: size.width,
+          height: size.height,
+          duration: normDelay(f.duration),
+        })
         i++
         report(Math.min(0.95, i / total))
       }
-      const bytes = muxAnimatedWebp(frames, { width: size.width, height: size.height, loop: src.loop })
+      const bytes = muxAnimatedWebp(frames, {
+        width: size.width,
+        height: size.height,
+        loop: src.loop,
+      })
       return result(bytes, 'image/webp', 'webp-anim')
     }
     return null
@@ -188,7 +204,11 @@ export async function convertAnimated(job: ConvertJob, env: Env, report: Report)
     env.releaseSurface(target)
   }
 
-  function result(bytes: Uint8Array, mime: string, encoder: ConvertResult['encoder']): ConvertResult {
+  function result(
+    bytes: Uint8Array,
+    mime: string,
+    encoder: ConvertResult['encoder'],
+  ): ConvertResult {
     return {
       buffer: (bytes.byteOffset === 0 && bytes.byteLength === bytes.buffer.byteLength
         ? bytes.buffer

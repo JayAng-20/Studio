@@ -10,7 +10,13 @@ import { spring, staggerDelay } from '@/design/motion'
 import { useT } from '@/i18n'
 import type { Detection } from '../lib/decode'
 import { parseScan, scanSummary } from '../lib/parse'
-import { addHistory, loadHistory, saveHistory, type HistoryItem, type ScanSource } from '../lib/storage'
+import {
+  addHistory,
+  loadHistory,
+  saveHistory,
+  type HistoryItem,
+  type ScanSource,
+} from '../lib/storage'
 import { useQrStore } from '../store'
 import { CameraScanner } from './CameraScanner'
 import { History } from './History'
@@ -64,8 +70,14 @@ export function Scanner({ incoming }: { incoming: IncomingImage | null }) {
       setHistory(h)
       if (src === 'camera' && continuous) setSession((s) => [...entries, ...s].slice(0, 30))
       // 手機版結果在相機下方：捲到可見處
-      if (!continuous && typeof matchMedia === 'function' && !matchMedia('(min-width: 1024px)').matches) {
-        requestAnimationFrame(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+      if (
+        !continuous &&
+        typeof matchMedia === 'function' &&
+        !matchMedia('(min-width: 1024px)').matches
+      ) {
+        requestAnimationFrame(() =>
+          resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+        )
       }
     },
     [continuous],
@@ -76,7 +88,9 @@ export function Scanner({ incoming }: { incoming: IncomingImage | null }) {
 
   const onCameraStatus = useCallback(
     (s: 'idle' | 'live' | 'found') =>
-      setScanStatus(s === 'live' ? (continuous ? 'continuous' : 'camera') : s === 'found' ? 'found' : 'idle'),
+      setScanStatus(
+        s === 'live' ? (continuous ? 'continuous' : 'camera') : s === 'found' ? 'found' : 'idle',
+      ),
     [continuous, setScanStatus],
   )
   const onImageStatus = useCallback(
@@ -185,7 +199,11 @@ export function Scanner({ incoming }: { incoming: IncomingImage | null }) {
                       key={e.id}
                       layout
                       initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0, transition: { ...spring.smooth, delay: staggerDelay(Math.min(i, 1)) } }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        transition: { ...spring.smooth, delay: staggerDelay(Math.min(i, 1)) },
+                      }}
                       transition={spring.smooth}
                     >
                       <button
@@ -194,7 +212,9 @@ export function Scanner({ incoming }: { incoming: IncomingImage | null }) {
                         className="flex min-h-11 w-full min-w-0 items-center gap-2.5 rounded-md px-2 text-left hover:bg-surface-2"
                       >
                         <Icon size={15} className="shrink-0 text-text-3" aria-hidden />
-                        <span className="min-w-0 flex-1 truncate text-small">{scanSummary(e.result)}</span>
+                        <span className="min-w-0 flex-1 truncate text-small">
+                          {scanSummary(e.result)}
+                        </span>
                       </button>
                     </motion.li>
                   )

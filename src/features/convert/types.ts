@@ -42,13 +42,69 @@ export interface FormatInfo {
 }
 
 export const FORMATS: Record<OutputFormat, FormatInfo> = {
-  jpeg: { mime: 'image/jpeg', ext: 'jpg', quality: true, target: true, exif: true, alpha: false, animation: false },
-  png: { mime: 'image/png', ext: 'png', quality: false, target: false, exif: true, alpha: true, animation: false },
-  webp: { mime: 'image/webp', ext: 'webp', quality: true, target: true, exif: true, alpha: true, animation: true },
-  avif: { mime: 'image/avif', ext: 'avif', quality: true, target: true, exif: false, alpha: true, animation: false },
-  ico: { mime: 'image/x-icon', ext: 'ico', quality: false, target: false, exif: false, alpha: true, animation: false },
-  bmp: { mime: 'image/bmp', ext: 'bmp', quality: false, target: false, exif: false, alpha: true, animation: false },
-  gif: { mime: 'image/gif', ext: 'gif', quality: false, target: false, exif: false, alpha: true, animation: true },
+  jpeg: {
+    mime: 'image/jpeg',
+    ext: 'jpg',
+    quality: true,
+    target: true,
+    exif: true,
+    alpha: false,
+    animation: false,
+  },
+  png: {
+    mime: 'image/png',
+    ext: 'png',
+    quality: false,
+    target: false,
+    exif: true,
+    alpha: true,
+    animation: false,
+  },
+  webp: {
+    mime: 'image/webp',
+    ext: 'webp',
+    quality: true,
+    target: true,
+    exif: true,
+    alpha: true,
+    animation: true,
+  },
+  avif: {
+    mime: 'image/avif',
+    ext: 'avif',
+    quality: true,
+    target: true,
+    exif: false,
+    alpha: true,
+    animation: false,
+  },
+  ico: {
+    mime: 'image/x-icon',
+    ext: 'ico',
+    quality: false,
+    target: false,
+    exif: false,
+    alpha: true,
+    animation: false,
+  },
+  bmp: {
+    mime: 'image/bmp',
+    ext: 'bmp',
+    quality: false,
+    target: false,
+    exif: false,
+    alpha: true,
+    animation: false,
+  },
+  gif: {
+    mime: 'image/gif',
+    ext: 'gif',
+    quality: false,
+    target: false,
+    exif: false,
+    alpha: true,
+    animation: true,
+  },
 }
 
 export const OUTPUT_ORDER: OutputFormat[] = ['jpeg', 'png', 'webp', 'avif', 'ico', 'bmp', 'gif']
@@ -88,14 +144,7 @@ export type WarningCode =
   | 'memory-retry'
 
 export type ErrorCode =
-  | 'decode'
-  | 'memory'
-  | 'encode'
-  | 'codec-load'
-  | 'heic-load'
-  | 'unsupported'
-  | 'crash'
-  | 'unknown'
+  'decode' | 'memory' | 'encode' | 'codec-load' | 'heic-load' | 'unsupported' | 'crash' | 'unknown'
 
 export type ExifOutcome = 'stripped' | 'kept' | 'none' | 'unsupported' | 'too-large'
 
@@ -158,9 +207,7 @@ export interface ThumbResult {
 
 export type CodecId = 'mozjpeg' | 'webp' | 'avif' | 'avif-dec' | 'oxipng'
 
-export type WorkerRequest =
-  | { type: 'convert'; job: ConvertJob }
-  | { type: 'thumb'; job: ThumbJob }
+export type WorkerRequest = { type: 'convert'; job: ConvertJob } | { type: 'thumb'; job: ThumbJob }
 
 export type WorkerResponse =
   | { type: 'progress'; id: string; value: number }

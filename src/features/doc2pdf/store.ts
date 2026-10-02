@@ -11,7 +11,8 @@ import { docStats, type DocModel, type DocStats, type SourceKind } from './engin
 import { EngineError, parseSource } from './lib/client'
 import { t } from '@/i18n'
 
-export const TEXT_ACCEPT = '.md,.markdown,.mdown,.mkd,.txt,.text,.rtf,text/plain,text/markdown,application/rtf,text/rtf'
+export const TEXT_ACCEPT =
+  '.md,.markdown,.mdown,.mkd,.txt,.text,.rtf,text/plain,text/markdown,application/rtf,text/rtf'
 export const IMAGE_ACCEPT = 'image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.avif'
 export const ACCEPT = `${TEXT_ACCEPT},${IMAGE_ACCEPT}`
 /** 超過這個大小的文字檔先提醒 */
@@ -69,7 +70,8 @@ function loadOptions(): ConvertOptions {
   for (const k of Object.keys(DEFAULT_OPTIONS) as (keyof ConvertOptions)[]) {
     if (k === 'exclude' || k === 'title' || k === 'date') continue
     const v = saved[k as keyof PersistedOptions]
-    if (v !== undefined && typeof v === typeof DEFAULT_OPTIONS[k]) (o as Record<string, unknown>)[k] = v
+    if (v !== undefined && typeof v === typeof DEFAULT_OPTIONS[k])
+      (o as Record<string, unknown>)[k] = v
   }
   return o
 }
@@ -171,7 +173,10 @@ export const useDoc2Pdf = create<State>((set, get) => {
       console.error(e)
       const cur = get().sources.find((x) => x.id === id)
       if (!cur || cur.version !== version) return
-      patch(id, { status: 'error', error: e instanceof EngineError && e.code === 'notRtf' ? 'notRtf' : 'parse' })
+      patch(id, {
+        status: 'error',
+        error: e instanceof EngineError && e.code === 'notRtf' ? 'notRtf' : 'parse',
+      })
     }
   }
 

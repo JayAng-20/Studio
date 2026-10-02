@@ -12,7 +12,10 @@ export interface Rect {
 }
 
 /** 追蹤元素尺寸（ResizeObserver）；回傳 callback ref，元素晚一點才掛載也能追蹤 */
-export function useSize<T extends HTMLElement>(): [(el: T | null) => void, { w: number; h: number }] {
+export function useSize<T extends HTMLElement>(): [
+  (el: T | null) => void,
+  { w: number; h: number },
+] {
   const [el, setEl] = useState<T | null>(null)
   const [size, setSize] = useState({ w: 0, h: 0 })
   useEffect(() => {
@@ -34,7 +37,10 @@ export function mapCorners(
   fit: 'cover' | 'contain',
 ): Rect | null {
   if (!corners.length || !src.w || !src.h || !box.w || !box.h) return null
-  const k = fit === 'cover' ? Math.max(box.w / src.w, box.h / src.h) : Math.min(box.w / src.w, box.h / src.h)
+  const k =
+    fit === 'cover'
+      ? Math.max(box.w / src.w, box.h / src.h)
+      : Math.min(box.w / src.w, box.h / src.h)
   const ox = (box.w - src.w * k) / 2
   const oy = (box.h - src.h * k) / 2
   const xs = corners.map((p) => p.x * k + ox)
@@ -124,7 +130,12 @@ export function ScanOverlay({
       {state === 'scanning' && (
         <div
           className="absolute overflow-hidden"
-          style={{ left: frame.x + 10, top: frame.y + 8, width: frame.w - 20, height: frame.h - 16 }}
+          style={{
+            left: frame.x + 10,
+            top: frame.y + 8,
+            width: frame.w - 20,
+            height: frame.h - 16,
+          }}
         >
           <div
             className="qr-scanline motion-decor absolute inset-x-0 top-0 h-0.5 rounded-full"
@@ -162,7 +173,10 @@ export function ScanOverlay({
           transition={spring.snappy}
         >
           <div
-            className={cn('relative size-full', state === 'scanning' && 'qr-bracket-breathe motion-decor')}
+            className={cn(
+              'relative size-full',
+              state === 'scanning' && 'qr-bracket-breathe motion-decor',
+            )}
             style={{ '--bx': `${c.bx * 4}px`, '--by': `${c.by * 4}px` } as CSSProperties}
           >
             <div className="absolute inset-0 drop-shadow-[0_1px_2px_rgba(0,0,0,.45)]">

@@ -237,7 +237,8 @@ export const zh = {
   frames: {
     summary: '共 {count} 格，總長 {duration}',
     customized: '已手動調整',
-    autoDesc: '影格依區間、fps 與速度自動產生。需要刪除、複製、重排或調整單格延遲時，打開影格編輯器。',
+    autoDesc:
+      '影格依區間、fps 與速度自動產生。需要刪除、複製、重排或調整單格延遲時，打開影格編輯器。',
     resetNotice: '已依新參數重新產生影格',
     editorTitle: '影格編輯器',
     editorDesc: '拖曳調整順序；每格可個別設定停留時間。',
@@ -318,7 +319,8 @@ export const en: DeepString<typeof zh> = {
   },
   errors: {
     videoDecode: 'Your browser can’t play this video',
-    videoDecodeDesc: 'The codec may not be supported. Convert it to MP4 (H.264) or WebM and try again.',
+    videoDecodeDesc:
+      'The codec may not be supported. Convert it to MP4 (H.264) or WebM and try again.',
     oneVideo: 'Only one video at a time',
     oneVideoDesc: 'Loaded the first video, “{name}”.',
     mixed: 'Videos and images can’t be mixed',
@@ -326,9 +328,11 @@ export const en: DeepString<typeof zh> = {
     imagesFailed: '{count} image(s) couldn’t be read',
     imagesFailedDesc: 'Images that couldn’t be decoded were skipped; the rest are ready.',
     encodeFailed: 'Couldn’t create the animation',
-    encodeFailedDesc: 'The browser may be out of memory. Lower the width or fps, or shorten the range, and try again.',
+    encodeFailedDesc:
+      'The browser may be out of memory. Lower the width or fps, or shorten the range, and try again.',
     seekFailed: 'Timed out reading video frames',
-    seekFailedDesc: 'This video is hard to seek (e.g. a recording without keyframes). Convert it to MP4 and try again.',
+    seekFailedDesc:
+      'This video is hard to seek (e.g. a recording without keyframes). Convert it to MP4 and try again.',
     estimateFailed: 'Can’t estimate right now',
     noFrames: 'No frames to export',
     noFramesDesc: 'Keep at least one frame.',
@@ -529,12 +533,14 @@ export const en: DeepString<typeof zh> = {
     pick: 'Pick from preview',
     picking: 'Click the preview…',
     tolerance: 'Tolerance',
-    gifNote: 'GIF pixels are fully transparent or opaque, so edges look sharp. Export APNG for smooth edges.',
+    gifNote:
+      'GIF pixels are fully transparent or opaque, so edges look sharp. Export APNG for smooth edges.',
   },
   frames: {
     summary: '{count} frames, {duration} total',
     customized: 'Edited manually',
-    autoDesc: 'Frames are generated from the range, fps and speed. Open the frame editor to delete, duplicate, reorder or change per-frame delays.',
+    autoDesc:
+      'Frames are generated from the range, fps and speed. Open the frame editor to delete, duplicate, reorder or change per-frame delays.',
     resetNotice: 'Frames regenerated with the new settings',
     editorTitle: 'Frame editor',
     editorDesc: 'Drag to reorder; set how long each frame stays.',

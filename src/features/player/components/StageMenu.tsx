@@ -1,13 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { Check } from 'lucide-react'
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type ReactNode,
-} from 'react'
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { Sheet } from '@/components/ui'
 import { duration, sec, spring } from '@/design/motion'
 import { cn } from '@/lib/cn'
@@ -69,7 +62,9 @@ export function StageMenu({
     }
     document.addEventListener('pointerdown', onDown, true)
     const focusId = requestAnimationFrame(() => {
-      const items = menu.current?.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]:not(:disabled)')
+      const items = menu.current?.querySelectorAll<HTMLButtonElement>(
+        '[role^="menuitem"]:not(:disabled)',
+      )
       const checked = menu.current?.querySelector<HTMLButtonElement>('[aria-checked="true"]')
       ;(checked ?? items?.[0])?.focus()
     })
@@ -92,10 +87,16 @@ export function StageMenu({
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Home' && e.key !== 'End') return
     e.preventDefault()
     e.stopPropagation()
-    const list = Array.from(menu.current?.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]:not(:disabled)') ?? [])
+    const list = Array.from(
+      menu.current?.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]:not(:disabled)') ?? [],
+    )
     const i = list.indexOf(document.activeElement as HTMLButtonElement)
     const nextI =
-      e.key === 'Home' ? 0 : e.key === 'End' ? list.length - 1 : (i + (e.key === 'ArrowDown' ? 1 : -1) + list.length) % list.length
+      e.key === 'Home'
+        ? 0
+        : e.key === 'End'
+          ? list.length - 1
+          : (i + (e.key === 'ArrowDown' ? 1 : -1) + list.length) % list.length
     list[nextI]?.focus()
   }
 
@@ -127,7 +128,13 @@ export function StageMenu({
               <button
                 key={it.key}
                 type="button"
-                role={radio ? 'menuitemradio' : it.checked !== undefined ? 'menuitemcheckbox' : 'menuitem'}
+                role={
+                  radio
+                    ? 'menuitemradio'
+                    : it.checked !== undefined
+                      ? 'menuitemcheckbox'
+                      : 'menuitem'
+                }
                 aria-checked={radio || it.checked !== undefined ? !!it.checked : undefined}
                 disabled={it.disabled}
                 onClick={() => {
@@ -137,9 +144,15 @@ export function StageMenu({
                 className="flex min-h-12 w-full items-center gap-3 rounded-md px-3 text-left text-body text-text transition-colors hover:bg-surface-2 disabled:opacity-40"
               >
                 <span className="grid w-5 shrink-0 place-items-center text-text-2">
-                  {it.checked ? <Check size={16} aria-hidden className="text-accent-ink" /> : it.icon}
+                  {it.checked ? (
+                    <Check size={16} aria-hidden className="text-accent-ink" />
+                  ) : (
+                    it.icon
+                  )}
                 </span>
-                <span className={cn('min-w-0 flex-1 truncate', numeric && 'tabular-nums')}>{it.label}</span>
+                <span className={cn('min-w-0 flex-1 truncate', numeric && 'tabular-nums')}>
+                  {it.label}
+                </span>
               </button>
             ))}
           </div>
@@ -160,12 +173,22 @@ export function StageMenu({
             exit={{ opacity: 0, scale: 0.96, y: 4, transition: { duration: sec(duration.fast) } }}
             transition={spring.snappy}
           >
-            {title && <div className="px-2.5 pb-1 pt-1.5 text-caption font-semibold text-[var(--stage-fg-2)]">{title}</div>}
+            {title && (
+              <div className="px-2.5 pb-1 pt-1.5 text-caption font-semibold text-[var(--stage-fg-2)]">
+                {title}
+              </div>
+            )}
             {items.map((it) => (
               <button
                 key={it.key}
                 type="button"
-                role={radio ? 'menuitemradio' : it.checked !== undefined ? 'menuitemcheckbox' : 'menuitem'}
+                role={
+                  radio
+                    ? 'menuitemradio'
+                    : it.checked !== undefined
+                      ? 'menuitemcheckbox'
+                      : 'menuitem'
+                }
                 aria-checked={radio || it.checked !== undefined ? !!it.checked : undefined}
                 disabled={it.disabled}
                 onClick={() => {
@@ -178,9 +201,19 @@ export function StageMenu({
                 className="flex min-h-9 w-full items-center gap-2.5 rounded-sm px-2.5 py-1.5 text-left text-body text-[var(--stage-fg)] outline-none transition-colors hover:bg-[var(--stage-hover)] focus-visible:bg-[var(--stage-hover)] disabled:opacity-40 pointer-coarse:min-h-11"
               >
                 <span className="grid w-4 shrink-0 place-items-center">
-                  {it.checked ? <Check size={15} aria-hidden className="text-[color-mix(in_srgb,var(--accent)_55%,white)]" /> : it.icon}
+                  {it.checked ? (
+                    <Check
+                      size={15}
+                      aria-hidden
+                      className="text-[color-mix(in_srgb,var(--accent)_55%,white)]"
+                    />
+                  ) : (
+                    it.icon
+                  )}
                 </span>
-                <span className={cn('min-w-0 flex-1 truncate', numeric && 'tabular-nums')}>{it.label}</span>
+                <span className={cn('min-w-0 flex-1 truncate', numeric && 'tabular-nums')}>
+                  {it.label}
+                </span>
                 {it.hint && (
                   <kbd className="rounded-xs border border-[var(--stage-glass-border)] px-1.5 text-[11px] text-[var(--stage-fg-2)]">
                     {it.hint}

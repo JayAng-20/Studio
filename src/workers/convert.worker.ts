@@ -11,7 +11,9 @@ declare const self: DedicatedWorkerGlobalScope
 
 const post = (msg: WorkerResponse, transfer: Transferable[] = []) => self.postMessage(msg, transfer)
 
-setCodecProgress((codec, loaded, total, done) => post({ type: 'codec', codec, loaded, total, done }))
+setCodecProgress((codec, loaded, total, done) =>
+  post({ type: 'codec', codec, loaded, total, done }),
+)
 
 self.onmessage = async (e: MessageEvent<WorkerRequest>) => {
   const req = e.data

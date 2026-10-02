@@ -40,9 +40,14 @@ export function SummaryBar({ onRetryFailed }: { onRetryFailed: () => void }) {
         <div className="flex min-w-0 flex-1 flex-col gap-2" aria-live="polite">
           <div className="flex items-baseline justify-between gap-3">
             <p className="text-body font-semibold text-text">
-              {t('convert.summary.running', { done: done.length, total: done.length + active.length })}
+              {t('convert.summary.running', {
+                done: done.length,
+                total: done.length + active.length,
+              })}
             </p>
-            <span className="text-small tabular-nums text-text-2">{Math.round(overall * 100)}%</span>
+            <span className="text-small tabular-nums text-text-2">
+              {Math.round(overall * 100)}%
+            </span>
           </div>
           <ProgressBar value={overall} label={t('convert.summary.label')} />
         </div>
@@ -53,13 +58,20 @@ export function SummaryBar({ onRetryFailed }: { onRetryFailed: () => void }) {
             <p className="text-body font-semibold text-text" aria-live="polite">
               {t('convert.summary.done', { count: done.length })}
               {failed.length > 0 && (
-                <span className="ml-2 font-normal text-danger-ink">{t('convert.summary.failed', { count: failed.length })}</span>
+                <span className="ml-2 font-normal text-danger-ink">
+                  {t('convert.summary.failed', { count: failed.length })}
+                </span>
               )}
             </p>
             <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-small tabular-nums text-text-2">
               <span>
                 {formatBytes(before)} →{' '}
-                <CountUp value={after} format={(v) => formatBytes(v)} onceKey={`sum:${batchKey}`} className="font-semibold text-text" />
+                <CountUp
+                  value={after}
+                  format={(v) => formatBytes(v)}
+                  onceKey={`sum:${batchKey}`}
+                  className="font-semibold text-text"
+                />
               </span>
               {done.length > 0 && <SavingsBadge pct={pct} onceKey={`sumpct:${batchKey}`} />}
               {before - after > 0 && (
@@ -79,7 +91,11 @@ export function SummaryBar({ onRetryFailed }: { onRetryFailed: () => void }) {
         ) : (
           <>
             {failed.length > 0 && (
-              <Button variant="ghost" leading={<RotateCcw size={16} aria-hidden />} onClick={onRetryFailed}>
+              <Button
+                variant="ghost"
+                leading={<RotateCcw size={16} aria-hidden />}
+                onClick={onRetryFailed}
+              >
                 {t('convert.summary.retryFailed')}
               </Button>
             )}
@@ -96,7 +112,13 @@ export function SummaryBar({ onRetryFailed }: { onRetryFailed: () => void }) {
             {done.length > 0 && (
               <Button
                 variant="primary"
-                leading={done.length > 1 ? <Archive size={16} aria-hidden /> : <Download size={16} aria-hidden />}
+                leading={
+                  done.length > 1 ? (
+                    <Archive size={16} aria-hidden />
+                  ) : (
+                    <Download size={16} aria-hidden />
+                  )
+                }
                 onClick={() => void downloadResults(run, items)}
               >
                 {done.length > 1 ? t('convert.summary.downloadZip') : t('common.download')}

@@ -53,7 +53,10 @@ describe('localStorage 持久化', () => {
   it('損毀的資料不會造成錯誤', () => {
     localStorage.setItem(STORAGE_KEYS.progress, '{bad json')
     expect(loadProgress()).toEqual({})
-    localStorage.setItem(STORAGE_KEYS.progress, JSON.stringify({ a: { t: 'x' }, b: { t: 9, d: 99, at: 1 } }))
+    localStorage.setItem(
+      STORAGE_KEYS.progress,
+      JSON.stringify({ a: { t: 'x' }, b: { t: 9, d: 99, at: 1 } }),
+    )
     expect(Object.keys(loadProgress())).toEqual(['b'])
   })
 })

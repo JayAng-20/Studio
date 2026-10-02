@@ -74,10 +74,12 @@ export async function createFeed(o: FeedOptions, signal?: AbortSignal): Promise<
   } else {
     if (o.bitmaps) bitmaps = o.bitmaps
     else {
-      bitmaps = (await decodeImages(
-        o.source.items.map((i) => i.file),
-        signal,
-      )).bitmaps
+      bitmaps = (
+        await decodeImages(
+          o.source.items.map((i) => i.file),
+          signal,
+        )
+      ).bitmaps
       ownBitmaps = true
     }
   }

@@ -105,7 +105,10 @@ export function FrameEditor({
       footer={
         <>
           <span className="mr-auto text-small tabular-nums text-text-2">
-            {t('frames.summary', { count: items.length, duration: formatTime(total, { tenths: true }) })}
+            {t('frames.summary', {
+              count: items.length,
+              duration: formatTime(total, { tenths: true }),
+            })}
           </span>
           <Button variant="secondary" onClick={() => onOpenChange(false)}>
             {tc('common.cancel')}
@@ -132,7 +135,12 @@ export function FrameEditor({
           size="sm"
           variant="secondary"
           onClick={() =>
-            setItems((list) => list.map((i) => ({ ...i, delayCs: Math.max(MIN_DELAY_CS, Math.round(allDelay / 10)) })))
+            setItems((list) =>
+              list.map((i) => ({
+                ...i,
+                delayCs: Math.max(MIN_DELAY_CS, Math.round(allDelay / 10)),
+              })),
+            )
           }
         >
           {tc('common.applyAll')}
@@ -149,9 +157,19 @@ export function FrameEditor({
           const url = source?.kind === 'video' ? thumbs.get(item.src) : imageUrl(item.src)
           return (
             <div className="card flex h-full flex-col overflow-hidden">
-              <div className={cn('relative aspect-video bg-surface-2', source?.kind === 'images' && 'gif-checker')}>
+              <div
+                className={cn(
+                  'relative aspect-video bg-surface-2',
+                  source?.kind === 'images' && 'gif-checker',
+                )}
+              >
                 {url ? (
-                  <img src={url} alt="" className="absolute inset-0 size-full object-contain" draggable={false} />
+                  <img
+                    src={url}
+                    alt=""
+                    className="absolute inset-0 size-full object-contain"
+                    draggable={false}
+                  />
                 ) : (
                   <Skeleton className="absolute inset-0 rounded-none" />
                 )}
@@ -201,7 +219,11 @@ export function FrameEditor({
                   size="sm"
                   onChange={(v) =>
                     setItems((list) =>
-                      list.map((x) => (x.id === item.id ? { ...x, delayCs: Math.max(MIN_DELAY_CS, Math.round(v / 10)) } : x)),
+                      list.map((x) =>
+                        x.id === item.id
+                          ? { ...x, delayCs: Math.max(MIN_DELAY_CS, Math.round(v / 10)) }
+                          : x,
+                      ),
                     )
                   }
                 />

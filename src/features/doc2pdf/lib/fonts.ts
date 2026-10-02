@@ -39,7 +39,12 @@ export async function fontsCached(): Promise<boolean> {
   }
 }
 
-async function fetchOne(url: string, approx: number, onBytes: (n: number) => void, signal: AbortSignal): Promise<Uint8Array> {
+async function fetchOne(
+  url: string,
+  approx: number,
+  onBytes: (n: number) => void,
+  signal: AbortSignal,
+): Promise<Uint8Array> {
   // 先找快取
   if (hasCaches()) {
     try {
@@ -74,7 +79,8 @@ async function fetchOne(url: string, approx: number, onBytes: (n: number) => voi
     off += c.length
   }
   // 基本檢查：TrueType 檔頭
-  if (!(out[0] === 0 && out[1] === 1 && out[2] === 0 && out[3] === 0)) throw new FontLoadError('invalid font')
+  if (!(out[0] === 0 && out[1] === 1 && out[2] === 0 && out[3] === 0))
+    throw new FontLoadError('invalid font')
   if (hasCaches()) {
     try {
       const c = await caches.open(CACHE)
@@ -91,7 +97,10 @@ async function fetchOne(url: string, approx: number, onBytes: (n: number) => voi
  * 取得字型；onProgress(已下載位元組, 總位元組)。已快取時立即完成。
  * 同時多次呼叫會共用同一次下載。
  */
-export function loadFonts(onProgress: (loaded: number, total: number) => void, signal: AbortSignal): Promise<FontBytes> {
+export function loadFonts(
+  onProgress: (loaded: number, total: number) => void,
+  signal: AbortSignal,
+): Promise<FontBytes> {
   if (memory) {
     onProgress(1, 1)
     return Promise.resolve(memory)

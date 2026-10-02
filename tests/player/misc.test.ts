@@ -37,22 +37,53 @@ describe('逐格', () => {
 describe('不支援格式診斷', () => {
   const none = () => ''
   it('MKV／AVI／HEVC／杜比', () => {
-    expect(diagnose({ name: 'a.mkv', type: '', errorCode: 4, canPlayType: none }).reason).toBe('mkv')
-    expect(diagnose({ name: 'a.AVI', type: '', errorCode: 4, canPlayType: none }).reason).toBe('avi')
-    expect(diagnose({ name: 'IMG_0001.MOV', type: 'video/quicktime', errorCode: 4, canPlayType: none }).reason).toBe('hevc')
-    expect(diagnose({ name: 'a.ac3', type: '', errorCode: 4, canPlayType: none }).reason).toBe('dolby')
-    expect(diagnose({ name: 'a.mp4', type: 'video/mp4', errorCode: 4, canPlayType: none }).reason).toBe('apac')
+    expect(diagnose({ name: 'a.mkv', type: '', errorCode: 4, canPlayType: none }).reason).toBe(
+      'mkv',
+    )
+    expect(diagnose({ name: 'a.AVI', type: '', errorCode: 4, canPlayType: none }).reason).toBe(
+      'avi',
+    )
+    expect(
+      diagnose({ name: 'IMG_0001.MOV', type: 'video/quicktime', errorCode: 4, canPlayType: none })
+        .reason,
+    ).toBe('hevc')
+    expect(diagnose({ name: 'a.ac3', type: '', errorCode: 4, canPlayType: none }).reason).toBe(
+      'dolby',
+    )
+    expect(
+      diagnose({ name: 'a.mp4', type: 'video/mp4', errorCode: 4, canPlayType: none }).reason,
+    ).toBe('apac')
   })
   it('沒有畫面時判定為 HEVC', () => {
-    const d = diagnose({ name: 'clip.mp4', type: 'video/mp4', errorCode: null, canPlayType: none, noVideoTrack: true })
+    const d = diagnose({
+      name: 'clip.mp4',
+      type: 'video/mp4',
+      errorCode: null,
+      canPlayType: none,
+      noVideoTrack: true,
+    })
     expect(d.reason).toBe('hevc')
     expect(d.tips).toContain('iphoneCompat')
   })
   it('網址的網路錯誤', () => {
-    expect(diagnose({ name: 'https://x/a.m3u8', type: '', errorCode: MEDIA_ERR.network, canPlayType: none, isUrl: true, isHls: true }).reason).toBe('hls')
+    expect(
+      diagnose({
+        name: 'https://x/a.m3u8',
+        type: '',
+        errorCode: MEDIA_ERR.network,
+        canPlayType: none,
+        isUrl: true,
+        isHls: true,
+      }).reason,
+    ).toBe('hls')
   })
   it('附上 canPlayType 結果', () => {
-    const d = diagnose({ name: 'a.mkv', type: 'video/x-matroska', errorCode: 4, canPlayType: (m) => (m.includes('webm') ? 'maybe' : '') })
+    const d = diagnose({
+      name: 'a.mkv',
+      type: 'video/x-matroska',
+      errorCode: 4,
+      canPlayType: (m) => (m.includes('webm') ? 'maybe' : ''),
+    })
     expect(d.probe[0]).toEqual({ mime: 'video/x-matroska', result: '' })
     expect(d.probe.some((p) => p.result === 'maybe')).toBe(true)
   })
@@ -68,7 +99,16 @@ describe('ID3', () => {
     const enc = new TextEncoder()
     const frame = (id: string, body: number[]) => {
       const size = body.length
-      return [...enc.encode(id), (size >>> 24) & 255, (size >>> 16) & 255, (size >>> 8) & 255, size & 255, 0, 0, ...body]
+      return [
+        ...enc.encode(id),
+        (size >>> 24) & 255,
+        (size >>> 16) & 255,
+        (size >>> 8) & 255,
+        size & 255,
+        0,
+        0,
+        ...body,
+      ]
     }
     const title = frame('TIT2', [3, ...enc.encode('晨光')])
     const artist = frame('TPE1', [0, ...enc.encode('Band')])

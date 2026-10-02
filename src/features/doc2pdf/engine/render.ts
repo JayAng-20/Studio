@@ -120,8 +120,10 @@ export async function renderPdf(c: Composed, o: RenderOptions): Promise<Uint8Arr
             borderWidth: op.stroke ? (op.lw ?? 0.75) : 0,
             borderDashArray: op.dash,
           }
-          if (op.r && op.r > 0.2) page.drawSvgPath(roundRectPath(op.w, op.h, op.r), { x: op.x, y: H - op.y, ...opts })
-          else page.drawRectangle({ x: op.x, y: H - op.y - op.h, width: op.w, height: op.h, ...opts })
+          if (op.r && op.r > 0.2)
+            page.drawSvgPath(roundRectPath(op.w, op.h, op.r), { x: op.x, y: H - op.y, ...opts })
+          else
+            page.drawRectangle({ x: op.x, y: H - op.y - op.h, width: op.w, height: op.h, ...opts })
           break
         }
         case 'line':
@@ -216,7 +218,11 @@ export function addOutline(
 ) {
   const ctx = pdf.context
   const rootRef = ctx.nextRef()
-  const build = (list: OutlineNode[], parent: PDFRef, depth: number): { first: PDFRef; last: PDFRef; visible: number } => {
+  const build = (
+    list: OutlineNode[],
+    parent: PDFRef,
+    depth: number,
+  ): { first: PDFRef; last: PDFRef; visible: number } => {
     const refs = list.map(() => ctx.nextRef())
     let visible = 0
     list.forEach((n, i) => {
@@ -242,7 +248,10 @@ export function addOutline(
     return { first: refs[0], last: refs[refs.length - 1], visible }
   }
   const top = build(nodes, rootRef, 0)
-  ctx.assign(rootRef, ctx.obj({ Type: 'Outlines', First: top.first, Last: top.last, Count: top.visible }))
+  ctx.assign(
+    rootRef,
+    ctx.obj({ Type: 'Outlines', First: top.first, Last: top.last, Count: top.visible }),
+  )
   pdf.catalog.set(PDFName.of('Outlines'), rootRef)
   pdf.catalog.set(PDFName.of('PageMode'), PDFName.of('UseOutlines'))
 }

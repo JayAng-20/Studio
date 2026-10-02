@@ -5,13 +5,7 @@
  */
 
 export type TextEncodingId =
-  | 'utf-8'
-  | 'utf-16le'
-  | 'utf-16be'
-  | 'big5'
-  | 'gb18030'
-  | 'shift_jis'
-  | 'windows-1252'
+  'utf-8' | 'utf-16le' | 'utf-16be' | 'big5' | 'gb18030' | 'shift_jis' | 'windows-1252'
 
 export const ENCODINGS: TextEncodingId[] = [
   'utf-8',

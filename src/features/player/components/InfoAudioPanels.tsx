@@ -1,13 +1,6 @@
 import { AudioWaveform, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import {
-  Button,
-  Callout,
-  SegmentedControl,
-  Select,
-  SliderField,
-  Switch,
-} from '@/components/ui'
+import { Button, Callout, SegmentedControl, Select, SliderField, Switch } from '@/components/ui'
 import { formatBytes } from '@/lib/format'
 import { useT } from '@/i18n'
 import { usePlayer, useCurrent } from '../store'
@@ -24,7 +17,9 @@ export function InfoPanel() {
       {rows.map(([k, v, numeric]) => (
         <div key={k} className="contents">
           <dt className="text-text-3">{k}</dt>
-          <dd className={numeric ? 'break-all tabular-nums text-text' : 'break-all text-text'}>{v}</dd>
+          <dd className={numeric ? 'break-all tabular-nums text-text' : 'break-all text-text'}>
+            {v}
+          </dd>
         </div>
       ))}
     </dl>
@@ -50,7 +45,8 @@ function AudioTracks() {
   const el = usePlayer((s) => s.el)
   const ready = usePlayer((s) => s.ready)
   const [tracks, setTracks] = useState<TrackLike[]>([])
-  const supported = typeof HTMLMediaElement !== 'undefined' && 'audioTracks' in HTMLMediaElement.prototype
+  const supported =
+    typeof HTMLMediaElement !== 'undefined' && 'audioTracks' in HTMLMediaElement.prototype
   useEffect(() => {
     if (!el || !supported) return
     const list = (el as unknown as { audioTracks?: TrackListLike }).audioTracks
@@ -58,7 +54,9 @@ function AudioTracks() {
     const read = () => {
       const out: TrackLike[] = []
       for (let i = 0; i < list.length; i++) out.push(list[i])
-      setTracks(out.map((x) => ({ id: x.id, label: x.label, language: x.language, enabled: x.enabled })))
+      setTracks(
+        out.map((x) => ({ id: x.id, label: x.label, language: x.language, enabled: x.enabled })),
+      )
     }
     const id = requestAnimationFrame(read)
     list.addEventListener?.('change', read)
@@ -69,8 +67,10 @@ function AudioTracks() {
       list.removeEventListener?.('addtrack', read)
     }
   }, [el, supported, ready])
-  if (!supported) return <p className="text-small text-text-3">{t('player.audio.tracksUnsupported')}</p>
-  if (tracks.length < 2) return <p className="text-small text-text-3">{t('player.audio.tracksNone')}</p>
+  if (!supported)
+    return <p className="text-small text-text-3">{t('player.audio.tracksUnsupported')}</p>
+  if (tracks.length < 2)
+    return <p className="text-small text-text-3">{t('player.audio.tracksNone')}</p>
   const current = tracks.findIndex((x) => x.enabled)
   return (
     <Select
@@ -104,12 +104,16 @@ export function AudioPanel() {
   const peak = usePlayer((s) => (s.currentId ? s.peaks[s.currentId] : undefined))
   const set = usePlayer((s) => s.set)
   const supported = webAudioSupported()
-  const preset = (Object.keys(EQ_PRESETS) as EqPreset[]).find((k) => EQ_PRESETS[k].every((g, i) => g === gains[i]))
+  const preset = (Object.keys(EQ_PRESETS) as EqPreset[]).find((k) =>
+    EQ_PRESETS[k].every((g, i) => g === gains[i]),
+  )
   const status =
     peak === 'busy'
       ? t('player.audio.waveformBusy')
       : peak === 'large'
-        ? t('player.audio.waveformTooLarge', { size: formatBytes(WAVEFORM_LIMIT[item?.kind ?? 'audio']) })
+        ? t('player.audio.waveformTooLarge', {
+            size: formatBytes(WAVEFORM_LIMIT[item?.kind ?? 'audio']),
+          })
         : peak === 'error'
           ? t('player.audio.waveformFailed')
           : null
@@ -126,7 +130,11 @@ export function AudioPanel() {
           }}
           label={t('player.audio.eqEnable')}
         />
-        <div className="flex flex-wrap gap-1.5" role="group" aria-label={t('player.audio.eqPreset')}>
+        <div
+          className="flex flex-wrap gap-1.5"
+          role="group"
+          aria-label={t('player.audio.eqPreset')}
+        >
           {(Object.keys(EQ_PRESETS) as EqPreset[]).map((k) => (
             <Button
               key={k}
@@ -173,14 +181,19 @@ export function AudioPanel() {
           description={t('player.audio.waveformDesc')}
         />
         {status && waveformOn && (
-          <p className="flex items-center gap-1.5 text-caption tabular-nums text-text-3" aria-live="polite">
+          <p
+            className="flex items-center gap-1.5 text-caption tabular-nums text-text-3"
+            aria-live="polite"
+          >
             <AudioWaveform size={14} aria-hidden />
             {status}
           </p>
         )}
         {item?.kind === 'audio' && (
           <div className="flex flex-col gap-1.5">
-            <span className="text-small font-medium text-text-2">{t('player.audio.visualizer')}</span>
+            <span className="text-small font-medium text-text-2">
+              {t('player.audio.visualizer')}
+            </span>
             <SegmentedControl
               label={t('player.audio.visualizer')}
               value={visualizer}

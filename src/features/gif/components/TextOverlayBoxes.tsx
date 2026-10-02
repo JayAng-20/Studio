@@ -26,9 +26,15 @@ export function TextOverlayBoxes({
   const t = useGT()
   const texts = useGifStore((s) => s.texts)
   const updateText = useGifStore((s) => s.updateText)
-  const drag = useRef<{ id: string; px: number; py: number; x: number; y: number; w: number; h: number } | null>(
-    null,
-  )
+  const drag = useRef<{
+    id: string
+    px: number
+    py: number
+    x: number
+    y: number
+    w: number
+    h: number
+  } | null>(null)
   const ctx = getMeasureCtx()
   if (!ctx) return null
 
@@ -87,7 +93,8 @@ export function TextOverlayBoxes({
               'pointer-events-auto absolute cursor-move touch-none rounded-xs outline-none transition-[box-shadow,opacity] duration-(--dur-fast)',
               'hover:shadow-[0_0_0_1.5px_rgba(255,255,255,.9),0_0_0_3px_rgba(0,0,0,.35)]',
               'focus-visible:shadow-[0_0_0_2px_var(--accent)]',
-              layer.id === selected && 'shadow-[0_0_0_2px_var(--accent),0_0_0_4px_rgba(255,255,255,.6)]',
+              layer.id === selected &&
+                'shadow-[0_0_0_2px_var(--accent),0_0_0_4px_rgba(255,255,255,.6)]',
               !visible && 'opacity-40',
             )}
             style={{

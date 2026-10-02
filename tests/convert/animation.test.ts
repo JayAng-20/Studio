@@ -56,7 +56,12 @@ describe('GIF 解碼（JS 備援）', () => {
     }
     const enc = GIFEncoder()
     enc.writeFrame(idx, w, h, { palette })
-    enc.writeFrame(idx.map((v) => 255 - v), w, h, { palette })
+    enc.writeFrame(
+      idx.map((v) => 255 - v),
+      w,
+      h,
+      { palette },
+    )
     enc.finish()
     const gif = parseGif(enc.bytes())
     const frames: Uint8ClampedArray[] = []
@@ -77,7 +82,11 @@ describe('GIF 解碼（JS 備援）', () => {
     // 第二格：左半透明（索引 2），右半綠色
     const f2 = new Uint8Array([2, 2, 1, 1, 2, 2, 1, 1])
     enc.writeFrame(f2, w, h, { palette, transparent: true, transparentIndex: 2, dispose: 2 })
-    enc.writeFrame(new Uint8Array(w * h).fill(2), w, h, { palette, transparent: true, transparentIndex: 2 })
+    enc.writeFrame(new Uint8Array(w * h).fill(2), w, h, {
+      palette,
+      transparent: true,
+      transparentIndex: 2,
+    })
     enc.finish()
     const out: number[][] = []
     for (const f of compositeGif(parseGif(enc.bytes()))) out.push([...f.rgba])
@@ -120,7 +129,13 @@ describe('動態 WebP 封裝', () => {
     expect(out[d + 6] | (out[d + 7] << 8)).toBe(29)
     expect(out[d + 9] | (out[d + 10] << 8)).toBe(19)
     expect(out[d + 12] | (out[d + 13] << 8)).toBe(120)
-    expect(probeBytes(out)).toMatchObject({ format: 'webp', width: 30, height: 20, animated: true, frames: 2 })
+    expect(probeBytes(out)).toMatchObject({
+      format: 'webp',
+      width: 30,
+      height: 20,
+      animated: true,
+      frames: 2,
+    })
   })
 
   it('沒有影格時丟出錯誤', () => {

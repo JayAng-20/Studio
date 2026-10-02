@@ -63,7 +63,8 @@ export const NO_LINE_END = new Set(Array.from('（「『《〈【〔〖〘〚｛
 export const SENTENCE_END = /[。．.！!？?；;…」』”"）)]$/
 
 /** 拉丁文字中可斷行的空白 */
-export const isSpace = (ch: string) => ch === ' ' || ch === '\u00a0' || ch === '\t' || ch === '\u3000'
+export const isSpace = (ch: string) =>
+  ch === ' ' || ch === '\u00a0' || ch === '\t' || ch === '\u3000'
 
 const NAMED: Record<string, string> = {
   amp: '&',
@@ -114,7 +115,10 @@ export function decodeEntities(s: string): string {
   if (!s.includes('&')) return s
   return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z][a-z0-9]*);/gi, (m, body: string) => {
     if (body[0] === '#') {
-      const cp = body[1] === 'x' || body[1] === 'X' ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10)
+      const cp =
+        body[1] === 'x' || body[1] === 'X'
+          ? parseInt(body.slice(2), 16)
+          : parseInt(body.slice(1), 10)
       if (!Number.isFinite(cp) || cp <= 0 || cp > 0x10ffff) return m
       return String.fromCodePoint(cp)
     }

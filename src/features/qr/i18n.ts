@@ -192,7 +192,8 @@ export const zh = {
     namePlaceholder: '例如 公司 Wi‑Fi',
     saved: '已儲存範本「{name}」',
     saveFailed: '無法儲存範本',
-    saveFailedDesc: '這台裝置的儲存空間不夠，可能是 Logo 圖片太大。可以刪除舊範本或換小一點的 Logo。',
+    saveFailedDesc:
+      '這台裝置的儲存空間不夠，可能是 Logo 圖片太大。可以刪除舊範本或換小一點的 Logo。',
     apply: '套用範本「{name}」',
     applied: '已套用「{name}」',
     remove: '刪除範本「{name}」',
@@ -256,7 +257,8 @@ export const zh = {
     found: '辨識成功',
     viewfinder: '相機畫面',
     deniedTitle: '沒有相機權限',
-    deniedDesc: '你拒絕了相機權限，或瀏覽器封鎖了這個網站。點網址列左邊的鎖頭或相機圖示，把「相機」改成允許，再按「重試」。',
+    deniedDesc:
+      '你拒絕了相機權限，或瀏覽器封鎖了這個網站。點網址列左邊的鎖頭或相機圖示，把「相機」改成允許，再按「重試」。',
     notFoundTitle: '找不到相機',
     notFoundDesc: '這台裝置沒有可用的相機。你可以改用「圖片」辨識截圖或照片。',
     busyTitle: '相機正在被其他程式使用',
@@ -467,7 +469,8 @@ export const en: DeepString<typeof zh> = {
     contrastInverted: 'May not scan: light on dark',
     contrastInvertedDesc:
       'Many scanners only read dark codes on light backgrounds. Make the foreground darker than the background.',
-    transparentNote: "A transparent code won't scan on a dark background — place it on a light one.",
+    transparentNote:
+      "A transparent code won't scan on a dark background — place it on a light one.",
     logoNote: 'Logo added — error correction locked to H',
     logoNoteDesc: 'The logo covers some modules. Test-scan with a phone before printing.',
     logoLarge: 'The logo is large, which makes scanning riskier. Keep it under 24%.',
@@ -582,7 +585,8 @@ export const en: DeepString<typeof zh> = {
     linesLabel: 'One QR code per line',
     linesPlaceholder: 'https://example.com/a\nhttps://example.com/b\nAny text',
     csvPick: 'Choose CSV file',
-    csvHint: 'First column is the content; the optional second column is the file name. Header rows are skipped.',
+    csvHint:
+      'First column is the content; the optional second column is the file name. Header rows are skipped.',
     csvEmpty: 'No file chosen',
     csvFailed: "Couldn't read this CSV",
     csvFailedDesc: 'Make sure it is a plain-text CSV (UTF‑8) and try again.',
@@ -631,7 +635,8 @@ export const en: DeepString<typeof zh> = {
     deniedDesc:
       'Camera access was denied or blocked for this site. Click the lock or camera icon in the address bar, allow Camera, then press Retry.',
     notFoundTitle: 'No camera found',
-    notFoundDesc: 'This device has no available camera. Use Image to read a screenshot or photo instead.',
+    notFoundDesc:
+      'This device has no available camera. Use Image to read a screenshot or photo instead.',
     busyTitle: 'The camera is in use',
     busyDesc: 'Close other apps or tabs using the camera, then press Retry.',
     insecureTitle: 'A secure connection is required',
@@ -682,7 +687,8 @@ export const en: DeepString<typeof zh> = {
     warnPunycode:
       'Caution: the domain contains special characters ({host}) and may imitate another site.',
     warnIp: 'Caution: this URL uses a raw IP address instead of a regular domain.',
-    warnScheme: "This isn't a regular web link ({scheme}), so it can't be opened directly for safety.",
+    warnScheme:
+      "This isn't a regular web link ({scheme}), so it can't be opened directly for safety.",
     ssid: 'Network',
     password: 'Password',
     noPassword: 'No password',

@@ -54,12 +54,24 @@ self.onmessage = async (e: MessageEvent<WorkerRequest>) => {
       }
     })
     post(
-      { type: 'converted', id: req.id, bytes: r.bytes, pages: r.pages, missing: r.missing, title: r.title },
+      {
+        type: 'converted',
+        id: req.id,
+        bytes: r.bytes,
+        pages: r.pages,
+        missing: r.missing,
+        title: r.title,
+      },
       [r.bytes.buffer as ArrayBuffer],
     )
   } catch (err) {
     console.error(err)
     const memory = err instanceof RangeError
-    post({ type: 'error', id: req.id, code: memory ? 'memory' : 'convert', message: String((err as Error)?.message ?? err) })
+    post({
+      type: 'error',
+      id: req.id,
+      code: memory ? 'memory' : 'convert',
+      message: String((err as Error)?.message ?? err),
+    })
   }
 }

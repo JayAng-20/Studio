@@ -13,7 +13,16 @@ import {
   X,
 } from 'lucide-react'
 import { useNavigate } from 'react-router'
-import { Button, FileName, Menu, Popover, ProgressBar, Tooltip, toast, type MenuItem } from '@/components/ui'
+import {
+  Button,
+  FileName,
+  Menu,
+  Popover,
+  ProgressBar,
+  Tooltip,
+  toast,
+  type MenuItem,
+} from '@/components/ui'
 import { useFlyIn } from '@/components/ui'
 import { duration, sec, spring } from '@/design/motion'
 import { formatBytes, percentChange } from '@/lib/format'
@@ -57,10 +66,13 @@ export function ItemCard({
   const dims = probe?.width && probe?.height ? `${probe.width}×${probe.height}` : null
   const px = probe?.width && probe?.height ? probe.width * probe.height : 0
   const huge = px > maxPixels()
-  const fit = probe?.alpha || probe?.format === 'svg' || probe?.format === 'ico' ? 'contain' : 'cover'
+  const fit =
+    probe?.alpha || probe?.format === 'svg' || probe?.format === 'ico' ? 'contain' : 'cover'
   const canCompare = done && result.format !== 'ico'
   const err = status === 'error' && item.error ? errorText(item.error, result?.format ?? '') : null
-  const notes = done ? result.warnings.map((w) => warningText(w, result.format)).filter(Boolean) : []
+  const notes = done
+    ? result.warnings.map((w) => warningText(w, result.format)).filter(Boolean)
+    : []
 
   const download = () => {
     if (!result) return
@@ -77,11 +89,23 @@ export function ItemCard({
 
   const menu: MenuItem[] = [
     ...(canCompare
-      ? [{ key: 'cmp', label: t('convert.card.compare'), icon: <Columns2 size={16} aria-hidden />, onSelect: () => onCompare(item.id) }]
+      ? [
+          {
+            key: 'cmp',
+            label: t('convert.card.compare'),
+            icon: <Columns2 size={16} aria-hidden />,
+            onSelect: () => onCompare(item.id),
+          },
+        ]
       : []),
     ...(done
       ? [
-          { key: 'dl', label: t('common.download'), icon: <Download size={16} aria-hidden />, onSelect: download },
+          {
+            key: 'dl',
+            label: t('common.download'),
+            icon: <Download size={16} aria-hidden />,
+            onSelect: download,
+          },
           {
             key: 'send',
             label: t('convert.card.sendTools', { target: t(moduleById.tools.nameKey) }),
@@ -185,7 +209,10 @@ export function ItemCard({
         <p className="truncate text-caption text-text-3">
           {[dims, formatBytes(item.size)].filter(Boolean).join(' · ')}
           {huge && !done && (
-            <span className="text-warning-ink"> · {t('convert.card.huge', { mp: Math.round(px / 1e6) })}</span>
+            <span className="text-warning-ink">
+              {' '}
+              · {t('convert.card.huge', { mp: Math.round(px / 1e6) })}
+            </span>
           )}
         </p>
         <div className="min-h-6" aria-live="polite">
@@ -198,7 +225,11 @@ export function ItemCard({
                 label={t('convert.card.progressOf', { name: item.name })}
               />
               <span className="w-10 shrink-0 text-right text-caption tabular-nums text-text-2">
-                {queued ? t('convert.card.queued') : item.progress < 0.03 ? '' : `${Math.round(item.progress * 100)}%`}
+                {queued
+                  ? t('convert.card.queued')
+                  : item.progress < 0.03
+                    ? ''
+                    : `${Math.round(item.progress * 100)}%`}
               </span>
             </div>
           ) : done ? (
@@ -213,7 +244,9 @@ export function ItemCard({
                 <span className="font-semibold">{FORMATS[result.format].ext.toUpperCase()}</span>
                 <span className="truncate text-text-2">
                   {result.width}×{result.height} · {formatBytes(result.size)}
-                  {result.frames && result.frames > 1 ? ` · ${t('convert.card.frames', { count: result.frames })}` : ''}
+                  {result.frames && result.frames > 1
+                    ? ` · ${t('convert.card.frames', { count: result.frames })}`
+                    : ''}
                 </span>
               </span>
               {stale ? (
@@ -305,7 +338,13 @@ export function ItemCard({
             label={t('common.more')}
             items={menu}
             trigger={
-              <Button variant="ghost" size="sm" icon aria-label={t('convert.card.moreOf', { name: item.name })} className="max-sm:size-11">
+              <Button
+                variant="ghost"
+                size="sm"
+                icon
+                aria-label={t('convert.card.moreOf', { name: item.name })}
+                className="max-sm:size-11"
+              >
                 <MoreHorizontal size={17} aria-hidden />
               </Button>
             }

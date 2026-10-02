@@ -61,7 +61,11 @@ interface PreviewState<T> {
 /** 麥克風試音：回傳 AnalyserNode 供音量條使用 */
 export function useMicPreview(active: boolean, deviceId: string) {
   const key = `${active}|${deviceId}`
-  const [state, setState] = useState<PreviewState<AnalyserNode>>({ value: null, error: null, key: '' })
+  const [state, setState] = useState<PreviewState<AnalyserNode>>({
+    value: null,
+    error: null,
+    key: '',
+  })
   useEffect(() => {
     if (!active) return
     let cancelled = false
@@ -109,7 +113,11 @@ export function useMicPreview(active: boolean, deviceId: string) {
 /** 鏡頭預覽：回傳 MediaStream */
 export function useCameraPreview(active: boolean, deviceId: string) {
   const key = `${active}|${deviceId}`
-  const [state, setState] = useState<PreviewState<MediaStream>>({ value: null, error: null, key: '' })
+  const [state, setState] = useState<PreviewState<MediaStream>>({
+    value: null,
+    error: null,
+    key: '',
+  })
   useEffect(() => {
     if (!active) return
     let cancelled = false

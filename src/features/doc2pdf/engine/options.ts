@@ -70,7 +70,11 @@ export function pageSetup(o: Pick<ConvertOptions, 'paper' | 'orientation' | 'mar
   if (o.orientation === 'landscape') [w, h] = [h, w]
   const k = o.paper === 'a5' ? 0.78 : 1
   const m = MARGIN[o.margin]
-  return { width: w, height: h, margin: { top: m.v * k, bottom: m.v * k, left: m.h * k, right: m.h * k } }
+  return {
+    width: w,
+    height: h,
+    margin: { top: m.v * k, bottom: m.v * k, left: m.h * k, right: m.h * k },
+  }
 }
 
 /** 文件語言：內容有中文就用中文的固定文字（目錄、日期） */
@@ -94,4 +98,3 @@ export function docTitle(docs: DocModel[], custom: string): string {
   }
   return docs[0]?.title ?? 'Document'
 }
-

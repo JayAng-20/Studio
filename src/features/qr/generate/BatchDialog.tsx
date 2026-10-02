@@ -17,7 +17,13 @@ export const BATCH_MAX = 500
 type Source = 'lines' | 'csv'
 
 /** 批次產生：多行文字或 CSV → 每筆一個 PNG＋SVG → ZIP（走任務中心） */
-export function BatchDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+export function BatchDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean
+  onOpenChange: (o: boolean) => void
+}) {
   const t = useT()
   const run = useTask('qr')
   const textId = useId()
@@ -74,7 +80,8 @@ export function BatchDialog({ open, onOpenChange }: { open: boolean; onOpenChang
         const geo = buildGeometry(matrix, style)
         const stem = batchFileStem(entry, i, list.length)
         if (wantSvg) files.push({ name: `${stem}.svg`, data: svgBlob(geo, style) })
-        if (wantPng) files.push({ name: `${stem}.png`, data: await exportBlob(geo, style, 'png', { logo }) })
+        if (wantPng)
+          files.push({ name: `${stem}.png`, data: await exportBlob(geo, style, 'png', { logo }) })
         progress(((i + 1) / list.length) * 0.9)
         // 讓出主執行緒，畫面與進度保持流暢
         await new Promise((r) => setTimeout(r, 0))
@@ -90,14 +97,16 @@ export function BatchDialog({ open, onOpenChange }: { open: boolean; onOpenChang
       .then(() => {
         toast.success(t('qr.batch.done', { count: list.length - skipped }), {
           description:
-            t('qr.batch.doneDesc') + (skipped ? ` ${t('qr.batch.skipped', { count: skipped })}` : ''),
+            t('qr.batch.doneDesc') +
+            (skipped ? ` ${t('qr.batch.skipped', { count: skipped })}` : ''),
         })
       })
       .catch((e: unknown) => {
         if (isAbortError(e)) return
         console.error(e)
         toast.error(t('qr.batch.failed'), {
-          description: e instanceof QrTooLongError ? t('qr.preview.tooLongDesc') : t('qr.batch.failedDesc'),
+          description:
+            e instanceof QrTooLongError ? t('qr.preview.tooLongDesc') : t('qr.batch.failedDesc'),
         })
       })
   }
@@ -184,7 +193,9 @@ export function BatchDialog({ open, onOpenChange }: { open: boolean; onOpenChang
             <ol className="flex flex-col gap-1 text-small">
               {preview.map((e, i) => (
                 <li key={i} className="flex min-w-0 items-baseline gap-2">
-                  <span className="w-8 shrink-0 text-right text-caption tabular-nums text-text-3">{i + 1}</span>
+                  <span className="w-8 shrink-0 text-right text-caption tabular-nums text-text-3">
+                    {i + 1}
+                  </span>
                   <span className="min-w-0 flex-1 truncate font-mono text-text-2">{e.content}</span>
                   <span className="max-w-[40%] shrink-0 truncate text-caption text-text-3">
                     {batchFileStem(e, i, entries.length)}
@@ -209,7 +220,9 @@ export function BatchDialog({ open, onOpenChange }: { open: boolean; onOpenChang
             <Switch checked={png} onChange={setPng} label={t('qr.batch.includePng')} />
             <Switch checked={svg} onChange={setSvg} label={t('qr.batch.includeSvg')} />
           </div>
-          <p className={!png && !svg ? 'text-caption text-warning-ink' : 'text-caption text-text-3'}>
+          <p
+            className={!png && !svg ? 'text-caption text-warning-ink' : 'text-caption text-text-3'}
+          >
             {!png && !svg ? t('qr.batch.needFormat') : t('qr.batch.styleNote', { size })}
           </p>
         </div>

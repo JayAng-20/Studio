@@ -80,6 +80,13 @@ export type WorkerResponse =
   | { id: number; ok: true; type: 'gif-begin' }
   /** written：這一格實際寫入的位元組（與前一格相同而合併時為 0） */
   | { id: number; ok: true; type: 'gif-frame'; written: number }
-  | { id: number; ok: true; type: 'gif-end'; bytes: ArrayBuffer; frameSizes: number[]; frames: number }
+  | {
+      id: number
+      ok: true
+      type: 'gif-end'
+      bytes: ArrayBuffer
+      frameSizes: number[]
+      frames: number
+    }
   | { id: number; ok: true; type: 'deflate'; data: ArrayBuffer }
   | { id: number; ok: true; type: 'webp'; chunks: ArrayBuffer; hasAlpha: boolean }

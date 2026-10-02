@@ -30,13 +30,19 @@ const isTyping = (el: Element | null) =>
 /** 焦點在會自己處理方向鍵的元件上（滑桿、分頁、單選、選單） */
 const ownsArrows = (el: Element | null) => {
   const role = el?.getAttribute('role') ?? ''
-  return /^(slider|tab|radio|menuitem|menuitemradio|menuitemcheckbox|option|listbox|spinbutton)$/.test(role)
+  return /^(slider|tab|radio|menuitem|menuitemradio|menuitemcheckbox|option|listbox|spinbutton)$/.test(
+    role,
+  )
 }
 /** 焦點在按鈕類元件：Space 交給按鈕本身 */
 const ownsSpace = (el: Element | null) => {
   if (!el) return false
   const role = el.getAttribute('role') ?? ''
-  return el.tagName === 'BUTTON' || el.tagName === 'A' || /^(button|switch|checkbox|radio|tab|menuitem\w*|option)$/.test(role)
+  return (
+    el.tagName === 'BUTTON' ||
+    el.tagName === 'A' ||
+    /^(button|switch|checkbox|radio|tab|menuitem\w*|option)$/.test(role)
+  )
 }
 
 export function usePlayerShortcuts(enabled: boolean) {
@@ -67,7 +73,12 @@ export function usePlayerShortcuts(enabled: boolean) {
       const a = document.activeElement
       if (isTyping(a)) return
       // 對話框或抽屜開啟時不處理（全螢幕抽屜在播放畫面內，不算）
-      if (document.querySelector('[role="dialog"][data-state="open"], [data-vaul-drawer][data-state="open"]')) return
+      if (
+        document.querySelector(
+          '[role="dialog"][data-state="open"], [data-vaul-drawer][data-state="open"]',
+        )
+      )
+        return
       if (!usePlayer.getState().currentId) return
       const k = e.key
       const lower = k.length === 1 ? k.toLowerCase() : k

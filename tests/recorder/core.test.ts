@@ -86,7 +86,12 @@ describe('pickFormat', () => {
   it('偏好格式可用就沿用，不可用就退回預設', () => {
     const f = listFormats((m) => chromeLike.has(m))
     expect(pickFormat(f, 'webm-av1')?.id).toBe('webm-av1')
-    expect(pickFormat(listFormats((m) => firefoxLike.has(m)), 'mp4')?.id).toBe('webm-vp8')
+    expect(
+      pickFormat(
+        listFormats((m) => firefoxLike.has(m)),
+        'mp4',
+      )?.id,
+    ).toBe('webm-vp8')
   })
   it('沒有任何格式時回傳 null', () => {
     expect(pickFormat([])).toBeNull()
@@ -353,4 +358,3 @@ describe('媒體錯誤分類', () => {
     expect(classifyMediaError('???', 'user')).toBe('generic')
   })
 })
-

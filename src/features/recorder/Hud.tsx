@@ -178,30 +178,32 @@ export function HudButton({
   disabled?: boolean
 }) {
   const button = (
-      <motion.button
-        type="button"
-        aria-label={label}
-        aria-pressed={active}
-        aria-keyshortcuts={shortcut}
-        disabled={disabled}
-        onClick={onClick}
-        whileTap={{ scale: 0.9 }}
-        transition={spring.snappy}
-        className={cn(
-          'relative grid size-11 shrink-0 place-items-center rounded-full transition-colors duration-(--dur-fast) sm:size-10',
-          tone === 'danger'
-            ? 'bg-danger text-white shadow-[0_6px_16px_-6px_var(--danger)] hover:brightness-110'
-            : active
-              ? 'bg-[color-mix(in_srgb,var(--danger)_14%,transparent)] text-danger-ink'
-              : 'text-text-2 hover:bg-[color-mix(in_srgb,var(--text)_8%,transparent)] hover:text-text',
-          disabled && 'opacity-45',
-        )}
-      >
-        {children}
-      </motion.button>
+    <motion.button
+      type="button"
+      aria-label={label}
+      aria-pressed={active}
+      aria-keyshortcuts={shortcut}
+      disabled={disabled}
+      onClick={onClick}
+      whileTap={{ scale: 0.9 }}
+      transition={spring.snappy}
+      className={cn(
+        'relative grid size-11 shrink-0 place-items-center rounded-full transition-colors duration-(--dur-fast) sm:size-10',
+        tone === 'danger'
+          ? 'bg-danger text-white shadow-[0_6px_16px_-6px_var(--danger)] hover:brightness-110'
+          : active
+            ? 'bg-[color-mix(in_srgb,var(--danger)_14%,transparent)] text-danger-ink'
+            : 'text-text-2 hover:bg-[color-mix(in_srgb,var(--text)_8%,transparent)] hover:text-text',
+        disabled && 'opacity-45',
+      )}
+    >
+      {children}
+    </motion.button>
   )
   // PiP 視窗裡不顯示 Tooltip（它會畫在主視窗）
-  return plain ? button : (
+  return plain ? (
+    button
+  ) : (
     <Tooltip content={label} shortcut={shortcut}>
       {button}
     </Tooltip>
@@ -255,10 +257,7 @@ function HudContent({
     <>
       <span className="relative mr-1 grid size-3 shrink-0 place-items-center" aria-hidden>
         <span
-          className={cn(
-            'size-3 rounded-full',
-            paused ? 'bg-text-3' : 'motion-decor bg-danger',
-          )}
+          className={cn('size-3 rounded-full', paused ? 'bg-text-3' : 'motion-decor bg-danger')}
           style={paused ? undefined : { animation: 'breathe 1.6s ease-in-out infinite' }}
         />
         {!paused && (
@@ -287,7 +286,12 @@ function HudContent({
         />
       )}
       <span aria-hidden className="mx-1.5 h-6 w-px bg-border-strong" />
-      <HudButton plain={compact} label={t('recorder.hud.marker')} shortcut="T" onClick={() => addMarkerNow()}>
+      <HudButton
+        plain={compact}
+        label={t('recorder.hud.marker')}
+        shortcut="T"
+        onClick={() => addMarkerNow()}
+      >
         <Flag size={18} aria-hidden />
         <AnimatePresence>
           {markerCount > 0 && (
@@ -342,7 +346,13 @@ function HudContent({
           <PictureInPicture2 size={18} aria-hidden />
         </HudButton>
       )}
-      <HudButton plain={compact} label={t('recorder.hud.stop')} shortcut="R" tone="danger" onClick={() => stopRecording('user')}>
+      <HudButton
+        plain={compact}
+        label={t('recorder.hud.stop')}
+        shortcut="R"
+        tone="danger"
+        onClick={() => stopRecording('user')}
+      >
         <span className="size-3.5 rounded-[4px] bg-white" aria-hidden />
       </HudButton>
       <AnimatePresence>
@@ -354,7 +364,11 @@ function HudContent({
             style={{ x: '-50%' }}
             initial={{ opacity: 0, y: 8, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, transition: { duration: sec(duration.fast), ease: easing.standard } }}
+            exit={{
+              opacity: 0,
+              y: -4,
+              transition: { duration: sec(duration.fast), ease: easing.standard },
+            }}
             transition={spring.bouncy}
           >
             <Flag size={12} className="mr-1 inline text-accent-ink" aria-hidden />

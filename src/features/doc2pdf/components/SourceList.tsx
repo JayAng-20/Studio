@@ -1,5 +1,14 @@
 import { motion, AnimatePresence } from 'motion/react'
-import { AlertTriangle, ClipboardPaste, FileCode2, FileText, FileType2, Image as ImageIcon, Trash2, X } from 'lucide-react'
+import {
+  AlertTriangle,
+  ClipboardPaste,
+  FileCode2,
+  FileText,
+  FileType2,
+  Image as ImageIcon,
+  Trash2,
+  X,
+} from 'lucide-react'
 import type { ReactNode } from 'react'
 import {
   AddFilesButton,
@@ -20,7 +29,13 @@ import { ACCEPT, useDoc2Pdf, type Source } from '../store'
 
 const KIND_ICON = { md: FileCode2, txt: FileText, rtf: FileType2 }
 
-export function SourceList({ onFiles, onPaste }: { onFiles: (f: File[]) => void; onPaste: () => void }) {
+export function SourceList({
+  onFiles,
+  onPaste,
+}: {
+  onFiles: (f: File[]) => void
+  onPaste: () => void
+}) {
   const t = useT()
   const sources = useDoc2Pdf((s) => s.sources)
   const reorder = useDoc2Pdf((s) => s.reorder)
@@ -34,16 +49,35 @@ export function SourceList({ onFiles, onPaste }: { onFiles: (f: File[]) => void;
             {t('doc2pdf.files.title')}
           </h3>
           <span className="text-small tabular-nums text-text-3">{sources.length}</span>
-          {merge && sources.length > 1 && <span className="hidden text-caption text-text-3 sm:inline">· {t('doc2pdf.files.reorderHint')}</span>}
+          {merge && sources.length > 1 && (
+            <span className="hidden text-caption text-text-3 sm:inline">
+              · {t('doc2pdf.files.reorderHint')}
+            </span>
+          )}
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Button size="sm" variant="ghost" leading={<Trash2 size={16} aria-hidden />} onClick={clear}>
+          <Button
+            size="sm"
+            variant="ghost"
+            leading={<Trash2 size={16} aria-hidden />}
+            onClick={clear}
+          >
             {t('doc2pdf.files.clear')}
           </Button>
-          <Button size="sm" variant="ghost" leading={<ClipboardPaste size={16} aria-hidden />} onClick={onPaste}>
+          <Button
+            size="sm"
+            variant="ghost"
+            leading={<ClipboardPaste size={16} aria-hidden />}
+            onClick={onPaste}
+          >
             {t('doc2pdf.pasteText')}
           </Button>
-          <AddFilesButton size="sm" accept={ACCEPT} onFiles={onFiles} label={t('doc2pdf.files.add')} />
+          <AddFilesButton
+            size="sm"
+            accept={ACCEPT}
+            onFiles={onFiles}
+            label={t('doc2pdf.files.add')}
+          />
         </div>
       </div>
       <SortableList
@@ -85,7 +119,9 @@ function SourceCard({ source: s, handle }: { source: Source; handle: ReactNode }
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 items-center gap-2">
             <FileName name={name} className="min-w-0 text-body font-medium" />
-            <Badge className="hidden sm:inline-flex">{s.pasted ? t('doc2pdf.files.pasted') : t(`doc2pdf.files.kind.${s.kind}`)}</Badge>
+            <Badge className="hidden sm:inline-flex">
+              {s.pasted ? t('doc2pdf.files.pasted') : t(`doc2pdf.files.kind.${s.kind}`)}
+            </Badge>
           </div>
           <p className="truncate text-caption tabular-nums text-text-3" aria-live="polite">
             {s.status === 'parsing'
@@ -101,7 +137,10 @@ function SourceCard({ source: s, handle }: { source: Source; handle: ReactNode }
         </div>
       </div>
       {s.status === 'error' && s.error && (
-        <p role="alert" className="mx-2.5 mb-2.5 flex items-start gap-2 rounded-sm bg-[color-mix(in_srgb,var(--danger)_10%,transparent)] px-3 py-2 text-small text-danger-ink">
+        <p
+          role="alert"
+          className="mx-2.5 mb-2.5 flex items-start gap-2 rounded-sm bg-[color-mix(in_srgb,var(--danger)_10%,transparent)] px-3 py-2 text-small text-danger-ink"
+        >
           <AlertTriangle size={16} className="mt-0.5 shrink-0" aria-hidden />
           {t(`doc2pdf.files.errors.${s.error}`)}
         </p>
@@ -116,7 +155,10 @@ function SourceCard({ source: s, handle }: { source: Source; handle: ReactNode }
             onChange={(v) => setEncoding(s.id, v)}
             options={ENCODINGS.map((e) => ({
               value: e,
-              label: e === s.detected ? t('doc2pdf.files.encodingAuto', { name: ENCODING_LABEL[e] }) : ENCODING_LABEL[e],
+              label:
+                e === s.detected
+                  ? t('doc2pdf.files.encodingAuto', { name: ENCODING_LABEL[e] })
+                  : ENCODING_LABEL[e],
             }))}
           />
           {s.kind === 'txt' && (
@@ -129,7 +171,11 @@ function SourceCard({ source: s, handle }: { source: Source; handle: ReactNode }
                 onChange={(v) => setRaw(s.id, v === 'raw')}
                 options={[
                   { value: 'detect', label: t('doc2pdf.files.modeDetect') },
-                  { value: 'raw', label: t('doc2pdf.files.modeRaw'), title: t('doc2pdf.files.modeRawHint') },
+                  {
+                    value: 'raw',
+                    label: t('doc2pdf.files.modeRaw'),
+                    title: t('doc2pdf.files.modeRawHint'),
+                  },
                 ]}
               />
             </div>
@@ -140,7 +186,9 @@ function SourceCard({ source: s, handle }: { source: Source; handle: ReactNode }
               {t('doc2pdf.files.encodingLossy')}
             </p>
           )}
-          {s.kind === 'txt' && s.raw && <p className="basis-full text-caption text-text-3">{t('doc2pdf.files.modeRawHint')}</p>}
+          {s.kind === 'txt' && s.raw && (
+            <p className="basis-full text-caption text-text-3">{t('doc2pdf.files.modeRawHint')}</p>
+          )}
         </div>
       )}
     </div>

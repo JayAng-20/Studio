@@ -21,10 +21,19 @@ class WorkerHandle {
   worker: Worker
   fontsSent = false
   private seq = 0
-  private pending = new Map<number, { resolve: (r: WorkerResponse) => void; reject: (e: unknown) => void; onProgress?: (r: WorkerResponse) => void }>()
+  private pending = new Map<
+    number,
+    {
+      resolve: (r: WorkerResponse) => void
+      reject: (e: unknown) => void
+      onProgress?: (r: WorkerResponse) => void
+    }
+  >()
   dead = false
   constructor() {
-    this.worker = new Worker(new URL('../../../workers/doc2pdf.worker.ts', import.meta.url), { type: 'module' })
+    this.worker = new Worker(new URL('../../../workers/doc2pdf.worker.ts', import.meta.url), {
+      type: 'module',
+    })
     this.worker.onmessage = (e: MessageEvent<WorkerResponse>) => {
       const msg = e.data
       const p = this.pending.get(msg.id)
@@ -42,7 +51,11 @@ class WorkerHandle {
       this.failAll(new EngineError('worker', e.message))
     }
   }
-  request(build: (id: number) => WorkerRequest, onProgress?: (r: WorkerResponse) => void, transfer: Transferable[] = []) {
+  request(
+    build: (id: number) => WorkerRequest,
+    onProgress?: (r: WorkerResponse) => void,
+    transfer: Transferable[] = [],
+  ) {
     const id = ++this.seq
     return new Promise<WorkerResponse>((resolve, reject) => {
       this.pending.set(id, { resolve, reject, onProgress })

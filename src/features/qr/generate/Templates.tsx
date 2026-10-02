@@ -124,7 +124,11 @@ export function Templates() {
                 key={tpl.id}
                 layout
                 initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0, transition: { ...spring.smooth, delay: staggerDelay(i) } }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  transition: { ...spring.smooth, delay: staggerDelay(i) },
+                }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={spring.smooth}
                 className="group flex items-center gap-1 rounded-md hover:bg-surface-2"
@@ -140,7 +144,9 @@ export function Templates() {
                 >
                   <TemplateThumb tpl={tpl} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-body font-medium text-text">{tpl.name}</span>
+                    <span className="block truncate text-body font-medium text-text">
+                      {tpl.name}
+                    </span>
                     <span className="block text-caption text-text-3">
                       {t(`qr.types.${tpl.type}.label`)}
                     </span>

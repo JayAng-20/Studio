@@ -22,7 +22,8 @@ export function imageInfo(b: Uint8Array): Omit<ImageData, 'bytes'> | null {
         continue
       }
       const len = (b[i + 2] << 8) | b[i + 3]
-      const isSof = marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc
+      const isSof =
+        marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc
       if (isSof) {
         const height = (b[i + 5] << 8) | b[i + 6]
         const width = (b[i + 7] << 8) | b[i + 8]
@@ -71,11 +72,18 @@ export function normalizeRelPath(src: string): string {
   } catch {
     // 保留原字串
   }
-  return s.replace(/\\/g, '/').replace(/^(\.\/)+/, '').replace(/^\/+/, '').toLowerCase()
+  return s
+    .replace(/\\/g, '/')
+    .replace(/^(\.\/)+/, '')
+    .replace(/^\/+/, '')
+    .toLowerCase()
 }
 
 /** 在檔案清單中找出對應相對路徑的圖片：先比完整路徑結尾，再比檔名 */
-export function matchImageFile<T extends { name: string; path?: string }>(src: string, files: T[]): T | undefined {
+export function matchImageFile<T extends { name: string; path?: string }>(
+  src: string,
+  files: T[],
+): T | undefined {
   const want = normalizeRelPath(src)
   if (!want) return undefined
   const base = want.split('/').pop()!

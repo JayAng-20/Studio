@@ -27,9 +27,14 @@ export function cameraErrorKind(e: unknown): CameraError {
   const name = (e as { name?: string })?.name ?? ''
   if (name === 'NotAllowedError' || name === 'SecurityError' || name === 'PermissionDeniedError')
     return 'denied'
-  if (name === 'NotFoundError' || name === 'OverconstrainedError' || name === 'DevicesNotFoundError')
+  if (
+    name === 'NotFoundError' ||
+    name === 'OverconstrainedError' ||
+    name === 'DevicesNotFoundError'
+  )
     return 'notFound'
-  if (name === 'NotReadableError' || name === 'TrackStartError' || name === 'AbortError') return 'busy'
+  if (name === 'NotReadableError' || name === 'TrackStartError' || name === 'AbortError')
+    return 'busy'
   return 'generic'
 }
 
@@ -67,9 +72,10 @@ export function CameraScanner({
   const [torchSupported, setTorchSupported] = useState(false)
   const [torch, setTorch] = useState(false)
   const [paused, setPaused] = useState(false)
-  const [hit, setHit] = useState<{ corners: Detection['corners']; src: { w: number; h: number } } | null>(
-    null,
-  )
+  const [hit, setHit] = useState<{
+    corners: Detection['corners']
+    src: { w: number; h: number }
+  } | null>(null)
 
   const streamRef = useRef<MediaStream | null>(null)
   const decoderRef = useRef<QrDecoder | null>(null)
@@ -191,7 +197,11 @@ export function CameraScanner({
           audio: false,
           video: wantDevice
             ? { deviceId: { exact: wantDevice }, width: { ideal: 1280 }, height: { ideal: 720 } }
-            : { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+            : {
+                facingMode: { ideal: 'environment' },
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+              },
         })
       } catch (e) {
         const kind = cameraErrorKind(e)
@@ -266,7 +276,9 @@ export function CameraScanner({
     const track = streamRef.current?.getVideoTracks()[0]
     if (!track) return
     try {
-      await track.applyConstraints({ advanced: [{ torch: !torch } as unknown as MediaTrackConstraintSet] })
+      await track.applyConstraints({
+        advanced: [{ torch: !torch } as unknown as MediaTrackConstraintSet],
+      })
       setTorch(!torch)
     } catch (e) {
       console.error(e)
@@ -313,7 +325,13 @@ export function CameraScanner({
     const onKey = (e: KeyboardEvent) => {
       if (e.code !== 'Space' || e.repeat) return
       const el = document.activeElement as HTMLElement | null
-      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'BUTTON' || el.isContentEditable))
+      if (
+        el &&
+        (el.tagName === 'INPUT' ||
+          el.tagName === 'TEXTAREA' ||
+          el.tagName === 'BUTTON' ||
+          el.isContentEditable)
+      )
         return
       e.preventDefault()
       if (pausedRef.current) resume()
@@ -393,11 +411,19 @@ export function CameraScanner({
             <p className="mt-1.5 max-w-md text-body text-text-2">{t(`qr.camera.${error}Desc`)}</p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               {error !== 'insecure' && error !== 'unsupported' && (
-                <Button variant="primary" leading={<RotateCcw size={16} aria-hidden />} onClick={() => void start()}>
+                <Button
+                  variant="primary"
+                  leading={<RotateCcw size={16} aria-hidden />}
+                  onClick={() => void start()}
+                >
                   {t('common.retry')}
                 </Button>
               )}
-              <Button variant="secondary" leading={<ImageIcon size={16} aria-hidden />} onClick={onUseImage}>
+              <Button
+                variant="secondary"
+                leading={<ImageIcon size={16} aria-hidden />}
+                onClick={onUseImage}
+              >
                 {t('qr.camera.useImage')}
               </Button>
             </div>
@@ -434,7 +460,11 @@ export function CameraScanner({
                 onClick={() => void toggleTorch()}
                 pressed={torch}
               >
-                {torch ? <FlashlightOff size={20} aria-hidden /> : <Flashlight size={20} aria-hidden />}
+                {torch ? (
+                  <FlashlightOff size={20} aria-hidden />
+                ) : (
+                  <Flashlight size={20} aria-hidden />
+                )}
               </GlassButton>
             )}
             <AnimatePresence initial={false} mode="popLayout">
@@ -446,7 +476,12 @@ export function CameraScanner({
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={spring.snappy}
                 >
-                  <Button variant="primary" size="lg" leading={<Play size={18} aria-hidden />} onClick={resume}>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    leading={<Play size={18} aria-hidden />}
+                    onClick={resume}
+                  >
                     {t('qr.camera.resume')}
                   </Button>
                 </motion.div>

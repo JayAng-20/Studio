@@ -39,7 +39,8 @@ let fontCache: {
 
 /** 解析字型（並修正子集化問題）；同一組字型只做一次 */
 function parseFonts(f: Fonts) {
-  if (fontCache && fontCache.key.regular === f.regular && fontCache.key.bold === f.bold) return fontCache
+  if (fontCache && fontCache.key.regular === f.regular && fontCache.key.bold === f.bold)
+    return fontCache
   const fixed = { regular: padGlyphs(f.regular), bold: padGlyphs(f.bold) }
   fontCache = {
     key: f,
@@ -77,7 +78,8 @@ export async function convertDocs(
       footer: opts.footer,
       cover: {
         enabled: opts.cover,
-        date: opts.cover && opts.coverDate ? formatDate(new Date(opts.date || Date.now()), lang) : null,
+        date:
+          opts.cover && opts.coverDate ? formatDate(new Date(opts.date || Date.now()), lang) : null,
         files: docs.length > 1 ? docs.map((d) => d.name) : [],
       },
       toc: {
@@ -100,5 +102,12 @@ export async function convertDocs(
     signal,
     onProgress: (p) => progress?.(p, 'render'),
   })
-  return { bytes, pages: composed.pages.length, missing: composed.missing, title, tocPages: composed.tocPages, composed }
+  return {
+    bytes,
+    pages: composed.pages.length,
+    missing: composed.missing,
+    title,
+    tocPages: composed.tocPages,
+    composed,
+  }
 }

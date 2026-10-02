@@ -82,7 +82,10 @@ export default function RecorderPage() {
       if (k === 'r') {
         if (st === 'setup' && format && (screenOk || cameraOk)) {
           e.preventDefault()
-          void beginRecording({ ...currentPrefs(), mode: screenOk ? currentPrefs().mode : 'camera' }, format)
+          void beginRecording(
+            { ...currentPrefs(), mode: screenOk ? currentPrefs().mode : 'camera' },
+            format,
+          )
         } else if (st === 'recording') {
           e.preventDefault()
           stopRecording('user')
@@ -113,7 +116,9 @@ export default function RecorderPage() {
 
   const status = (
     <Badge
-      tone={stage === 'recording' && !paused ? 'danger' : stage === 'result' ? 'success' : 'neutral'}
+      tone={
+        stage === 'recording' && !paused ? 'danger' : stage === 'result' ? 'success' : 'neutral'
+      }
       icon={
         stage === 'recording' && !paused ? (
           <span
@@ -124,7 +129,9 @@ export default function RecorderPage() {
         ) : undefined
       }
     >
-      {stage === 'recording' && paused ? t('recorder.status.paused') : t(`recorder.status.${stage === 'setup' ? 'ready' : stage}`)}
+      {stage === 'recording' && paused
+        ? t('recorder.status.paused')
+        : t(`recorder.status.${stage === 'setup' ? 'ready' : stage}`)}
     </Badge>
   )
 

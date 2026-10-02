@@ -27,7 +27,10 @@ export { wasmSupported }
 function simdSupported(): boolean {
   try {
     return WebAssembly.validate(
-      new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3, 2, 1, 0, 10, 10, 1, 8, 0, 65, 0, 253, 15, 253, 98, 11]),
+      new Uint8Array([
+        0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3, 2, 1, 0, 10, 10, 1, 8, 0, 65, 0,
+        253, 15, 253, 98, 11,
+      ]),
     )
   } catch {
     return false
@@ -90,7 +93,8 @@ function instantiate<M>(factory: EmscriptenFactory<M>, wasm: WebAssembly.Module)
 function lazy<T>(codec: CodecId, load: () => Promise<T>): () => Promise<T> {
   let p: Promise<T> | null = null
   return () => {
-    if (!wasmSupported()) return Promise.reject(new EngineError('codec-load', `${codec}: WebAssembly 不可用`))
+    if (!wasmSupported())
+      return Promise.reject(new EngineError('codec-load', `${codec}: WebAssembly 不可用`))
     p ??= load().catch((e) => {
       p = null
       console.error(e)
@@ -133,7 +137,11 @@ const loadMozjpeg = lazy('mozjpeg', async () => {
 
 export async function encodeMozjpeg(img: ImageData, quality: number): Promise<Uint8Array> {
   const m = await loadMozjpeg()
-  const out = m.encode(img.data, img.width, img.height, { ...JPEG_DEFAULTS, quality, chroma_quality: quality })
+  const out = m.encode(img.data, img.width, img.height, {
+    ...JPEG_DEFAULTS,
+    quality,
+    chroma_quality: quality,
+  })
   if (!out) throw new EngineError('encode', 'mozjpeg')
   return out.slice()
 }
@@ -175,13 +183,19 @@ const WEBP_DEFAULTS = {
 const loadWebp = lazy('webp', async () => {
   const simd = simdSupported()
   const [glue, wasm] = await Promise.all([
-    simd ? import('@jsquash/webp/codec/enc/webp_enc_simd.js') : import('@jsquash/webp/codec/enc/webp_enc.js'),
+    simd
+      ? import('@jsquash/webp/codec/enc/webp_enc_simd.js')
+      : import('@jsquash/webp/codec/enc/webp_enc.js'),
     compileWasm('webp', simd ? webpSimdWasmUrl : webpWasmUrl),
   ])
   return instantiate(glue.default as unknown as EmscriptenFactory<WebpModule>, wasm)
 })
 
-export async function encodeWebpWasm(img: ImageData, quality: number, lossless = false): Promise<Uint8Array> {
+export async function encodeWebpWasm(
+  img: ImageData,
+  quality: number,
+  lossless = false,
+): Promise<Uint8Array> {
   const m = await loadWebp()
   const out = m.encode(img.data, img.width, img.height, {
     ...WEBP_DEFAULTS,
@@ -222,10 +236,15 @@ const loadAvifEnc = lazy('avif', async () => {
 
 export async function encodeAvifWasm(img: ImageData, quality: number): Promise<Uint8Array> {
   const m = await loadAvifEnc()
-  const out = m.encode(new Uint8Array(img.data.buffer, img.data.byteOffset, img.data.byteLength), img.width, img.height, {
-    ...AVIF_DEFAULTS,
-    quality,
-  })
+  const out = m.encode(
+    new Uint8Array(img.data.buffer, img.data.byteOffset, img.data.byteLength),
+    img.width,
+    img.height,
+    {
+      ...AVIF_DEFAULTS,
+      quality,
+    },
+  )
   if (!out) throw new EngineError('encode', 'avif')
   return out.slice()
 }

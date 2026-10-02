@@ -12,8 +12,8 @@ export type Palette = number[][]
 /** 8×8 Bayer 矩陣（0–63） */
 export const BAYER8 = [
   0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36, 14, 46, 6, 38, 60, 28,
-  52, 20, 62, 30, 54, 22, 3, 35, 11, 43, 1, 33, 9, 41, 51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7, 39,
-  13, 45, 5, 37, 63, 31, 55, 23, 61, 29, 53, 21,
+  52, 20, 62, 30, 54, 22, 3, 35, 11, 43, 1, 33, 9, 41, 51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7,
+  39, 13, 45, 5, 37, 63, 31, 55, 23, 61, 29, 53, 21,
 ] as const
 
 /**
@@ -21,7 +21,10 @@ export const BAYER8 = [
  * 第一次遇到某個色格時才暴力搜尋整個調色盤。
  * skip 為不可被選到的索引（例如保留給透明的那一格）。
  */
-export function createNearest(palette: Palette, skip = -1): (r: number, g: number, b: number) => number {
+export function createNearest(
+  palette: Palette,
+  skip = -1,
+): (r: number, g: number, b: number) => number {
   const n = palette.length
   const pr = new Int32Array(n)
   const pg = new Int32Array(n)
@@ -98,7 +101,11 @@ export function indexPixels(
       }
       if (spread) {
         const k = (BAYER8[row | (x & 7)] / 64 - 0.5) * spread
-        out[p] = nearest(clamp255(rgba[o] + k), clamp255(rgba[o + 1] + k), clamp255(rgba[o + 2] + k))
+        out[p] = nearest(
+          clamp255(rgba[o] + k),
+          clamp255(rgba[o + 1] + k),
+          clamp255(rgba[o + 2] + k),
+        )
       } else {
         out[p] = nearest(rgba[o], rgba[o + 1], rgba[o + 2])
       }
@@ -203,7 +210,10 @@ export function rgbToHex(r: number, g: number, b: number): string {
  * 從多個影格均勻抽樣像素，合成一張「樣本圖」給全域調色盤量化使用。
  * 只取不透明像素；budget 為最多抽樣的像素數。
  */
-export function samplePixels(frames: Array<Uint8Array | Uint8ClampedArray>, budget = 400_000): Uint8Array {
+export function samplePixels(
+  frames: Array<Uint8Array | Uint8ClampedArray>,
+  budget = 400_000,
+): Uint8Array {
   const total = frames.reduce((a, f) => a + f.length / 4, 0)
   const step = Math.max(1, Math.floor(total / budget))
   const out = new Uint8Array(Math.ceil(total / step) * 4 + 4)

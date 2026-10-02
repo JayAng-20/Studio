@@ -209,7 +209,13 @@ export function removeItem(id: string) {
   const it = s.items.find((i) => i.id === id)
   if (!it) return
   const q = removeFromQueue(
-    { ids: s.items.map((i) => i.id), order: s.order, currentId: s.currentId, shuffle: s.shuffle, repeat: s.repeat },
+    {
+      ids: s.items.map((i) => i.id),
+      order: s.order,
+      currentId: s.currentId,
+      shuffle: s.shuffle,
+      repeat: s.repeat,
+    },
     id,
   )
   const wasCurrent = s.currentId === id
@@ -253,7 +259,13 @@ export function reorder(ids: string[]) {
 
 const queue = () => {
   const s = S()
-  return { ids: s.items.map((i) => i.id), order: s.order, currentId: s.currentId, shuffle: s.shuffle, repeat: s.repeat }
+  return {
+    ids: s.items.map((i) => i.id),
+    order: s.order,
+    currentId: s.currentId,
+    shuffle: s.shuffle,
+    repeat: s.repeat,
+  }
 }
 
 export function next(reason: 'ended' | 'user' = 'user') {
@@ -285,7 +297,12 @@ export function toggleShuffle() {
   const on = !s.shuffle
   s.set({
     shuffle: on,
-    order: on ? makeShuffleOrder(s.items.map((i) => i.id), s.currentId) : s.items.map((i) => i.id),
+    order: on
+      ? makeShuffleOrder(
+          s.items.map((i) => i.id),
+          s.currentId,
+        )
+      : s.items.map((i) => i.id),
   })
   osd(t(on ? 'player.osd.shuffleOn' : 'player.osd.shuffleOff'))
 }
@@ -294,7 +311,15 @@ export function cycleRepeat() {
   const s = S()
   const nextMode = s.repeat === 'off' ? 'all' : s.repeat === 'all' ? 'one' : 'off'
   s.set({ repeat: nextMode })
-  osd(t(nextMode === 'one' ? 'player.osd.repeatOne' : nextMode === 'all' ? 'player.osd.repeatAll' : 'player.osd.repeatOff'))
+  osd(
+    t(
+      nextMode === 'one'
+        ? 'player.osd.repeatOne'
+        : nextMode === 'all'
+          ? 'player.osd.repeatAll'
+          : 'player.osd.repeatOff',
+    ),
+  )
 }
 
 // ───────────── 播放控制 ─────────────
@@ -376,7 +401,10 @@ export async function probeDurations() {
   probing = true
   try {
     for (;;) {
-      const it = S().items.find((i) => i.source === 'file' && i.duration === undefined && !i.probed && i.id !== S().currentId)
+      const it = S().items.find(
+        (i) =>
+          i.source === 'file' && i.duration === undefined && !i.probed && i.id !== S().currentId,
+      )
       if (!it) break
       S().updateItem(it.id, { probed: true })
       const r = await probeOne(it)
@@ -455,7 +483,7 @@ export function jumpPercent(p: number) {
   const s = S()
   if (!s.duration) return
   seek((s.duration * p) / 100)
-  osd(t('player.osd.seekTo', { time: formatTime(s.duration * p / 100) }))
+  osd(t('player.osd.seekTo', { time: formatTime((s.duration * p) / 100) }))
 }
 
 export function setVolume(v: number, showOsd = false) {
@@ -479,7 +507,11 @@ export function toggleMute() {
   if (!muted && s.volume === 0) s.set({ volume: 0.5 })
   s.set({ muted })
   if (s.el) applyVolume(s.el, S().volume, muted)
-  osd(muted ? t('player.osd.muted') : t('player.osd.volume', { value: `${Math.round(S().volume * 100)}%` }))
+  osd(
+    muted
+      ? t('player.osd.muted')
+      : t('player.osd.volume', { value: `${Math.round(S().volume * 100)}%` }),
+  )
 }
 
 export function setRate(r: number, showOsd = true) {
@@ -727,7 +759,8 @@ export function removeSubtitle(itemId: string, subId: string) {
     const subtitles = it.subtitles.filter((s) => s.id !== subId)
     return {
       subtitles,
-      activeSub: it.activeSub === subId ? (subtitles[subtitles.length - 1]?.id ?? null) : it.activeSub,
+      activeSub:
+        it.activeSub === subId ? (subtitles[subtitles.length - 1]?.id ?? null) : it.activeSub,
     }
   })
 }

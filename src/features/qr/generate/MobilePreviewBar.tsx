@@ -1,5 +1,15 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { AlertTriangle, Copy, Download, FileCode2, FileImage, Layers, Maximize2, MoreHorizontal, QrCode } from 'lucide-react'
+import {
+  AlertTriangle,
+  Copy,
+  Download,
+  FileCode2,
+  FileImage,
+  Layers,
+  Maximize2,
+  MoreHorizontal,
+  QrCode,
+} from 'lucide-react'
 import { useState } from 'react'
 import { Badge, Button, CopyButton, Menu, Sheet, toast } from '@/components/ui'
 import { caps } from '@/lib/capabilities'
@@ -32,7 +42,10 @@ export function MobilePreviewBar({
   const { geo, matrix, error, displayType } = qr
   const { style, busy, logoReady, doExport, copy } = useExporter(geo)
   const [open, setOpen] = useState(false)
-  const contrast = checkContrast(foregroundColors(style), style.bgTransparent ? '#FFFFFF' : style.bg)
+  const contrast = checkContrast(
+    foregroundColors(style),
+    style.bgTransparent ? '#FFFFFF' : style.bg,
+  )
   const disabled = !geo || !logoReady
   const canCopy = caps.clipboardWrite()
 
@@ -78,7 +91,11 @@ export function MobilePreviewBar({
             exit={{ opacity: 0 }}
             className={cn('grid place-items-center', error ? 'text-danger-ink' : 'text-text-3')}
           >
-            {error ? <AlertTriangle size={26} aria-hidden /> : <QrCode size={30} strokeWidth={1.6} aria-hidden />}
+            {error ? (
+              <AlertTriangle size={26} aria-hidden />
+            ) : (
+              <QrCode size={30} strokeWidth={1.6} aria-hidden />
+            )}
           </motion.span>
         )}
       </AnimatePresence>
@@ -113,7 +130,9 @@ export function MobilePreviewBar({
         )}
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <p className="flex min-w-0 items-center gap-1.5 text-caption" aria-live="polite">
-            <span className="shrink-0 font-semibold text-text">{t(`qr.types.${displayType}.label`)}</span>
+            <span className="shrink-0 font-semibold text-text">
+              {t(`qr.types.${displayType}.label`)}
+            </span>
             <span aria-hidden className="text-text-3">
               ・
             </span>
@@ -140,7 +159,12 @@ export function MobilePreviewBar({
             <Menu
               label={t('qr.mobile.more')}
               trigger={
-                <Button variant="secondary" icon aria-label={t('qr.mobile.more')} className="max-sm:size-11">
+                <Button
+                  variant="secondary"
+                  icon
+                  aria-label={t('qr.mobile.more')}
+                  className="max-sm:size-11"
+                >
                   <MoreHorizontal size={18} aria-hidden />
                 </Button>
               }
@@ -197,7 +221,12 @@ export function MobilePreviewBar({
                 style.bgTransparent ? 'qr-checker' : 'bg-surface-2',
               )}
             >
-              <div className={cn('size-full overflow-hidden', !style.bgTransparent && 'rounded-md shadow-e2')}>
+              <div
+                className={cn(
+                  'size-full overflow-hidden',
+                  !style.bgTransparent && 'rounded-md shadow-e2',
+                )}
+              >
                 <QrArt
                   geo={geo}
                   style={style}
@@ -209,7 +238,9 @@ export function MobilePreviewBar({
             {contrast.issue && (
               <p className="flex items-start gap-2 text-small text-warning-ink">
                 <AlertTriangle size={16} className="mt-0.5 shrink-0" aria-hidden />
-                {contrast.issue === 'low' ? t('qr.preview.contrastLow') : t('qr.preview.contrastInverted')}
+                {contrast.issue === 'low'
+                  ? t('qr.preview.contrastLow')
+                  : t('qr.preview.contrastInverted')}
               </p>
             )}
             <Button

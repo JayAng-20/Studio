@@ -1,6 +1,11 @@
 import { Clapperboard, Images, RotateCcw, Sparkles, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ModulePage, StageContainer, TopBarActions, Workspace } from '@/components/layout/ModulePage'
+import {
+  ModulePage,
+  StageContainer,
+  TopBarActions,
+  Workspace,
+} from '@/components/layout/ModulePage'
 import {
   AddFilesButton,
   Badge,
@@ -100,13 +105,24 @@ export default function GifPage() {
 
   // ---------- 載入 ----------
   const loadVideo = useCallback(
-    async (file: File, incoming: { start: number; end: number } | null, origin: BusSource | null) => {
+    async (
+      file: File,
+      incoming: { start: number; end: number } | null,
+      origin: BusSource | null,
+    ) => {
       setLoading(true)
       const url = URL.createObjectURL(file)
       try {
         const info = await probeVideo(url, incoming?.end)
         useGifStore.getState().setSource(
-          { kind: 'video', file, url, width: info.width, height: info.height, duration: info.duration },
+          {
+            kind: 'video',
+            file,
+            url,
+            width: info.width,
+            height: info.height,
+            duration: info.duration,
+          },
           origin,
         )
         useGifStore.getState().setRange(defaultRange(info.duration, incoming))
@@ -133,13 +149,22 @@ export default function GifPage() {
       for (const file of files) {
         try {
           const s = await imageSize(file)
-          out.push({ id: uid('img'), file, url: URL.createObjectURL(file), width: s.width, height: s.height })
+          out.push({
+            id: uid('img'),
+            file,
+            url: URL.createObjectURL(file),
+            width: s.width,
+            height: s.height,
+          })
         } catch (e) {
           console.error(e)
           failed++
         }
       }
-      if (failed) toast.error(t('errors.imagesFailed', { count: failed }), { description: t('errors.imagesFailedDesc') })
+      if (failed)
+        toast.error(t('errors.imagesFailed', { count: failed }), {
+          description: t('errors.imagesFailedDesc'),
+        })
       return out
     },
     [t],
@@ -148,13 +173,21 @@ export default function GifPage() {
   const loadFiles = useCallback(
     async (
       files: File[],
-      opts: { range?: { start: number; end: number } | null; from?: BusSource | null; append?: boolean } = {},
+      opts: {
+        range?: { start: number; end: number } | null
+        from?: BusSource | null
+        append?: boolean
+      } = {},
     ) => {
       const videos = files.filter((f) => fileKind(f) === 'video')
       const images = files.filter((f) => fileKind(f) === 'image')
       if (videos.length) {
-        if (videos.length > 1) toast.info(t('errors.oneVideo'), { description: t('errors.oneVideoDesc', { name: videos[0].name }) })
-        else if (images.length) toast.info(t('errors.mixed'), { description: t('errors.mixedDesc') })
+        if (videos.length > 1)
+          toast.info(t('errors.oneVideo'), {
+            description: t('errors.oneVideoDesc', { name: videos[0].name }),
+          })
+        else if (images.length)
+          toast.info(t('errors.mixed'), { description: t('errors.mixedDesc') })
         await loadVideo(videos[0], opts.range ?? null, opts.from ?? null)
         return
       }
@@ -218,7 +251,10 @@ export default function GifPage() {
           const pool = new WorkerPool(poolSize() + 1)
           let dispose: (() => void) | null = null
           try {
-            const feed = await createFeed({ ...snapshot, onRendered: (_i, c) => drawHero(c) }, signal)
+            const feed = await createFeed(
+              { ...snapshot, onRendered: (_i, c) => drawHero(c) },
+              signal,
+            )
             dispose = feed.dispose
             let last = 0
             const out = await encodeSequence(pool, cfg, feed, signal, (p) => {
@@ -294,7 +330,8 @@ export default function GifPage() {
       }
       const el = document.activeElement as HTMLElement | null
       if (e.metaKey || e.ctrlKey || e.altKey) return
-      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable))
+        return
       if (document.querySelector('[role="dialog"][data-state="open"]')) return
       if (e.key === ' ' && !(el && (el.tagName === 'BUTTON' || el.getAttribute('role')))) {
         e.preventDefault()
@@ -328,13 +365,19 @@ export default function GifPage() {
   const header = source && (
     <div className="flex flex-wrap items-center gap-3">
       <span className="grid size-10 shrink-0 place-items-center rounded-md bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] text-accent-ink">
-        {source.kind === 'video' ? <Clapperboard size={20} aria-hidden /> : <Images size={20} aria-hidden />}
+        {source.kind === 'video' ? (
+          <Clapperboard size={20} aria-hidden />
+        ) : (
+          <Images size={20} aria-hidden />
+        )}
       </span>
       <div className="flex min-w-0 flex-1 flex-col">
         {source.kind === 'video' ? (
           <FileName name={source.file.name} className="text-body font-semibold text-text" />
         ) : (
-          <span className="text-body font-semibold text-text">{t('meta.images', { count: source.items.length })}</span>
+          <span className="text-body font-semibold text-text">
+            {t('meta.images', { count: source.items.length })}
+          </span>
         )}
         <span className="text-caption tabular-nums text-text-3">
           {source.kind === 'video'
@@ -404,7 +447,12 @@ export default function GifPage() {
       />
       {source && stage === 'edit' && (
         <TopBarActions>
-          <Button variant="primary" size="sm" leading={<Sparkles size={14} aria-hidden />} onClick={() => void start()}>
+          <Button
+            variant="primary"
+            size="sm"
+            leading={<Sparkles size={14} aria-hidden />}
+            onClick={() => void start()}
+          >
             {t('actions.startShort')}
           </Button>
         </TopBarActions>
@@ -438,7 +486,10 @@ export default function GifPage() {
         )}
 
         {stageKey === 'edit' && source && (
-          <DropTarget accept={ACCEPT} onFiles={(f) => loadFiles(f, { append: source.kind === 'images' })}>
+          <DropTarget
+            accept={ACCEPT}
+            onFiles={(f) => loadFiles(f, { append: source.kind === 'images' })}
+          >
             <Workspace
               main={
                 <div className="flex flex-col gap-5">
@@ -515,7 +566,13 @@ export default function GifPage() {
         )}
 
         {stageKey === 'encoding' && source && (
-          <EncodingView geom={geom} plan={plan} thumbs={thumbs} thumbCount={thumbCount} onCancel={cancel} />
+          <EncodingView
+            geom={geom}
+            plan={plan}
+            thumbs={thumbs}
+            thumbCount={thumbCount}
+            onCancel={cancel}
+          />
         )}
 
         {stageKey === 'done' && result && (
@@ -528,7 +585,10 @@ export default function GifPage() {
       </StageContainer>
       {stageKey === 'done' && !result && (
         <div className="card p-6">
-          <Button leading={<RotateCcw size={16} aria-hidden />} onClick={() => useGifStore.getState().setStage('edit')}>
+          <Button
+            leading={<RotateCcw size={16} aria-hidden />}
+            onClick={() => useGifStore.getState().setStage('edit')}
+          >
             {t('actions.adjust')}
           </Button>
         </div>

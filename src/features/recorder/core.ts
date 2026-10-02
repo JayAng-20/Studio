@@ -39,7 +39,11 @@ export const FORMAT_DEFS: FormatDef[] = [
   {
     id: 'webm-av1',
     container: 'webm',
-    candidates: ['video/webm;codecs=av01,opus', 'video/webm;codecs=av1,opus', 'video/webm;codecs=av01'],
+    candidates: [
+      'video/webm;codecs=av01,opus',
+      'video/webm;codecs=av1,opus',
+      'video/webm;codecs=av01',
+    ],
   },
 ]
 
@@ -468,13 +472,7 @@ export function bandLevels(freq: ArrayLike<number>, bars: number): number[] {
 /* ===================== 錯誤分類 ===================== */
 
 export type MediaErrorKind =
-  | 'canceled'
-  | 'denied'
-  | 'systemDenied'
-  | 'notFound'
-  | 'inUse'
-  | 'unsupported'
-  | 'generic'
+  'canceled' | 'denied' | 'systemDenied' | 'notFound' | 'inUse' | 'unsupported' | 'generic'
 
 /**
  * 把 getDisplayMedia／getUserMedia 的例外轉成可以給使用者看的類別。

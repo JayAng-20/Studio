@@ -42,7 +42,12 @@ export function History({
           <p className="text-caption text-text-3">{t('qr.history.note')}</p>
         </div>
         {items.length > 0 && (
-          <Button size="sm" variant="ghost" leading={<Trash2 size={14} aria-hidden />} onClick={() => setConfirm(true)}>
+          <Button
+            size="sm"
+            variant="ghost"
+            leading={<Trash2 size={14} aria-hidden />}
+            onClick={() => setConfirm(true)}
+          >
             {t('qr.history.clear')}
           </Button>
         )}
@@ -62,7 +67,11 @@ export function History({
                   key={h.id}
                   layout
                   initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0, transition: { ...spring.smooth, delay: staggerDelay(Math.min(i, 3)) } }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    transition: { ...spring.smooth, delay: staggerDelay(Math.min(i, 3)) },
+                  }}
                   exit={{ opacity: 0, scale: 0.96 }}
                   transition={spring.smooth}
                   className="group flex items-center gap-1 rounded-md"
@@ -74,14 +83,18 @@ export function History({
                     aria-label={t('qr.history.show', { summary })}
                     className={
                       'flex min-h-12 min-w-0 flex-1 items-center gap-3 rounded-md px-2 py-1.5 text-left transition-colors duration-(--dur-fast) ' +
-                      (active ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : 'hover:bg-surface-2')
+                      (active
+                        ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
+                        : 'hover:bg-surface-2')
                     }
                   >
                     <span className="grid size-8 shrink-0 place-items-center rounded-sm bg-surface-2 text-text-2">
                       <Icon size={16} aria-hidden />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-small font-medium text-text">{summary}</span>
+                      <span className="block truncate text-small font-medium text-text">
+                        {summary}
+                      </span>
                       <span className="flex items-center gap-1.5 text-caption text-text-3">
                         {h.source === 'camera' ? (
                           <Camera size={12} aria-label={t('qr.history.fromCamera')} />

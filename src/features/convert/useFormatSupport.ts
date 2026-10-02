@@ -34,7 +34,10 @@ export function detectSupport(): Promise<SupportMap> {
 }
 
 export function useFormatSupport(): { support: SupportMap; ready: boolean } {
-  const [state, setState] = useState<{ support: SupportMap; ready: boolean }>({ support: initial, ready: false })
+  const [state, setState] = useState<{ support: SupportMap; ready: boolean }>({
+    support: initial,
+    ready: false,
+  })
   useEffect(() => {
     let alive = true
     void detectSupport().then((support) => alive && setState({ support, ready: true }))

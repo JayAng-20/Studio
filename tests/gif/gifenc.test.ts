@@ -124,7 +124,15 @@ describe('gifenc 輸出', () => {
     for (let i = 0; i < 8; i++) px[i * 4 + 3] = 0
     const q = quantizeFrame(px, w, h, 16, 'none', null, true)
     expect(q.transparentIndex).toBe(q.palette.length - 1)
-    const asm = new GifAssembler({ width: w, height: h, repeat: 0, global: null, diff: false, tolerance: 0, transparent: true })
+    const asm = new GifAssembler({
+      width: w,
+      height: h,
+      repeat: 0,
+      global: null,
+      diff: false,
+      tolerance: 0,
+      transparent: true,
+    })
     asm.add(q.index, q.palette, q.transparentIndex, 10)
     const bytes = asm.finish()
     const gce = bytes.findIndex((v, i) => v === 0x21 && bytes[i + 1] === 0xf9)

@@ -224,7 +224,7 @@ function ResultInner({ result, library }: { result: RecordingResult; library: Re
   const markers = result.markers
 
   const markersSection = (
-      <section className="card p-4" aria-labelledby="res-markers">
+    <section className="card p-4" aria-labelledby="res-markers">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <h3 id="res-markers" className="flex flex-1 items-center gap-2 text-h3 font-semibold">
           <Flag size={16} className="text-accent-ink" aria-hidden />
@@ -378,11 +378,7 @@ function ResultInner({ result, library }: { result: RecordingResult; library: Re
 
         {/* 標記時間軸：點標記跳轉 */}
         <div className="border-b border-border px-4 pt-3 pb-2">
-          <div
-            role="group"
-            aria-label={t('recorder.result.timeline')}
-            className="relative h-6"
-          >
+          <div role="group" aria-label={t('recorder.result.timeline')} className="relative h-6">
             <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--text)_10%,transparent)]">
               <motion.div
                 className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-accent"
@@ -390,7 +386,11 @@ function ResultInner({ result, library }: { result: RecordingResult; library: Re
               />
             </div>
             {/* 播放位置：全寬容器以 translateX(百分比) 移動，只動 transform */}
-            <motion.div aria-hidden className="pointer-events-none absolute inset-0" style={{ x: playheadX }}>
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{ x: playheadX }}
+            >
               <span className="absolute left-0 top-1/2 -ml-1.5 size-3 -translate-y-1/2 rounded-full border-2 border-surface bg-accent shadow-e1" />
             </motion.div>
             {markers.map((m, i) => (

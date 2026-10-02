@@ -48,7 +48,8 @@ describe('抖色', () => {
   const w = 64
   const h = 16
   const src = gradient(w, h)
-  const srcMean = Array.from({ length: w * h }, (_, p) => src[p * 4]).reduce((a, b) => a + b, 0) / (w * h)
+  const srcMean =
+    Array.from({ length: w * h }, (_, p) => src[p * 4]).reduce((a, b) => a + b, 0) / (w * h)
 
   it('none：只有兩種顏色時呈硬邊（左半黑、右半白）', () => {
     const idx = indexPixels(src, w, h, BW, 'none')

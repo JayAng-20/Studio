@@ -1,15 +1,6 @@
 /** 準備畫面：來源說明、鏡頭泡泡預覽、開始按鈕，以及右側設定面板 */
 import { AnimatePresence, motion } from 'motion/react'
-import {
-  AppWindow,
-  Camera,
-  CircleDot,
-  Mic,
-  Monitor,
-  PanelsTopLeft,
-  Volume2,
-  X,
-} from 'lucide-react'
+import { AppWindow, Camera, CircleDot, Mic, Monitor, PanelsTopLeft, Volume2, X } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Workspace } from '@/components/layout/ModulePage'
 import {

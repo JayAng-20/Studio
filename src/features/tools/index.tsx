@@ -26,9 +26,11 @@ export default function Page() {
       module="tools"
       wide
       status={
-        count > 0 ? <Badge tone="accent">
+        count > 0 ? (
+          <Badge tone="accent">
             {count === 1 ? t('tools.imageCountOne') : t('tools.imageCount', { count })}
-          </Badge> : undefined
+          </Badge>
+        ) : undefined
       }
     >
       <StageContainer stage={count ? 'work' : 'empty'}>

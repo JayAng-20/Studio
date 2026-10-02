@@ -66,7 +66,15 @@ function useFitViewport() {
   return ref
 }
 
-function Section({ title, children, aside }: { title: ReactNode; children: ReactNode; aside?: ReactNode }) {
+function Section({
+  title,
+  children,
+  aside,
+}: {
+  title: ReactNode
+  children: ReactNode
+  aside?: ReactNode
+}) {
   return (
     <section className="flex flex-col gap-2.5">
       <div className="flex items-center justify-between gap-2">
@@ -102,9 +110,23 @@ export function OptionsPanel({ support, footer }: { support: SupportMap; footer:
           : t('convert.options.qLow')
 
   const r = o.resize
-  const resizeValue = r.mode === 'width' ? r.width : r.mode === 'height' ? r.height : r.mode === 'long' ? r.long : r.percent
+  const resizeValue =
+    r.mode === 'width'
+      ? r.width
+      : r.mode === 'height'
+        ? r.height
+        : r.mode === 'long'
+          ? r.long
+          : r.percent
   const setResizeValue = (v: number) => {
-    const key = r.mode === 'width' ? 'width' : r.mode === 'height' ? 'height' : r.mode === 'long' ? 'long' : 'percent'
+    const key =
+      r.mode === 'width'
+        ? 'width'
+        : r.mode === 'height'
+          ? 'height'
+          : r.mode === 'long'
+            ? 'long'
+            : 'percent'
     set({ resize: { ...r, [key]: v } })
   }
   const example =
@@ -127,7 +149,11 @@ export function OptionsPanel({ support, footer }: { support: SupportMap; footer:
       : null
 
   return (
-    <section ref={panelRef} aria-label={t('convert.options.title')} className="card flex flex-col overflow-hidden">
+    <section
+      ref={panelRef}
+      aria-label={t('convert.options.title')}
+      className="card flex flex-col overflow-hidden"
+    >
       <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-4">
         <Section title={t('convert.options.format')}>
           <FormatPicker value={o.format} onChange={(format) => set({ format })} support={support} />
@@ -185,7 +211,11 @@ export function OptionsPanel({ support, footer }: { support: SupportMap; footer:
 
         {o.format === 'ico' ? (
           <Section title={t('convert.options.icoSizes')}>
-            <div className="grid grid-cols-6 gap-1" role="group" aria-label={t('convert.options.icoSizes')}>
+            <div
+              className="grid grid-cols-6 gap-1"
+              role="group"
+              aria-label={t('convert.options.icoSizes')}
+            >
               {ICO_SIZES.map((n) => {
                 const on = o.icoSizes.includes(n)
                 const last = on && o.icoSizes.length === 1
@@ -198,7 +228,11 @@ export function OptionsPanel({ support, footer }: { support: SupportMap; footer:
                     title={last ? t('convert.options.icoAtLeastOne') : undefined}
                     onClick={() => {
                       if (last) return
-                      set({ icoSizes: on ? o.icoSizes.filter((x) => x !== n) : [...o.icoSizes, n].sort((a, b) => a - b) })
+                      set({
+                        icoSizes: on
+                          ? o.icoSizes.filter((x) => x !== n)
+                          : [...o.icoSizes, n].sort((a, b) => a - b),
+                      })
                     }}
                     className={cn(
                       'h-9 rounded-sm border text-caption font-semibold tabular-nums transition-colors duration-(--dur-fast) max-sm:h-11',
@@ -293,10 +327,14 @@ export function OptionsPanel({ support, footer }: { support: SupportMap; footer:
                 checked={o.keepAnimation}
                 onChange={(keepAnimation) => set({ keepAnimation })}
                 label={t('convert.options.keepAnimation')}
-                description={t('convert.options.keepAnimationDesc', { format: OUTPUT_LABEL[o.format] })}
+                description={t('convert.options.keepAnimationDesc', {
+                  format: OUTPUT_LABEL[o.format],
+                })}
               />
             ) : (
-              <p className="text-caption text-text-3">{t('convert.options.animationFirstFrame', { format: OUTPUT_LABEL[o.format] })}</p>
+              <p className="text-caption text-text-3">
+                {t('convert.options.animationFirstFrame', { format: OUTPUT_LABEL[o.format] })}
+              </p>
             )}
           </Section>
         )}
@@ -312,7 +350,11 @@ export function OptionsPanel({ support, footer }: { support: SupportMap; footer:
               <Sparkles size={14} className="text-accent-ink" aria-hidden />
               {t('convert.options.advanced')}
             </span>
-            <motion.span animate={{ rotate: adv ? 180 : 0 }} transition={spring.snappy} className="text-text-3">
+            <motion.span
+              animate={{ rotate: adv ? 180 : 0 }}
+              transition={spring.snappy}
+              className="text-text-3"
+            >
               <ChevronDown size={16} aria-hidden />
             </motion.span>
           </button>
@@ -340,7 +382,9 @@ export function OptionsPanel({ support, footer }: { support: SupportMap; footer:
                       ]}
                     />
                     <p className="text-caption text-text-3">
-                      {t(`convert.options.encoderHint.${o.encoder}.${o.format === 'ico' ? 'png' : o.format}`)}
+                      {t(
+                        `convert.options.encoderHint.${o.encoder}.${o.format === 'ico' ? 'png' : o.format}`,
+                      )}
                     </p>
                   </div>
                 )}
@@ -355,7 +399,9 @@ export function OptionsPanel({ support, footer }: { support: SupportMap; footer:
           className="pointer-events-none sticky bottom-0 -mx-4 -mt-5 h-6 shrink-0 bg-gradient-to-t from-surface to-transparent max-lg:hidden"
         />
       </div>
-      <div className="border-t border-border bg-[color-mix(in_srgb,var(--surface-2)_60%,var(--surface))] p-4">{footer}</div>
+      <div className="border-t border-border bg-[color-mix(in_srgb,var(--surface-2)_60%,var(--surface))] p-4">
+        {footer}
+      </div>
     </section>
   )
 }

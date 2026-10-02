@@ -8,7 +8,11 @@ import { EngineError } from '../types'
 
 type HeicModule = typeof import('heic-to')
 
-export type HeicProgress = (state: 'loading' | 'ready' | 'error', loaded: number, total: number) => void
+export type HeicProgress = (
+  state: 'loading' | 'ready' | 'error',
+  loaded: number,
+  total: number,
+) => void
 
 let heicMod: Promise<HeicModule> | null = null
 const heicListeners = new Set<HeicProgress>()
@@ -18,7 +22,8 @@ export function onHeicProgress(fn: HeicProgress) {
   heicListeners.add(fn)
   return () => heicListeners.delete(fn)
 }
-const emit = (s: 'loading' | 'ready' | 'error', l: number, t: number) => heicListeners.forEach((fn) => fn(s, l, t))
+const emit = (s: 'loading' | 'ready' | 'error', l: number, t: number) =>
+  heicListeners.forEach((fn) => fn(s, l, t))
 
 /** 下載解碼器（含進度），再從記憶體中的 Blob URL 載入模組，避免重複下載 */
 export function loadHeic(): Promise<HeicModule> {

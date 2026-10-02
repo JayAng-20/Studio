@@ -62,7 +62,10 @@ export default function GlobalHud() {
           >
             <span className="relative mr-1 grid size-3 shrink-0 place-items-center" aria-hidden>
               <span
-                className={cn('size-3 rounded-full', paused ? 'bg-text-3' : 'motion-decor bg-danger')}
+                className={cn(
+                  'size-3 rounded-full',
+                  paused ? 'bg-text-3' : 'motion-decor bg-danger',
+                )}
                 style={paused ? undefined : { animation: 'breathe 1.6s ease-in-out infinite' }}
               />
               {!paused && (

@@ -100,7 +100,13 @@ function pageOps(fc: FlowContext, flow: PageFlow, anchorsOut: { id: string; y: n
 }
 
 /** 目錄項目 → 流動項目（引導點對齊頁碼、整個項目可點擊） */
-function tocItems(fc: FlowContext, o: ComposeOptions, entries: TocEntry[], numbers: Map<string, string>, numW: number): FlowItem[] {
+function tocItems(
+  fc: FlowContext,
+  o: ComposeOptions,
+  entries: TocEntry[],
+  numbers: Map<string, string>,
+  numW: number,
+): FlowItem[] {
   const th = o.theme
   const base = o.baseSize
   const x0 = o.page.margin.left
@@ -108,7 +114,13 @@ function tocItems(fc: FlowContext, o: ComposeOptions, entries: TocEntry[], numbe
   const items: FlowItem[] = []
   // 標題
   const titleSize = base * th.headingScale[0] * 0.85
-  const titleStyle = fc.style({ family: th.heading, bold: true, italic: false, size: titleSize, color: th.colors.heading })
+  const titleStyle = fc.style({
+    family: th.heading,
+    bold: true,
+    italic: false,
+    size: titleSize,
+    color: th.colors.heading,
+  })
   const tl = fc.breaker.break([{ text: o.toc.title, style: titleStyle }], { width: W }).lines
   tl.forEach((line, i) => {
     const lh = titleSize * 1.35
@@ -117,7 +129,15 @@ function tocItems(fc: FlowContext, o: ComposeOptions, entries: TocEntry[], numbe
     if (i === tl.length - 1) {
       if (th.headingRule[0]) {
         it.h += titleSize * 0.3
-        it.ops.push({ t: 'line', x1: x0, y1: it.h, x2: x0 + W, y2: it.h, color: th.colors.rule, w: 1 })
+        it.ops.push({
+          t: 'line',
+          x1: x0,
+          y1: it.h,
+          x2: x0 + W,
+          y2: it.h,
+          color: th.colors.rule,
+          w: 1,
+        })
       } else if (th.h1Band) {
         it.h += titleSize * 0.22
         it.ops.push({ t: 'rect', x: x0, y: it.h, w: 44, h: 3.2, fill: th.colors.accent, r: 1.6 })
@@ -136,16 +156,27 @@ function tocItems(fc: FlowContext, o: ComposeOptions, entries: TocEntry[], numbe
     const bold = top && maxLevel > 1
     const color = top ? th.colors.heading : th.colors.text
     const style = fc.style({ family: th.body, bold, italic: false, size, color })
-    const numStyle = fc.style({ family: th.body, bold, italic: false, size, color: top ? th.colors.heading : th.colors.muted })
+    const numStyle = fc.style({
+      family: th.body,
+      bold,
+      italic: false,
+      size,
+      color: top ? th.colors.heading : th.colors.muted,
+    })
     const label = e.number ? `${e.number}\u2002${e.text}` : e.text
     const textW = W - indent - numW - base * 2.2
     const lines = fc.breaker.break([{ text: label, style }], { width: textW }).lines
     const pageStr = numbers.get(e.id) ?? ''
-    const numLine = fc.breaker.break([{ text: pageStr, style: numStyle }], { width: numW * 2 }).lines[0]
+    const numLine = fc.breaker.break([{ text: pageStr, style: numStyle }], { width: numW * 2 })
+      .lines[0]
     const entryItems: FlowItem[] = []
     lines.forEach((line, i) => {
       const { ops, baseline } = lineOps(fc, line, x0 + indent, lh)
-      const it: FlowItem = { h: lh, before: i === 0 && k > 0 ? (top && maxLevel > 1 ? base * 0.55 : base * 0.1) : 0, ops }
+      const it: FlowItem = {
+        h: lh,
+        before: i === 0 && k > 0 ? (top && maxLevel > 1 ? base * 0.55 : base * 0.1) : 0,
+        ops,
+      }
       if (i === lines.length - 1) {
         // 頁碼靠右；引導點對齊到全域格線，讓上下列的點對齊
         const nx = x0 + W - numLine.width
@@ -193,14 +224,26 @@ function truncate(fc: FlowContext, text: string, style: number, width: number): 
 }
 
 /** 頁首（文件標題｜目前章節）與頁尾（n / N） */
-function headerFooter(fc: FlowContext, o: ComposeOptions, pageNo: number, total: number, section: string | null): Op[] {
+function headerFooter(
+  fc: FlowContext,
+  o: ComposeOptions,
+  pageNo: number,
+  total: number,
+  section: string | null,
+): Op[] {
   const ops: Op[] = []
   const th = o.theme
   const { width: PW, height: PH, margin } = o.page
   const x0 = margin.left
   const W = fc.contentWidth
   const size = Math.max(7.5, o.baseSize * 0.72)
-  const style = fc.style({ family: th.body, bold: false, italic: false, size, color: th.colors.muted })
+  const style = fc.style({
+    family: th.body,
+    bold: false,
+    italic: false,
+    size,
+    color: th.colors.muted,
+  })
   if (o.header) {
     const by = Math.max(margin.top * 0.55, size * 2)
     const half = W / 2 - 8
@@ -210,15 +253,29 @@ function headerFooter(fc: FlowContext, o: ComposeOptions, pageNo: number, total:
     if (section && section !== o.title) {
       const right = truncate(fc, section, style, half)
       const r = fc.breaker.break([{ text: right, style }], { width: W }).lines[0]
-      ops.push(...lineOps(fc, r, x0 + W - r.width, size * 1.4).ops.map((op) => shiftOp(op, by - size)))
+      ops.push(
+        ...lineOps(fc, r, x0 + W - r.width, size * 1.4).ops.map((op) => shiftOp(op, by - size)),
+      )
     }
-    ops.push({ t: 'line', x1: x0, y1: by + size * 0.75, x2: x0 + W, y2: by + size * 0.75, color: th.colors.rule, w: 0.5 })
+    ops.push({
+      t: 'line',
+      x1: x0,
+      y1: by + size * 0.75,
+      x2: x0 + W,
+      y2: by + size * 0.75,
+      color: th.colors.rule,
+      w: 0.5,
+    })
   }
   if (o.footer) {
     const text = `${pageNo} / ${total}`
     const f = fc.breaker.break([{ text, style }], { width: W }).lines[0]
     const fy = PH - Math.max(margin.bottom * 0.5, size * 2.2)
-    ops.push(...lineOps(fc, f, (PW - f.width) / 2, size * 1.4).ops.map((op) => shiftOp(op, fy - size * 0.7)))
+    ops.push(
+      ...lineOps(fc, f, (PW - f.width) / 2, size * 1.4).ops.map((op) =>
+        shiftOp(op, fy - size * 0.7),
+      ),
+    )
   }
   return ops
 }
@@ -230,7 +287,13 @@ function coverOps(fc: FlowContext, o: ComposeOptions): Op[] {
   const W = fc.contentWidth
   const ops: Op[] = []
   const size = o.baseSize * 2.5
-  const style = fc.style({ family: th.heading, bold: true, italic: false, size, color: th.colors.heading })
+  const style = fc.style({
+    family: th.heading,
+    bold: true,
+    italic: false,
+    size,
+    color: th.colors.heading,
+  })
   const lines = fc.breaker.break([{ text: o.title, style }], { width: W * 0.86 }).lines
   const lh = size * 1.3
   let y = PH * 0.34 - (lines.length * lh) / 2
@@ -241,11 +304,41 @@ function coverOps(fc: FlowContext, o: ComposeOptions): Op[] {
     y += lh
   }
   y += size * 0.4
-  if (th.id === 'academic') ops.push({ t: 'line', x1: x0 + W * 0.3, y1: y, x2: x0 + W * 0.7, y2: y, color: th.colors.rule, w: 0.8 })
-  else ops.push({ t: 'rect', x: centered ? x0 + W / 2 - 28 : x0, y, w: 56, h: 3.5, fill: th.colors.accent, r: 1.75 })
+  if (th.id === 'academic')
+    ops.push({
+      t: 'line',
+      x1: x0 + W * 0.3,
+      y1: y,
+      x2: x0 + W * 0.7,
+      y2: y,
+      color: th.colors.rule,
+      w: 0.8,
+    })
+  else
+    ops.push({
+      t: 'rect',
+      x: centered ? x0 + W / 2 - 28 : x0,
+      y,
+      w: 56,
+      h: 3.5,
+      fill: th.colors.accent,
+      r: 1.75,
+    })
   y += o.baseSize * 2.2
-  const sub = fc.style({ family: th.body, bold: false, italic: false, size: o.baseSize * 1.05, color: th.colors.muted })
-  const small = fc.style({ family: th.body, bold: false, italic: false, size: o.baseSize * 0.9, color: th.colors.muted })
+  const sub = fc.style({
+    family: th.body,
+    bold: false,
+    italic: false,
+    size: o.baseSize * 1.05,
+    color: th.colors.muted,
+  })
+  const small = fc.style({
+    family: th.body,
+    bold: false,
+    italic: false,
+    size: o.baseSize * 0.9,
+    color: th.colors.muted,
+  })
   const put = (text: string, st: number, lineH: number) => {
     for (const line of fc.breaker.break([{ text, style: st }], { width: W * 0.8 }).lines) {
       const x = centered ? x0 + (W - line.width) / 2 : x0
@@ -275,7 +368,12 @@ function sections(flows: PageFlow[]): (string | null)[] {
   })
 }
 
-export function composeDocuments(docs: DocModel[], measurer: Measurer, o: ComposeOptions, onProgress?: (p: number) => void): Composed {
+export function composeDocuments(
+  docs: DocModel[],
+  measurer: Measurer,
+  o: ComposeOptions,
+  onProgress?: (p: number) => void,
+): Composed {
   const fc = new FlowContext(measurer, o)
   const items: FlowItem[] = []
   const numbers = new Map<string, string>()
@@ -300,7 +398,9 @@ export function composeDocuments(docs: DocModel[], measurer: Measurer, o: Compos
     return ops
   })
   const contentDest = new Map<string, Dest>()
-  contentAnchors.forEach((as, p) => as.forEach((a) => !contentDest.has(a.id) && contentDest.set(a.id, { page: p, y: a.y })))
+  contentAnchors.forEach((as, p) =>
+    as.forEach((a) => !contentDest.has(a.id) && contentDest.set(a.id, { page: p, y: a.y })),
+  )
 
   const exclude = new Set(o.toc.exclude)
   const allEntries = buildEntries(docs, numbers).filter((e) => contentDest.has(e.id))
@@ -319,8 +419,16 @@ export function composeDocuments(docs: DocModel[], measurer: Measurer, o: Compos
       pageNumbers.clear()
       for (const e of entries) pageNumbers.set(e.id, offset + contentDest.get(e.id)!.page + 1)
       // 頁碼欄寬：以總頁數的位數預留
-      const digitStyle = fc.style({ family: o.theme.body, bold: true, italic: false, size: o.baseSize, color: o.theme.colors.text })
-      const numW = fc.breaker.measure([{ text: '8'.repeat(String(total + 2).length), style: digitStyle }]).max
+      const digitStyle = fc.style({
+        family: o.theme.body,
+        bold: true,
+        italic: false,
+        size: o.baseSize,
+        color: o.theme.colors.text,
+      })
+      const numW = fc.breaker.measure([
+        { text: '8'.repeat(String(total + 2).length), style: digitStyle },
+      ]).max
       const strs = new Map([...pageNumbers].map(([k, v]) => [k, String(v)]))
       tocFlows = paginate(tocItems(fc, o, entries, strs, numW), fc)
       if (tocFlows.length === T) break
@@ -350,7 +458,9 @@ export function composeDocuments(docs: DocModel[], measurer: Measurer, o: Compos
   const dests = new Map<string, Dest>()
   for (const [id, d] of contentDest) dests.set(id, { page: contentStart + d.page, y: d.y })
 
-  const outlineEntries = o.bookmarks ? allEntries.filter((e) => !exclude.has(e.id) && e.level <= Math.max(o.toc.maxLevel, 3)) : []
+  const outlineEntries = o.bookmarks
+    ? allEntries.filter((e) => !exclude.has(e.id) && e.level <= Math.max(o.toc.maxLevel, 3))
+    : []
   return {
     pages,
     dests,

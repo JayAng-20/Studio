@@ -20,10 +20,12 @@ const base: QueueState = {
 }
 
 /** 可重現的亂數 */
-const seeded = (seed = 1) => () => {
-  seed = (seed * 16807) % 2147483647
-  return (seed - 1) / 2147483646
-}
+const seeded =
+  (seed = 1) =>
+  () => {
+    seed = (seed * 16807) % 2147483647
+    return (seed - 1) / 2147483646
+  }
 
 describe('nextId／prevId', () => {
   it('依序播放，最後一首沒有下一首', () => {

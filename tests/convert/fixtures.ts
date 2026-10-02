@@ -28,7 +28,14 @@ export function buildTiff(orientation = 6): Uint8Array {
   const v = new DataView(t.buffer)
   t.set([0x49, 0x49, 0x2a, 0])
   v.setUint32(4, 8, true)
-  const entry = (at: number, tag: number, type: number, count: number, value: number, short = false) => {
+  const entry = (
+    at: number,
+    tag: number,
+    type: number,
+    count: number,
+    value: number,
+    short = false,
+  ) => {
     v.setUint16(at, tag, true)
     v.setUint16(at + 2, type, true)
     v.setUint32(at + 4, count, true)
@@ -62,12 +69,33 @@ export function buildTiff(orientation = 6): Uint8Array {
 }
 
 /** 最小 JPEG：SOI、APP0（JFIF）、[APP1 Exif]、DQT、SOF0、SOS、資料、EOI */
-export function buildJpeg(opts: { width?: number; height?: number; tiff?: Uint8Array } = {}): Uint8Array {
+export function buildJpeg(
+  opts: { width?: number; height?: number; tiff?: Uint8Array } = {},
+): Uint8Array {
   const { width = 640, height = 480, tiff } = opts
   const app0 = [0xff, 0xe0, ...u16be(16), ...ascii('JFIF\0'), 1, 1, 0, 0, 1, 0, 1, 0, 0]
-  const app1 = tiff ? [0xff, 0xe1, ...u16be(2 + 6 + tiff.length), ...ascii('Exif\0\0'), ...tiff] : []
+  const app1 = tiff
+    ? [0xff, 0xe1, ...u16be(2 + 6 + tiff.length), ...ascii('Exif\0\0'), ...tiff]
+    : []
   const dqt = [0xff, 0xdb, ...u16be(4), 0, 1]
-  const sof = [0xff, 0xc0, ...u16be(17), 8, ...u16be(height), ...u16be(width), 3, 1, 0x22, 0, 2, 0x11, 1, 3, 0x11, 1]
+  const sof = [
+    0xff,
+    0xc0,
+    ...u16be(17),
+    8,
+    ...u16be(height),
+    ...u16be(width),
+    3,
+    1,
+    0x22,
+    0,
+    2,
+    0x11,
+    1,
+    3,
+    0x11,
+    1,
+  ]
   const sos = [0xff, 0xda, ...u16be(12), 3, 1, 0, 2, 0x11, 3, 0x11, 0, 63, 0]
   return concat([0xff, 0xd8], app0, app1, dqt, sof, sos, [1, 2, 3, 4, 5], [0xff, 0xd9])
 }
@@ -78,7 +106,15 @@ function pngChunk(type: string, data: number[] | Uint8Array): Uint8Array {
 }
 
 /** 最小 PNG：簽章、IHDR、[acTL]、[eXIf]、IDAT、IEND */
-export function buildPng(opts: { width?: number; height?: number; colorType?: number; apngFrames?: number; tiff?: Uint8Array } = {}) {
+export function buildPng(
+  opts: {
+    width?: number
+    height?: number
+    colorType?: number
+    apngFrames?: number
+    tiff?: Uint8Array
+  } = {},
+) {
   const { width = 32, height = 16, colorType = 6, apngFrames, tiff } = opts
   return concat(
     [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
@@ -107,10 +143,31 @@ export function buildWebpLossless(width: number, height: number, alpha: boolean)
 }
 
 /** 延伸格式 VP8X（可標示動畫與 alpha） */
-export function buildWebpExtended(width: number, height: number, flags: number, frames = 0): Uint8Array {
-  const vp8x = [flags, 0, 0, 0, (width - 1) & 255, ((width - 1) >> 8) & 255, ((width - 1) >> 16) & 255, (height - 1) & 255, ((height - 1) >> 8) & 255, ((height - 1) >> 16) & 255]
+export function buildWebpExtended(
+  width: number,
+  height: number,
+  flags: number,
+  frames = 0,
+): Uint8Array {
+  const vp8x = [
+    flags,
+    0,
+    0,
+    0,
+    (width - 1) & 255,
+    ((width - 1) >> 8) & 255,
+    ((width - 1) >> 16) & 255,
+    (height - 1) & 255,
+    ((height - 1) >> 8) & 255,
+    ((height - 1) >> 16) & 255,
+  ]
   const anmf = Array.from({ length: frames }, () => riffChunk('ANMF', new Array(16).fill(0)))
-  return riff([riffChunk('VP8X', vp8x), ...(frames ? [riffChunk('ANIM', [0, 0, 0, 0, 0, 0])] : []), ...anmf, ...(frames ? [] : [riffChunk('VP8L', [0x2f, 0, 0, 0, 0])])])
+  return riff([
+    riffChunk('VP8X', vp8x),
+    ...(frames ? [riffChunk('ANIM', [0, 0, 0, 0, 0, 0])] : []),
+    ...anmf,
+    ...(frames ? [] : [riffChunk('VP8L', [0x2f, 0, 0, 0, 0])]),
+  ])
 }
 
 function box(type: string, ...parts: Array<Uint8Array | number[]>): Uint8Array {
@@ -121,17 +178,46 @@ const fullBox = (type: string, version: number, ...parts: Array<Uint8Array | num
   box(type, [version, 0, 0, 0], ...parts)
 
 /** 最小 HEIC：ftyp、meta（hdlr、iinf/infe Exif、iloc、iprp/ipco/ispe［、irot］）、mdat */
-export function buildHeic(opts: { tiff?: Uint8Array; sizes?: Array<[number, number]>; rotate?: boolean; brand?: string } = {}) {
-  const { tiff = buildTiff(), sizes = [[4032, 3024], [512, 512]], rotate = false, brand = 'heic' } = opts
+export function buildHeic(
+  opts: {
+    tiff?: Uint8Array
+    sizes?: Array<[number, number]>
+    rotate?: boolean
+    brand?: string
+  } = {},
+) {
+  const {
+    tiff = buildTiff(),
+    sizes = [
+      [4032, 3024],
+      [512, 512],
+    ],
+    rotate = false,
+    brand = 'heic',
+  } = opts
   const payload = concat(u32be(6), ascii('Exif\0\0'), tiff)
   const ftyp = box('ftyp', ascii(brand), u32be(0), ascii('mif1'), ascii(brand))
   const hdlr = fullBox('hdlr', 0, u32be(0), ascii('pict'), new Array(12).fill(0), [0])
   const infe = fullBox('infe', 2, u16be(7), u16be(0), ascii('Exif'), [0])
   const iinf = fullBox('iinf', 0, u16be(1), infe)
-  const ipco = box('ipco', ...sizes.map(([w, h]) => fullBox('ispe', 0, u32be(w), u32be(h))), rotate ? box('irot', [1]) : [])
+  const ipco = box(
+    'ipco',
+    ...sizes.map(([w, h]) => fullBox('ispe', 0, u32be(w), u32be(h))),
+    rotate ? box('irot', [1]) : [],
+  )
   const iprp = box('iprp', ipco)
   const ilocFor = (offset: number) =>
-    fullBox('iloc', 0, [0x44, 0x00], u16be(1), u16be(7), u16be(0), u16be(1), u32be(offset), u32be(payload.length))
+    fullBox(
+      'iloc',
+      0,
+      [0x44, 0x00],
+      u16be(1),
+      u16be(7),
+      u16be(0),
+      u16be(1),
+      u32be(offset),
+      u32be(payload.length),
+    )
   const metaFor = (offset: number) => fullBox('meta', 0, hdlr, iinf, ilocFor(offset), iprp)
   const before = ftyp.length + metaFor(0).length + 8
   return concat(ftyp, metaFor(before), box('mdat', payload))
@@ -141,9 +227,27 @@ export function buildHeic(opts: { tiff?: Uint8Array; sizes?: Array<[number, numb
 export function buildGif(frames = 2): Uint8Array {
   const header = [...ascii('GIF89a'), ...u16le(10), ...u16le(8), 0x80, 0, 0, 0, 0, 0, 255, 255, 255]
   const frame = (transparent: boolean) => [
-    0x21, 0xf9, 4, transparent ? 1 : 0, 10, 0, 0, 0,
-    0x2c, 0, 0, 0, 0, ...u16le(10), ...u16le(8), 0,
-    2, 2, 0x4c, 0x01, 0,
+    0x21,
+    0xf9,
+    4,
+    transparent ? 1 : 0,
+    10,
+    0,
+    0,
+    0,
+    0x2c,
+    0,
+    0,
+    0,
+    0,
+    ...u16le(10),
+    ...u16le(8),
+    0,
+    2,
+    2,
+    0x4c,
+    0x01,
+    0,
   ]
   const body: number[] = []
   for (let i = 0; i < frames; i++) body.push(...frame(i === 0))

@@ -30,7 +30,15 @@ import { cn } from '@/lib/cn'
 import { spring } from '@/design/motion'
 import { useT, useLang } from '@/i18n'
 import { usePlayer, type PlayItem } from '../store'
-import { addFiles, clearAll, cycleRepeat, playItem, removeItem, reorder, toggleShuffle } from '../actions'
+import {
+  addFiles,
+  clearAll,
+  cycleRepeat,
+  playItem,
+  removeItem,
+  reorder,
+  toggleShuffle,
+} from '../actions'
 import { orderByNames } from '../logic/playlist'
 import { loadSaved, upsertSaved, writeSaved, type SavedPlaylist } from '../logic/savedPlaylists'
 
@@ -42,7 +50,10 @@ function EqBars({ paused }: { paused: boolean }) {
   return (
     <span className={cn('flex h-3.5 items-end gap-[2px]', paused && 'eq-paused')} aria-hidden>
       {[0, 1, 2].map((i) => (
-        <span key={i} className="eq-bar motion-decor block h-full w-[3px] rounded-full bg-current" />
+        <span
+          key={i}
+          className="eq-bar motion-decor block h-full w-[3px] rounded-full bg-current"
+        />
       ))}
     </span>
   )
@@ -53,7 +64,10 @@ function Row({ item, handle, dark }: { item: PlayItem; handle: React.ReactNode; 
   const current = usePlayer((s) => s.currentId === item.id)
   const paused = usePlayer((s) => s.paused)
   const Icon = item.source === 'url' ? Globe : item.kind === 'audio' ? Music : Film
-  const meta = [item.duration ? formatTime(item.duration) : null, item.size !== undefined ? formatBytes(item.size) : null]
+  const meta = [
+    item.duration ? formatTime(item.duration) : null,
+    item.size !== undefined ? formatBytes(item.size) : null,
+  ]
     .filter(Boolean)
     .join(' · ')
   return (
@@ -68,7 +82,9 @@ function Row({ item, handle, dark }: { item: PlayItem; handle: React.ReactNode; 
           layoutId={dark ? 'pl-current-dark' : 'pl-current'}
           className={cn(
             'absolute inset-0 -z-0 rounded-md',
-            dark ? 'bg-[color-mix(in_srgb,var(--accent)_28%,transparent)]' : 'bg-[color-mix(in_srgb,var(--accent)_11%,transparent)] ring-1 ring-[color-mix(in_srgb,var(--accent)_35%,transparent)]',
+            dark
+              ? 'bg-[color-mix(in_srgb,var(--accent)_28%,transparent)]'
+              : 'bg-[color-mix(in_srgb,var(--accent)_11%,transparent)] ring-1 ring-[color-mix(in_srgb,var(--accent)_35%,transparent)]',
           )}
           transition={spring.snappy}
         />
@@ -78,21 +94,42 @@ function Row({ item, handle, dark }: { item: PlayItem; handle: React.ReactNode; 
         type="button"
         onClick={() => playItem(item.id)}
         aria-current={current ? 'true' : undefined}
-        aria-label={[item.meta?.title || item.name, current ? t('player.playlist.current') : null, meta].filter(Boolean).join('，')}
+        aria-label={[
+          item.meta?.title || item.name,
+          current ? t('player.playlist.current') : null,
+          meta,
+        ]
+          .filter(Boolean)
+          .join('，')}
         className="relative flex min-h-11 min-w-0 flex-1 items-center gap-2.5 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <span
           className={cn(
             'relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md',
-            current ? 'text-white' : dark ? 'bg-[var(--stage-hover)] text-[var(--stage-fg-2)]' : 'bg-surface-2 text-text-3',
+            current
+              ? 'text-white'
+              : dark
+                ? 'bg-[var(--stage-hover)] text-[var(--stage-fg-2)]'
+                : 'bg-surface-2 text-text-3',
           )}
-          style={current ? { background: 'linear-gradient(135deg, var(--m-1), var(--m-2))' } : undefined}
+          style={
+            current ? { background: 'linear-gradient(135deg, var(--m-1), var(--m-2))' } : undefined
+          }
         >
           {item.meta?.coverUrl ? (
-            <img src={item.meta.coverUrl} alt="" className="absolute inset-0 size-full object-cover" />
+            <img
+              src={item.meta.coverUrl}
+              alt=""
+              className="absolute inset-0 size-full object-cover"
+            />
           ) : null}
           {current ? (
-            <span className={cn('relative grid size-full place-items-center', item.meta?.coverUrl && 'bg-black/40')}>
+            <span
+              className={cn(
+                'relative grid size-full place-items-center',
+                item.meta?.coverUrl && 'bg-black/40',
+              )}
+            >
               <EqBars paused={paused} />
             </span>
           ) : (
@@ -100,15 +137,31 @@ function Row({ item, handle, dark }: { item: PlayItem; handle: React.ReactNode; 
           )}
         </span>
         <span className="flex min-w-0 flex-1 flex-col">
-          <span className={cn('flex min-w-0 items-center gap-1.5 text-body', current ? 'font-semibold' : 'font-medium', dark ? 'text-[var(--stage-fg)]' : 'text-text')}>
+          <span
+            className={cn(
+              'flex min-w-0 items-center gap-1.5 text-body',
+              current ? 'font-semibold' : 'font-medium',
+              dark ? 'text-[var(--stage-fg)]' : 'text-text',
+            )}
+          >
             <FileName name={item.meta?.title || item.name} className="min-w-0" />
           </span>
-          <span className={cn('flex min-w-0 items-center gap-1.5 text-caption', dark ? 'text-[var(--stage-fg-2)]' : 'text-text-3')}>
+          <span
+            className={cn(
+              'flex min-w-0 items-center gap-1.5 text-caption',
+              dark ? 'text-[var(--stage-fg-2)]' : 'text-text-3',
+            )}
+          >
             {current && <span className="sr-only">{t('player.playlist.current')}</span>}
             {meta && <span className="truncate tabular-nums">{meta}</span>}
             {item.source === 'url' && <span>{t('player.playlist.stream')}</span>}
             {(item.error || item.suspect) && (
-              <span className={cn('inline-flex items-center gap-0.5', dark ? '' : 'text-warning-ink')} style={dark ? { color: 'color-mix(in srgb, var(--warning) 70%, white)' } : undefined}>
+              <span
+                className={cn('inline-flex items-center gap-0.5', dark ? '' : 'text-warning-ink')}
+                style={
+                  dark ? { color: 'color-mix(in srgb, var(--warning) 70%, white)' } : undefined
+                }
+              >
                 <TriangleAlert size={12} aria-hidden />
                 {t('player.playlist.unsupported')}
               </span>
@@ -123,7 +176,9 @@ function Row({ item, handle, dark }: { item: PlayItem; handle: React.ReactNode; 
           aria-label={`${t('player.playlist.remove')}：${item.name}`}
           className={cn(
             'relative grid size-9 shrink-0 place-items-center rounded-sm transition-colors pointer-coarse:size-11',
-            dark ? 'text-[var(--stage-fg-2)] hover:bg-[var(--stage-hover)] hover:text-[var(--stage-fg)]' : 'text-text-3 hover:bg-[color-mix(in_srgb,var(--danger)_10%,transparent)] hover:text-danger-ink',
+            dark
+              ? 'text-[var(--stage-fg-2)] hover:bg-[var(--stage-hover)] hover:text-[var(--stage-fg)]'
+              : 'text-text-3 hover:bg-[color-mix(in_srgb,var(--danger)_10%,transparent)] hover:text-danger-ink',
           )}
         >
           <X size={16} aria-hidden />
@@ -137,7 +192,10 @@ function Row({ item, handle, dark }: { item: PlayItem; handle: React.ReactNode; 
 export function PlaylistList({ dark }: { dark?: boolean }) {
   const t = useT()
   const items = usePlayer((s) => s.items)
-  if (!items.length) return <p className="px-2 py-6 text-center text-small text-text-3">{t('player.playlist.empty')}</p>
+  if (!items.length)
+    return (
+      <p className="px-2 py-6 text-center text-small text-text-3">{t('player.playlist.empty')}</p>
+    )
   return (
     <SortableList
       items={items}
@@ -157,7 +215,11 @@ function QueueControls() {
   const repeat = usePlayer((s) => s.repeat)
   const autoNext = usePlayer((s) => s.autoNext)
   const repeatLabel =
-    repeat === 'one' ? t('player.playlist.repeatOne') : repeat === 'all' ? t('player.playlist.repeatAll') : t('player.playlist.repeatOff')
+    repeat === 'one'
+      ? t('player.playlist.repeatOne')
+      : repeat === 'all'
+        ? t('player.playlist.repeatAll')
+        : t('player.playlist.repeatOff')
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       <Button
@@ -173,7 +235,9 @@ function QueueControls() {
         size="sm"
         variant={repeat !== 'off' ? 'primary' : 'secondary'}
         aria-label={`${t('player.playlist.repeat')}：${repeatLabel}`}
-        leading={repeat === 'one' ? <Repeat1 size={15} aria-hidden /> : <Repeat size={15} aria-hidden />}
+        leading={
+          repeat === 'one' ? <Repeat1 size={15} aria-hidden /> : <Repeat size={15} aria-hidden />
+        }
         onClick={cycleRepeat}
       >
         {repeatLabel}
@@ -182,7 +246,11 @@ function QueueControls() {
         <span className="text-small text-text-2" aria-hidden>
           {t('player.playlist.autoNext')}
         </span>
-        <Switch checked={autoNext} onChange={(v) => usePlayer.getState().set({ autoNext: v })} ariaLabel={t('player.playlist.autoNext')} />
+        <Switch
+          checked={autoNext}
+          onChange={(v) => usePlayer.getState().set({ autoNext: v })}
+          ariaLabel={t('player.playlist.autoNext')}
+        />
       </div>
     </div>
   )
@@ -215,9 +283,15 @@ export function SavedPlaylists({ compact, hint }: { compact?: boolean; hint?: st
     const { ordered, missing, extra } = orderByNames(files, p.names)
     clearAll()
     await addFiles([...ordered, ...extra])
-    if (ordered.length) toast.success(t('player.playlist.restored', { name: p.name, count: ordered.length }))
+    if (ordered.length)
+      toast.success(t('player.playlist.restored', { name: p.name, count: ordered.length }))
     if (missing.length) {
-      toast.warning(t('player.playlist.missing', { count: missing.length, names: missing.slice(0, 3).join('、') + (missing.length > 3 ? '…' : '') }))
+      toast.warning(
+        t('player.playlist.missing', {
+          count: missing.length,
+          names: missing.slice(0, 3).join('、') + (missing.length > 3 ? '…' : ''),
+        }),
+      )
     }
   }
 
@@ -238,7 +312,8 @@ export function SavedPlaylists({ compact, hint }: { compact?: boolean; hint?: st
               <span className="flex min-w-0 flex-col">
                 <span className="truncate text-body font-medium">{p.name}</span>
                 <span className="text-caption tabular-nums text-text-3">
-                  {t('player.playlist.itemCount', { count: p.names.length })} · {t('player.playlist.savedAt', { date: fmt.format(p.savedAt) })}
+                  {t('player.playlist.itemCount', { count: p.names.length })} ·{' '}
+                  {t('player.playlist.savedAt', { date: fmt.format(p.savedAt) })}
                 </span>
               </span>
             </button>
@@ -294,7 +369,14 @@ function SaveDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: b
   const save = () => {
     const items = usePlayer.getState().items.filter((i) => i.source === 'file')
     const finalName = name.trim() || t('player.playlist.saveDefault')
-    writeSaved(upsertSaved(loadSaved(), { id: uid('plist'), name: finalName, names: items.map((i) => i.name), savedAt: Date.now() }))
+    writeSaved(
+      upsertSaved(loadSaved(), {
+        id: uid('plist'),
+        name: finalName,
+        names: items.map((i) => i.name),
+        savedAt: Date.now(),
+      }),
+    )
     notifySaved()
     toast.success(t('player.playlist.saved', { name: finalName }))
     onOpenChange(false)
@@ -337,7 +419,9 @@ function SaveDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: b
           maxLength={60}
           onChange={(e) => setName(e.target.value)}
         />
-        {hasStream && <p className="mt-2 text-caption text-text-3">{t('player.playlist.noStreamSave')}</p>}
+        {hasStream && (
+          <p className="mt-2 text-caption text-text-3">{t('player.playlist.noStreamSave')}</p>
+        )}
       </form>
     </Dialog>
   )
@@ -356,11 +440,28 @@ export function PlaylistPanel() {
         <PlaylistList />
       </div>
       <div className="flex flex-wrap items-center gap-1.5">
-        <AddFilesButton onFiles={(f) => void addFiles(f, { play: false })} accept={MEDIA_ACCEPT} size="sm" label={t('player.actions.addFiles')} />
-        <Button size="sm" variant="ghost" leading={<Save size={15} aria-hidden />} onClick={() => setSaving(true)} disabled={!hasFiles}>
+        <AddFilesButton
+          onFiles={(f) => void addFiles(f, { play: false })}
+          accept={MEDIA_ACCEPT}
+          size="sm"
+          label={t('player.actions.addFiles')}
+        />
+        <Button
+          size="sm"
+          variant="ghost"
+          leading={<Save size={15} aria-hidden />}
+          onClick={() => setSaving(true)}
+          disabled={!hasFiles}
+        >
           {t('player.playlist.save')}
         </Button>
-        <Button size="sm" variant="ghost" className="ml-auto" leading={<Trash2 size={15} aria-hidden />} onClick={() => setConfirm(true)}>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="ml-auto"
+          leading={<Trash2 size={15} aria-hidden />}
+          onClick={() => setConfirm(true)}
+        >
           {t('player.playlist.clear')}
         </Button>
       </div>

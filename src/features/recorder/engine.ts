@@ -183,13 +183,13 @@ function displayOptions(prefs: RecorderPrefs): DisplayMediaStreamOptions {
     displaySurface: 'monitor',
   }
   const audio: MediaTrackConstraints | false = prefs.systemAudio
-    ? {
+    ? ({
         echoCancellation: false,
         noiseSuppression: false,
         autoGainControl: false,
         // 錄分頁時讓使用者仍聽得到分頁聲音
         suppressLocalAudioPlayback: false,
-      } as MediaTrackConstraints
+      } as MediaTrackConstraints)
     : false
   // 下列為 Chromium 的選擇器提示，其他瀏覽器會忽略
   return {
@@ -258,7 +258,9 @@ export function mediaErrorMessage(kind: MediaErrorKind, device: 'screen' | 'mic'
           ? t('recorder.errors.cameraDenied')
           : t('recorder.errors.screenDenied')
     case 'notFound':
-      return device === 'mic' ? t('recorder.errors.micNotFound') : t('recorder.errors.cameraNotFound')
+      return device === 'mic'
+        ? t('recorder.errors.micNotFound')
+        : t('recorder.errors.cameraNotFound')
     case 'inUse':
       return t('recorder.errors.inUse')
     case 'unsupported':
@@ -307,7 +309,8 @@ export async function beginRecording(prefs: RecorderPrefs, format: AvailableForm
     if (prefs.mode === 'screen') {
       source = await navigator.mediaDevices.getDisplayMedia(displayOptions(prefs))
     } else {
-      const size = prefs.quality === 'standard' ? { width: 1280, height: 720 } : { width: 1920, height: 1080 }
+      const size =
+        prefs.quality === 'standard' ? { width: 1280, height: 720 } : { width: 1920, height: 1080 }
       source = await getUserMediaWithFallback({
         video: cameraConstraints(prefs.cameraDeviceId, { ...size, fps: prefs.fps }),
         audio: false,
@@ -337,7 +340,10 @@ export async function beginRecording(prefs: RecorderPrefs, format: AvailableForm
   let mic: MediaStream | null = null
   if (prefs.mic) {
     try {
-      mic = await getUserMediaWithFallback({ audio: micConstraints(prefs.micDeviceId), video: false })
+      mic = await getUserMediaWithFallback({
+        audio: micConstraints(prefs.micDeviceId),
+        video: false,
+      })
       acquired.push(mic)
     } catch (e) {
       console.error(e)

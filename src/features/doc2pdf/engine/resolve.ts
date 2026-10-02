@@ -15,7 +15,11 @@ export interface ImageFile {
 
 export type ConvertOther = (bytes: Uint8Array, mime: string) => Promise<ImageData | null>
 
-async function toImageData(bytes: Uint8Array, mime: string, convertOther?: ConvertOther): Promise<ImageData | null> {
+async function toImageData(
+  bytes: Uint8Array,
+  mime: string,
+  convertOther?: ConvertOther,
+): Promise<ImageData | null> {
   const info = imageInfo(bytes)
   if (info) return { bytes, ...info }
   if (convertOther) {
@@ -28,7 +32,11 @@ async function toImageData(bytes: Uint8Array, mime: string, convertOther?: Conve
   return null
 }
 
-export async function resolveImages(doc: DocModel, files: ImageFile[], convertOther?: ConvertOther): Promise<DocModel> {
+export async function resolveImages(
+  doc: DocModel,
+  files: ImageFile[],
+  convertOther?: ConvertOther,
+): Promise<DocModel> {
   const imgs: ImageBlock[] = []
   walkBlocks(doc.blocks, (b) => {
     if (b.type === 'image' && !b.data) imgs.push(b)

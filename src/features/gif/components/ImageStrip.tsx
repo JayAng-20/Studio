@@ -26,7 +26,12 @@ export function ImageStrip({ items }: { items: ImageItem[] }) {
           >
             {handle}
             <span className="gif-checker relative size-12 shrink-0 overflow-hidden rounded-sm ring-1 ring-border">
-              <img src={item.url} alt="" className="absolute inset-0 size-full object-cover" draggable={false} />
+              <img
+                src={item.url}
+                alt=""
+                className="absolute inset-0 size-full object-cover"
+                draggable={false}
+              />
             </span>
             <div className="flex min-w-0 flex-1 flex-col">
               <FileName name={item.file.name} className="text-body font-medium text-text" />

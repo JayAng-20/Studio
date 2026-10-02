@@ -57,7 +57,11 @@ describe('目錄：兩階段排版的頁碼修正', () => {
 
   it('有封面時再往後推一頁', () => {
     const doc = bigDoc(10)
-    const c = composeDocuments([doc], fakeMeasurer, base({ cover: { enabled: true, date: '2026 年 10 月 2 日', files: [] } }))
+    const c = composeDocuments(
+      [doc],
+      fakeMeasurer,
+      base({ cover: { enabled: true, date: '2026 年 10 月 2 日', files: [] } }),
+    )
     expect(c.pages[0].kind).toBe('cover')
     expect(c.pageNumbers.get(c.entries[0].id)).toBe(1 + c.tocPages + 1)
     for (const e of c.entries) expect(c.pageNumbers.get(e.id)).toBe(c.dests.get(e.id)!.page + 1)
@@ -65,7 +69,11 @@ describe('目錄：兩階段排版的頁碼修正', () => {
 
   it('目錄放最後：頁碼不受目錄頁數影響', () => {
     const doc = bigDoc(10)
-    const c = composeDocuments([doc], fakeMeasurer, base({ toc: { ...base().toc, position: 'end' } }))
+    const c = composeDocuments(
+      [doc],
+      fakeMeasurer,
+      base({ toc: { ...base().toc, position: 'end' } }),
+    )
     expect(c.pageNumbers.get(c.entries[0].id)).toBe(1)
     expect(c.pages[c.pages.length - 1].kind).toBe('toc')
     for (const e of c.entries) expect(c.pageNumbers.get(e.id)).toBe(c.dests.get(e.id)!.page + 1)
@@ -74,10 +82,18 @@ describe('目錄：兩階段排版的頁碼修正', () => {
   it('目錄層級與取消勾選的項目', () => {
     const doc = bigDoc(5)
     const all = composeDocuments([doc], fakeMeasurer, base())
-    const lvl1 = composeDocuments([doc], fakeMeasurer, base({ toc: { ...base().toc, maxLevel: 1 } }))
+    const lvl1 = composeDocuments(
+      [doc],
+      fakeMeasurer,
+      base({ toc: { ...base().toc, maxLevel: 1 } }),
+    )
     expect(lvl1.entries.every((e) => e.level === 1)).toBe(true)
     expect(lvl1.entries.length).toBe(5)
-    const ex = composeDocuments([doc], fakeMeasurer, base({ toc: { ...base().toc, exclude: [all.entries[0].id] } }))
+    const ex = composeDocuments(
+      [doc],
+      fakeMeasurer,
+      base({ toc: { ...base().toc, exclude: [all.entries[0].id] } }),
+    )
     expect(ex.entries.length).toBe(all.entries.length - 1)
   })
 
@@ -140,7 +156,12 @@ describe('書籤樹', () => {
 
 describe('分頁', () => {
   const fc = () => new FlowContext(fakeMeasurer, base())
-  const item = (h: number, extra: Partial<FlowItem> = {}): FlowItem => ({ h, before: 0, ops: [], ...extra })
+  const item = (h: number, extra: Partial<FlowItem> = {}): FlowItem => ({
+    h,
+    before: 0,
+    ops: [],
+    ...extra,
+  })
 
   it('標題不會單獨留在頁尾（與下一項不分開）', () => {
     const f = fc()
@@ -154,7 +175,13 @@ describe('分頁', () => {
   it('孤行／寡行：段落頭兩行在一起', () => {
     const f = fc()
     const avail = f.contentHeight
-    const lines = [item(15, { keepNext: true }), item(15), item(15), item(15, { keepNext: true }), item(15)]
+    const lines = [
+      item(15, { keepNext: true }),
+      item(15),
+      item(15),
+      item(15, { keepNext: true }),
+      item(15),
+    ]
     const pages = paginate([item(avail - 20), ...lines], f)
     // 只放得下一行：第一行跟著第二行到下一頁
     expect(pages[0].placements).toHaveLength(1)

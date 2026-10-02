@@ -151,11 +151,7 @@ export function BubbleEditor({
             )}
           >
             {ghost ? null : stream ? (
-              <StreamVideo
-                stream={stream}
-                mirror={b.mirror}
-                className="size-full object-cover"
-              />
+              <StreamVideo stream={stream} mirror={b.mirror} className="size-full object-cover" />
             ) : (
               <div className={cn('size-full', loading && 'skeleton shimmer')} />
             )}
@@ -168,7 +164,10 @@ export function BubbleEditor({
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
             className="absolute grid size-7 cursor-nwse-resize place-items-center"
-            style={{ left: d / 2 + (d / 2) * Math.SQRT1_2 - 14, top: d / 2 + (d / 2) * Math.SQRT1_2 - 14 }}
+            style={{
+              left: d / 2 + (d / 2) * Math.SQRT1_2 - 14,
+              top: d / 2 + (d / 2) * Math.SQRT1_2 - 14,
+            }}
           >
             <span className="size-3.5 rounded-full border-2 border-white bg-accent shadow-e2" />
           </div>

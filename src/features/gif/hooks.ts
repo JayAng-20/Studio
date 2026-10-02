@@ -239,10 +239,7 @@ export function useEstimate(plan: PlanItem[], geom: Geometry, enabled: boolean):
     const picks = Array.from(new Set([0, Math.floor((n - 1) / 2), Math.max(0, n - 2)]))
     return picks.map((i) => [i, Math.min(n - 1, i + 1)])
   }, [plan])
-  const samplePlan = useMemo(
-    () => sampleIdx.flat().map((i) => plan[i]),
-    [sampleIdx, plan],
-  )
+  const samplePlan = useMemo(() => sampleIdx.flat().map((i) => plan[i]), [sampleIdx, plan])
   const sampleKey = JSON.stringify(samplePlan.map((p) => [p.src, p.delayCs]))
 
   const fullKey = `${cfgKey}|${sampleKey}|${source ? (source.kind === 'video' ? source.url : source.items.length) : ''}`
@@ -322,4 +319,5 @@ export function useEstimate(plan: PlanItem[], geom: Geometry, enabled: boolean):
 }
 
 /** 輸出總長（毫秒） */
-export const planDurationMs = (plan: PlanItem[]) => Math.round(totalDuration(plan.map((p) => p.delayCs)) * 1000)
+export const planDurationMs = (plan: PlanItem[]) =>
+  Math.round(totalDuration(plan.map((p) => p.delayCs)) * 1000)

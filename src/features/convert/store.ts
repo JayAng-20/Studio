@@ -141,7 +141,8 @@ export const useConvert = create<ConvertState>((set, get) => {
     patch(id, { probe })
     try {
       const pool = getPool()
-      const srcSize = probe.width && probe.height ? { width: probe.width, height: probe.height } : undefined
+      const srcSize =
+        probe.width && probe.height ? { width: probe.width, height: probe.height } : undefined
       let res
       if (probe.format === 'heic') {
         const bitmap = await mainDecodeQueue(() => decodeHeic(item.file))
@@ -162,7 +163,11 @@ export const useConvert = create<ConvertState>((set, get) => {
       patch(id, {
         thumb: { url, width: res.width, height: res.height },
         thumbState: 'ready',
-        probe: { ...probe, width: probe.width ?? res.srcWidth, height: probe.height ?? res.srcHeight },
+        probe: {
+          ...probe,
+          width: probe.width ?? res.srcWidth,
+          height: probe.height ?? res.srcHeight,
+        },
       })
     } catch (e) {
       if (!find(id)) return
@@ -196,7 +201,8 @@ export const useConvert = create<ConvertState>((set, get) => {
     patch(id, { status: 'queued', progress: 0, error: undefined })
     try {
       const probe = item.probe ?? (await probeFile(item.file))
-      const srcSize = probe.width && probe.height ? { width: probe.width, height: probe.height } : undefined
+      const srcSize =
+        probe.width && probe.height ? { width: probe.width, height: probe.height } : undefined
       const out = srcSize ? computeOutputSize(srcSize, opts.resize) : null
 
       /** 一次轉換嘗試；limit 為像素上限（記憶體不足時會以較小的上限重試） */
@@ -258,13 +264,24 @@ export const useConvert = create<ConvertState>((set, get) => {
         r = await attempt(limit)
       } catch (e) {
         // 記憶體不足（或 Worker 因此中斷）：自動以四分之一像素重試一次，而不是直接失敗
-        if (!(e instanceof EngineError) || (e.code !== 'memory' && e.code !== 'crash') || ctl.signal.aborted) throw e
+        if (
+          !(e instanceof EngineError) ||
+          (e.code !== 'memory' && e.code !== 'crash') ||
+          ctl.signal.aborted
+        )
+          throw e
         console.error(e)
         const px = srcSize ? srcSize.width * srcSize.height : limit
         const lower = Math.max(4_000_000, Math.floor(Math.min(px, limit) / 4))
         if (lower >= px) throw e
         r = await attempt(lower)
-        r = { ...r, warnings: [...r.warnings.filter((w) => w !== 'downscaled-pixels'), 'memory-retry' as const] }
+        r = {
+          ...r,
+          warnings: [
+            ...r.warnings.filter((w) => w !== 'downscaled-pixels'),
+            'memory-retry' as const,
+          ],
+        }
       }
       const warnings = [...r.warnings]
       if (
@@ -317,10 +334,16 @@ export const useConvert = create<ConvertState>((set, get) => {
   }
 
   /** 依模板命名，並與其他結果去重 */
-  const nameFor = (id: string, r: Pick<ItemResult, 'width' | 'height' | 'quality' | 'format'>, template: string) => {
+  const nameFor = (
+    id: string,
+    r: Pick<ItemResult, 'width' | 'height' | 'quality' | 'format'>,
+    template: string,
+  ) => {
     const items = get().items
     const idx = items.findIndex((x) => x.id === id)
-    const dedupe = createDeduper(items.filter((x) => x.id !== id && x.result?.name).map((x) => x.result!.name))
+    const dedupe = createDeduper(
+      items.filter((x) => x.id !== id && x.result?.name).map((x) => x.result!.name),
+    )
     return dedupe(
       buildOutputName(template, {
         original: items[idx]?.name ?? 'image',
@@ -367,7 +390,9 @@ export const useConvert = create<ConvertState>((set, get) => {
   // 載入進度：HEIC 解碼器與進階編碼器
   onHeicProgress((state, loaded, total) => set({ heic: { state, loaded, total } }))
   getPool().onCodec((codec, loaded, total, done) =>
-    set((s) => ({ codecs: { ...s.codecs, [codec]: { state: done ? 'ready' : 'loading', loaded, total } } })),
+    set((s) => ({
+      codecs: { ...s.codecs, [codec]: { state: done ? 'ready' : 'loading', loaded, total } },
+    })),
   )
 
   return {
@@ -452,7 +477,8 @@ export const useConvert = create<ConvertState>((set, get) => {
         if (!it) return false
         // 已用相同設定完成的不再轉換（除非明確指定）
         if (!ids && it.status === 'done' && it.result?.key === key) return false
-        if (!ids && it.status === 'error' && (it.error === 'decode' || it.error === 'unsupported')) return false
+        if (!ids && it.status === 'error' && (it.error === 'decode' || it.error === 'unsupported'))
+          return false
         return true
       })
       if (!targets.length) return
@@ -479,28 +505,36 @@ export const useConvert = create<ConvertState>((set, get) => {
       const name =
         targets.length === 1
           ? t('convert.task.one', { name: find(targets[0])?.name ?? '' })
-          : t('convert.task.many', { count: targets.length, format: FORMATS[opts.format].ext.toUpperCase() })
+          : t('convert.task.many', {
+              count: targets.length,
+              format: FORMATS[opts.format].ext.toUpperCase(),
+            })
       try {
-        await run(name, async ({ signal, progress: report }) => {
-          const tick = () => report([...progress.values()].reduce((a, b) => a + b, 0) / targets.length)
-          tickAll = tick
-          const results = await Promise.all(
-            targets.map((id) =>
-              convertOne(id, opts, key, signal, (p) => {
-                progress.set(id, p)
-                tick()
-              }).catch((e) => {
-                if (isAbortError(e)) return null
-                throw e
-              }),
-            ),
-          )
-          if (signal.aborted) throw new DOMException('Aborted', 'AbortError')
-          const ok = results.filter((r): r is ItemResult => !!r)
-          if (!ok.length) throw new Error(t('convert.errors.allFailed'))
-          set({ delivered: false })
-          return ok.map((r) => ({ blob: r.blob, name: r.name }))
-        }, { signal: ctl.signal })
+        await run(
+          name,
+          async ({ signal, progress: report }) => {
+            const tick = () =>
+              report([...progress.values()].reduce((a, b) => a + b, 0) / targets.length)
+            tickAll = tick
+            const results = await Promise.all(
+              targets.map((id) =>
+                convertOne(id, opts, key, signal, (p) => {
+                  progress.set(id, p)
+                  tick()
+                }).catch((e) => {
+                  if (isAbortError(e)) return null
+                  throw e
+                }),
+              ),
+            )
+            if (signal.aborted) throw new DOMException('Aborted', 'AbortError')
+            const ok = results.filter((r): r is ItemResult => !!r)
+            if (!ok.length) throw new Error(t('convert.errors.allFailed'))
+            set({ delivered: false })
+            return ok.map((r) => ({ blob: r.blob, name: r.name }))
+          },
+          { signal: ctl.signal },
+        )
       } catch (e) {
         if (!isAbortError(e)) console.error(e)
       } finally {
@@ -523,7 +557,10 @@ export const useConvert = create<ConvertState>((set, get) => {
 /** 等比放進 max×max（只縮不放，square=true 時允許放大） */
 function fitBox(s: Size, max: number, allowUp = false): Size {
   const k = Math.min(allowUp ? Infinity : 1, max / Math.max(s.width, s.height))
-  return { width: Math.max(1, Math.round(s.width * k)), height: Math.max(1, Math.round(s.height * k)) }
+  return {
+    width: Math.max(1, Math.round(s.width * k)),
+    height: Math.max(1, Math.round(s.height * k)),
+  }
 }
 
 /** 主執行緒解碼的同時數量限制 */
@@ -564,4 +601,5 @@ function mainDecodeQueue<T>(fn: () => Promise<T>): Promise<T> {
 export const currentKey = (o: StoredOptions) => optionsKey(o)
 
 /** 項目的結果是否與目前設定相符 */
-export const isFresh = (it: ConvertItem, key: string) => it.status === 'done' && it.result?.key === key
+export const isFresh = (it: ConvertItem, key: string) =>
+  it.status === 'done' && it.result?.key === key

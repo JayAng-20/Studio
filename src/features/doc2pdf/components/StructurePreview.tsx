@@ -33,8 +33,26 @@ export function StructurePreview() {
 
   const groups: Group[] = useMemo(() => {
     if (!ready.length) return []
-    if (merge && ready.length > 1) return [{ key: 'all', name: null, entries: buildEntries(ready.map((s) => s.doc!), new Map()), raw: false }]
-    return [{ key: picked.id, name: picked.name, entries: buildEntries([picked.doc!], new Map()), raw: picked.raw }]
+    if (merge && ready.length > 1)
+      return [
+        {
+          key: 'all',
+          name: null,
+          entries: buildEntries(
+            ready.map((s) => s.doc!),
+            new Map(),
+          ),
+          raw: false,
+        },
+      ]
+    return [
+      {
+        key: picked.id,
+        name: picked.name,
+        entries: buildEntries([picked.doc!], new Map()),
+        raw: picked.raw,
+      },
+    ]
   }, [ready, merge, picked])
 
   const all = groups.flatMap((g) => g.entries)
@@ -42,7 +60,14 @@ export function StructurePreview() {
   const ex = new Set(exclude)
   const selected = eligible.filter((e) => !ex.has(e.id)).length
 
-  const images = useMemo(() => imageReport(ready.map((s) => s.doc!), attachments), [ready, attachments])
+  const images = useMemo(
+    () =>
+      imageReport(
+        ready.map((s) => s.doc!),
+        attachments,
+      ),
+    [ready, attachments],
+  )
   const parsing = sources.some((s) => s.status === 'parsing')
 
   return (
@@ -60,10 +85,28 @@ export function StructurePreview() {
             <span className="mr-1 text-caption tabular-nums text-text-3" aria-live="polite">
               {t('doc2pdf.structure.selected', { n: selected, total: eligible.length })}
             </span>
-            <Button size="sm" variant="ghost" onClick={() => setExcluded(eligible.map((e) => e.id), false)}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() =>
+                setExcluded(
+                  eligible.map((e) => e.id),
+                  false,
+                )
+              }
+            >
               {t('doc2pdf.structure.all')}
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => setExcluded(eligible.map((e) => e.id), true)}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() =>
+                setExcluded(
+                  eligible.map((e) => e.id),
+                  true,
+                )
+              }
+            >
               {t('doc2pdf.structure.none')}
             </Button>
           </div>
@@ -84,15 +127,24 @@ export function StructurePreview() {
       {!ready.length && parsing ? (
         <div className="flex flex-col gap-2" aria-label={t('doc2pdf.structure.waiting')}>
           {[70, 52, 60, 44].map((w, i) => (
-            <Skeleton key={i} className="h-5 rounded-sm" style={{ width: `${w}%`, marginLeft: i % 2 ? 24 : 0 }} />
+            <Skeleton
+              key={i}
+              className="h-5 rounded-sm"
+              style={{ width: `${w}%`, marginLeft: i % 2 ? 24 : 0 }}
+            />
           ))}
         </div>
       ) : all.length === 0 ? (
         <p className="rounded-md bg-surface-2 px-4 py-6 text-center text-small text-text-2">
-          {groups[0]?.raw ? t('doc2pdf.structure.noHeadingsRaw') : t('doc2pdf.structure.noHeadings')}
+          {groups[0]?.raw
+            ? t('doc2pdf.structure.noHeadingsRaw')
+            : t('doc2pdf.structure.noHeadings')}
         </p>
       ) : (
-        <ul className="-mx-1 flex max-h-[min(60vh,560px)] flex-col overflow-y-auto pr-1" aria-label={t('doc2pdf.structure.tocDraft')}>
+        <ul
+          className="-mx-1 flex max-h-[min(60vh,560px)] flex-col overflow-y-auto pr-1"
+          aria-label={t('doc2pdf.structure.tocDraft')}
+        >
           {all.slice(0, MAX_ROWS).map((e, i) => (
             <EntryRow
               key={e.id}

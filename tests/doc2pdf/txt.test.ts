@@ -4,12 +4,19 @@ import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parseTxt } from '@/features/doc2pdf/engine/txt'
 import { commonHanRatio, decodeWith, detectAndDecode } from '@/features/doc2pdf/engine/encoding'
-import { collectHeadings, runsText, type Block, type ListBlock, type TableBlock } from '@/features/doc2pdf/engine/model'
+import {
+  collectHeadings,
+  runsText,
+  type Block,
+  type ListBlock,
+  type TableBlock,
+} from '@/features/doc2pdf/engine/model'
 
 const txt = (s: string) => parseTxt(s, 'note.txt')
 const heads = (s: string) => collectHeadings(txt(s)).map((h) => [h.text, h.level])
 const text = (b: Block) => ('runs' in b ? runsText(b.runs) : '')
-const LONG = '這是一段比較長的內文，用來讓文件看起來像真正的文章，所以標題的啟發式才會啟用，而且這段文字還要再長一點點才夠。'
+const LONG =
+  '這是一段比較長的內文，用來讓文件看起來像真正的文章，所以標題的啟發式才會啟用，而且這段文字還要再長一點點才夠。'
 
 describe('TXT 標題辨識', () => {
   it('Markdown 式 # 標題直接使用層級', () => {
@@ -28,7 +35,11 @@ describe('TXT 標題辨識', () => {
   })
 
   it('中文章節：第一部／第一章／第1節依階層分配', () => {
-    expect(heads(`第一部\u3000起\n\n${LONG}\n\n第一章\u3000開始\n\n${LONG}\n\n第1節 細節\n\n${LONG}\n\n第二章 繼續\n\n${LONG}`)).toEqual([
+    expect(
+      heads(
+        `第一部\u3000起\n\n${LONG}\n\n第一章\u3000開始\n\n${LONG}\n\n第1節 細節\n\n${LONG}\n\n第二章 繼續\n\n${LONG}`,
+      ),
+    ).toEqual([
       ['第一部\u3000起', 1],
       ['第一章\u3000開始', 2],
       ['第1節 細節', 3],
@@ -42,7 +53,11 @@ describe('TXT 標題辨識', () => {
       ['（一）說明', 2],
       ['二、方法', 1],
     ])
-    expect(heads(`1. Introduction\n\n${LONG}\n\n1.1 Scope\n\n${LONG}\n\n1.1.1 Detail\n\n${LONG}\n\n2. Methods\n\n${LONG}`)).toEqual([
+    expect(
+      heads(
+        `1. Introduction\n\n${LONG}\n\n1.1 Scope\n\n${LONG}\n\n1.1.1 Detail\n\n${LONG}\n\n2. Methods\n\n${LONG}`,
+      ),
+    ).toEqual([
       ['1. Introduction', 1],
       ['1.1 Scope', 2],
       ['1.1.1 Detail', 3],
@@ -114,7 +129,9 @@ describe('TXT 清單、表格、程式碼、段落', () => {
   })
 
   it('兩個空白分句的散文不會被當成表格', () => {
-    const doc = txt('This is a sentence.  Another sentence follows here.\nAnd one more line.  With two spaces again here.')
+    const doc = txt(
+      'This is a sentence.  Another sentence follows here.\nAnd one more line.  With two spaces again here.',
+    )
     expect(doc.blocks.every((b) => b.type !== 'table')).toBe(true)
   })
 
@@ -129,9 +146,13 @@ describe('TXT 清單、表格、程式碼、段落', () => {
 
   it('硬換行的段落接起來（中文不加空白、英文加空白）', () => {
     const line = '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十'
-    const doc = txt(`${line}\n${line}\n最後。\n\nThe quick brown fox jumps over the lazy\ndog and runs away quickly from here.`)
+    const doc = txt(
+      `${line}\n${line}\n最後。\n\nThe quick brown fox jumps over the lazy\ndog and runs away quickly from here.`,
+    )
     expect(text(doc.blocks[0])).toBe(`${line}${line}最後。`)
-    expect(text(doc.blocks[1])).toBe('The quick brown fox jumps over the lazy dog and runs away quickly from here.')
+    expect(text(doc.blocks[1])).toBe(
+      'The quick brown fox jumps over the lazy dog and runs away quickly from here.',
+    )
   })
 
   it('網址與電子郵件變成連結', () => {
@@ -149,7 +170,9 @@ describe('TXT 清單、表格、程式碼、段落', () => {
   })
 
   it('範例檔（Big5）：標題、清單、表格', () => {
-    const doc = txt(new TextDecoder('big5').decode(readFileSync(resolve(__dirname, 'fixtures/big5.txt'))))
+    const doc = txt(
+      new TextDecoder('big5').decode(readFileSync(resolve(__dirname, 'fixtures/big5.txt'))),
+    )
     const hs = collectHeadings(doc)
     expect(hs[0]).toMatchObject({ text: '員工手冊', level: 1 })
     expect(hs.map((h) => h.text)).toContain('第一章\u3000總則')
@@ -182,7 +205,10 @@ describe('編碼偵測', () => {
   })
 
   it('沒有 BOM 的 UTF‑8', () => {
-    expect(detectAndDecode(new TextEncoder().encode(sample))).toMatchObject({ encoding: 'utf-8', text: sample })
+    expect(detectAndDecode(new TextEncoder().encode(sample))).toMatchObject({
+      encoding: 'utf-8',
+      text: sample,
+    })
   })
 
   it('Big5 檔案（UTF‑8 解碼失敗 → Big5）', () => {
@@ -195,8 +221,9 @@ describe('編碼偵測', () => {
   it('GB18030 檔案：Big5 雖能解但常用字比例低，改用 GB18030', () => {
     // 「简体中文的文件，这是测试。我们的数据」以 GBK 編碼
     const gbk = [
-      0xbc, 0xf2, 0xcc, 0xe5, 0xd6, 0xd0, 0xce, 0xc4, 0xb5, 0xc4, 0xce, 0xc4, 0xbc, 0xfe, 0xa3, 0xac, 0xd5, 0xe2, 0xca,
-      0xc7, 0xb2, 0xe2, 0xca, 0xd4, 0xa1, 0xa3, 0xce, 0xd2, 0xc3, 0xc7, 0xb5, 0xc4, 0xca, 0xfd, 0xbe, 0xdd,
+      0xbc, 0xf2, 0xcc, 0xe5, 0xd6, 0xd0, 0xce, 0xc4, 0xb5, 0xc4, 0xce, 0xc4, 0xbc, 0xfe, 0xa3,
+      0xac, 0xd5, 0xe2, 0xca, 0xc7, 0xb2, 0xe2, 0xca, 0xd4, 0xa1, 0xa3, 0xce, 0xd2, 0xc3, 0xc7,
+      0xb5, 0xc4, 0xca, 0xfd, 0xbe, 0xdd,
     ]
     const bytes = new Uint8Array(gbk)
     const r = detectAndDecode(bytes)

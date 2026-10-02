@@ -26,7 +26,9 @@ describe('A–B 區間匯出參數', () => {
     expect(clipPlan('a.flac', 0, 1, true).outExt).toBe('m4a')
   })
   it('從 log 解析進度時間', () => {
-    expect(parseLogTime('frame=  12 fps=0.0 q=-1.0 size=0kB time=00:00:03.52 bitrate=')).toBeCloseTo(3.52)
+    expect(
+      parseLogTime('frame=  12 fps=0.0 q=-1.0 size=0kB time=00:00:03.52 bitrate='),
+    ).toBeCloseTo(3.52)
     expect(parseLogTime('time=01:02:03.00')).toBe(3723)
     expect(parseLogTime('no time here')).toBeNull()
   })

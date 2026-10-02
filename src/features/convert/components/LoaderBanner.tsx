@@ -19,7 +19,8 @@ export function LoaderBanner() {
   if (heic.state === 'loading') rows.push({ key: 'heic', label: t('convert.loader.heic'), s: heic })
   for (const c of SHOWN) {
     const s = codecs[c]
-    if (s?.state === 'loading') rows.push({ key: c, label: t(`convert.loader.codec.${c}` as TKey), s })
+    if (s?.state === 'loading')
+      rows.push({ key: c, label: t(`convert.loader.codec.${c}` as TKey), s })
   }
   return (
     <AnimatePresence initial={false}>
@@ -44,7 +45,9 @@ export function LoaderBanner() {
               <div className="flex items-baseline justify-between gap-2">
                 <p className="truncate text-small font-medium text-text">{label}</p>
                 <span className="shrink-0 text-caption tabular-nums text-text-3">
-                  {s.total ? `${formatBytes(s.loaded)}／${formatBytes(s.total)}` : formatBytes(s.loaded)}
+                  {s.total
+                    ? `${formatBytes(s.loaded)}／${formatBytes(s.total)}`
+                    : formatBytes(s.loaded)}
                 </span>
               </div>
               <ProgressBar value={p} size="sm" label={label} />

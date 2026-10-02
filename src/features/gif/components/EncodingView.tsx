@@ -51,8 +51,10 @@ export function EncodingView({
   const value = progress?.value ?? 0
   // 目前影格在膠卷上的位置（0–1）
   let pos = total > 1 ? frame / (total - 1) : 0
-  if (source?.kind === 'video' && plan[frame]) pos = plan[frame].src / Math.max(0.1, source.duration)
-  else if (source?.kind === 'images' && plan[frame]) pos = (plan[frame].src + 0.5) / source.items.length
+  if (source?.kind === 'video' && plan[frame])
+    pos = plan[frame].src / Math.max(0.1, source.duration)
+  else if (source?.kind === 'images' && plan[frame])
+    pos = (plan[frame].src + 0.5) / source.items.length
 
   const heroH = Math.round((HERO_W * geom.outH) / geom.outW)
   const heroW = heroH > 132 ? Math.round((132 * geom.outW) / geom.outH) : HERO_W
@@ -86,7 +88,10 @@ export function EncodingView({
         </Button>
       </div>
 
-      <div className="relative mt-6 pt-[calc(var(--hero-h)+20px)]" style={{ ['--hero-h' as string]: `${heroHeight}px` }}>
+      <div
+        className="relative mt-6 pt-[calc(var(--hero-h)+20px)]"
+        style={{ ['--hero-h' as string]: `${heroHeight}px` }}
+      >
         {/* 正在寫入的影格 */}
         <motion.div className="absolute left-0 top-0 z-10" style={{ x }}>
           <motion.div
@@ -106,8 +111,15 @@ export function EncodingView({
               className="absolute inset-0 size-full rounded-md"
             />
             <span className="absolute -right-3 -top-3 grid place-items-center rounded-full bg-surface p-0.5 shadow-e2">
-              <ProgressRing value={value} size={36} stroke={3.5} label={t('encoding.progress', { value: pct })} />
-              <span className="absolute text-[10px] font-semibold tabular-nums text-text">{pct}</span>
+              <ProgressRing
+                value={value}
+                size={36}
+                stroke={3.5}
+                label={t('encoding.progress', { value: pct })}
+              />
+              <span className="absolute text-[10px] font-semibold tabular-nums text-text">
+                {pct}
+              </span>
             </span>
             <span
               aria-hidden
@@ -116,7 +128,11 @@ export function EncodingView({
           </motion.div>
         </motion.div>
 
-        <div ref={strip} className="relative h-14 overflow-hidden rounded-md bg-[color-mix(in_srgb,var(--text)_10%,transparent)]" aria-hidden>
+        <div
+          ref={strip}
+          className="relative h-14 overflow-hidden rounded-md bg-[color-mix(in_srgb,var(--text)_10%,transparent)]"
+          aria-hidden
+        >
           <div className="absolute inset-0 flex">
             {cells
               ? cells.map((url, i) => (
@@ -127,16 +143,29 @@ export function EncodingView({
               : Array.from({ length: thumbCount }, (_, i) => (
                   <div key={i} className="relative h-full min-w-0 flex-1 overflow-hidden">
                     {thumbs[i] ? (
-                      <img src={thumbs[i].url} alt="" className="absolute inset-0 size-full object-cover" />
+                      <img
+                        src={thumbs[i].url}
+                        alt=""
+                        className="absolute inset-0 size-full object-cover"
+                      />
                     ) : (
                       <Skeleton className="absolute inset-0 rounded-none" />
                     )}
                   </div>
                 ))}
           </div>
-          <span className="absolute inset-y-0 left-0 bg-[color-mix(in_srgb,var(--bg)_65%,transparent)]" style={{ width: `${left}%` }} />
-          <span className="absolute inset-y-0 right-0 bg-[color-mix(in_srgb,var(--bg)_65%,transparent)]" style={{ width: `${100 - right}%` }} />
-          <span className="absolute inset-y-0 border-y-2 border-accent" style={{ left: `${left}%`, right: `${100 - right}%` }} />
+          <span
+            className="absolute inset-y-0 left-0 bg-[color-mix(in_srgb,var(--bg)_65%,transparent)]"
+            style={{ width: `${left}%` }}
+          />
+          <span
+            className="absolute inset-y-0 right-0 bg-[color-mix(in_srgb,var(--bg)_65%,transparent)]"
+            style={{ width: `${100 - right}%` }}
+          />
+          <span
+            className="absolute inset-y-0 border-y-2 border-accent"
+            style={{ left: `${left}%`, right: `${100 - right}%` }}
+          />
         </div>
       </div>
 

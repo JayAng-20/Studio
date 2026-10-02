@@ -28,5 +28,17 @@ export type ParseErrorCode = 'notRtf' | 'parse'
 export type WorkerResponse =
   | { type: 'parsed'; id: number; doc: DocModel }
   | { type: 'progress'; id: number; stage: 'layout' | 'render'; value: number }
-  | { type: 'converted'; id: number; bytes: Uint8Array; pages: number; missing: number; title: string }
-  | { type: 'error'; id: number; code: ParseErrorCode | 'noFonts' | 'convert' | 'memory'; message: string }
+  | {
+      type: 'converted'
+      id: number
+      bytes: Uint8Array
+      pages: number
+      missing: number
+      title: string
+    }
+  | {
+      type: 'error'
+      id: number
+      code: ParseErrorCode | 'noFonts' | 'convert' | 'memory'
+      message: string
+    }

@@ -62,7 +62,12 @@ function Row({
     <div className="flex items-start gap-2 border-t border-border py-2.5 first:border-t-0 first:pt-0">
       <div className="min-w-0 flex-1">
         <dt className="text-caption text-text-3">{label}</dt>
-        <dd className={cn('mt-0.5 whitespace-pre-wrap break-words text-body text-text', mono && 'font-mono text-small')}>
+        <dd
+          className={cn(
+            'mt-0.5 whitespace-pre-wrap break-words text-body text-text',
+            mono && 'font-mono text-small',
+          )}
+        >
           {children ?? value}
         </dd>
       </div>
@@ -116,7 +121,13 @@ export function ResultCard({ entry, className }: { entry: ResultEntry; className
         </div>
         <Badge
           tone="neutral"
-          icon={entry.source === 'camera' ? <Camera size={12} aria-hidden /> : <ImageIcon size={12} aria-hidden />}
+          icon={
+            entry.source === 'camera' ? (
+              <Camera size={12} aria-hidden />
+            ) : (
+              <ImageIcon size={12} aria-hidden />
+            )
+          }
           className="tabular-nums"
         >
           {time}
@@ -127,7 +138,10 @@ export function ResultCard({ entry, className }: { entry: ResultEntry; className
         <details className="group rounded-md bg-surface-2 px-3 py-2 text-small">
           <summary className="flex min-h-8 cursor-pointer select-none items-center justify-between gap-2 text-text-2 marker:content-none">
             {t('qr.result.raw')}
-            <span aria-hidden className="text-text-3 transition-transform duration-(--dur-fast) group-open:rotate-90">
+            <span
+              aria-hidden
+              className="text-text-3 transition-transform duration-(--dur-fast) group-open:rotate-90"
+            >
               ›
             </span>
           </summary>
@@ -135,7 +149,12 @@ export function ResultCard({ entry, className }: { entry: ResultEntry; className
             {r.raw}
           </pre>
           <div className="mt-2">
-            <CopyButton size="sm" variant="secondary" label={t('qr.result.copyRaw')} onCopy={() => copyText(r.raw)} />
+            <CopyButton
+              size="sm"
+              variant="secondary"
+              label={t('qr.result.copyRaw')}
+              onCopy={() => copyText(r.raw)}
+            />
           </div>
         </details>
       )}
@@ -261,7 +280,9 @@ function WifiBody({ r }: { r: WifiResult }) {
 /** 把聯絡人存成 .vcf（MECARD 轉成 vCard） */
 function contactVcf(r: ContactResult): string {
   if (r.format === 'vcard') return r.raw
-  const lines = buildVCard({ ...defaultValues().vcard, firstName: r.name, org: r.org }).split('\r\n')
+  const lines = buildVCard({ ...defaultValues().vcard, firstName: r.name, org: r.org }).split(
+    '\r\n',
+  )
   const extra = [
     ...r.phones.map((p) => `TEL:${p}`),
     ...r.emails.map((e) => `EMAIL:${e}`),
@@ -283,7 +304,10 @@ function ContactBody({ r }: { r: ContactResult }) {
         <Row label={t('qr.result.jobTitle')} value={r.title} />
         {r.phones.map((p, i) => (
           <Row key={`p${i}`} label={t('qr.result.phone')} value={p}>
-            <a className="text-accent-ink underline-offset-2 hover:underline" href={`tel:${p.replace(/[^\d+*#]/g, '')}`}>
+            <a
+              className="text-accent-ink underline-offset-2 hover:underline"
+              href={`tel:${p.replace(/[^\d+*#]/g, '')}`}
+            >
               {p}
             </a>
           </Row>
@@ -321,7 +345,9 @@ function ContactBody({ r }: { r: ContactResult }) {
 
 function EmailBody({ r }: { r: EmailResult }) {
   const t = useT()
-  const href = /^mailto:/i.test(r.raw) ? r.raw : buildMailto({ to: r.to, subject: r.subject, body: r.body })
+  const href = /^mailto:/i.test(r.raw)
+    ? r.raw
+    : buildMailto({ to: r.to, subject: r.subject, body: r.body })
   return (
     <div className="flex flex-col gap-3">
       <dl className="flex flex-col">
@@ -405,9 +431,13 @@ function GeoBody({ r }: { r: GeoResult }) {
 /** 包成完整的 .ics（行事曆 App 需要 VCALENDAR 外框） */
 function eventIcs(r: EventResult): string {
   if (/BEGIN:VCALENDAR/i.test(r.raw)) return r.raw
-  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//JayAng Studio Web//QR//EN', r.raw.trim(), 'END:VCALENDAR'].join(
-    '\r\n',
-  )
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//JayAng Studio Web//QR//EN',
+    r.raw.trim(),
+    'END:VCALENDAR',
+  ].join('\r\n')
 }
 
 function EventBody({ r }: { r: EventResult }) {
@@ -455,9 +485,12 @@ function TextBody({ r }: { r: TextResult }) {
         {r.raw}
       </p>
       <div>
-        <CopyButton variant="secondary" label={t('qr.result.copyText')} onCopy={() => copyText(r.raw)} />
+        <CopyButton
+          variant="secondary"
+          label={t('qr.result.copyText')}
+          onCopy={() => copyText(r.raw)}
+        />
       </div>
     </div>
   )
 }
-

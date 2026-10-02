@@ -15,7 +15,10 @@ export function SubtitleLayer() {
   const style = usePlayer((s) => s.subStyle)
   const controls = usePlayer((s) => s.controlsVisible)
   const track = item?.subtitles.find((s) => s.id === item.activeSub)
-  const cues = useMemo(() => (track && on ? activeCues(track.cues, time, delay) : []), [track, on, time, delay])
+  const cues = useMemo(
+    () => (track && on ? activeCues(track.cues, time, delay) : []),
+    [track, on, time, delay],
+  )
   if (!cues.length) return null
   return (
     <div
@@ -41,7 +44,11 @@ export function SubtitleLayer() {
                 {line.map((seg, si) => (
                   <span
                     key={si}
-                    className={cn(seg.italic && 'italic', seg.bold && 'font-bold', seg.underline && 'underline')}
+                    className={cn(
+                      seg.italic && 'italic',
+                      seg.bold && 'font-bold',
+                      seg.underline && 'underline',
+                    )}
                   >
                     {seg.text}
                   </span>

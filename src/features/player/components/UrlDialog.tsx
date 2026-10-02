@@ -6,7 +6,13 @@ import { useT } from '@/i18n'
 import { addUrl } from '../actions'
 
 /** P2：HLS（hls.js）或一般影音網址；限同源或有 CORS 的來源 */
-export function UrlDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+export function UrlDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean
+  onOpenChange: (o: boolean) => void
+}) {
   const t = useT()
   const id = useId()
   const [value, setValue] = useState('')
@@ -73,7 +79,10 @@ export function UrlDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
             setError(false)
           }}
         />
-        <p id={`${id}-hint`} className={cn('mt-1.5 text-caption', error ? 'text-danger-ink' : 'text-text-3')}>
+        <p
+          id={`${id}-hint`}
+          className={cn('mt-1.5 text-caption', error ? 'text-danger-ink' : 'text-text-3')}
+        >
           {error ? t('player.url.invalid') : t('player.url.privacy')}
         </p>
       </form>

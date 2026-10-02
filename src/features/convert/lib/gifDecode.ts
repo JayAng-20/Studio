@@ -82,7 +82,8 @@ export function parseGif(b: Uint8Array): ParsedGif {
         if (id === 'NETSCAPE2.0' || id === 'ANIMEXTS1.0') {
           // 第一個子區塊是識別碼，第二個是循環次數；readSub 已把兩者串在一起
           const off = 11
-          if (block.length >= off + 3 && block[off] === 1) loop = block[off + 1] | (block[off + 2] << 8)
+          if (block.length >= off + 3 && block[off] === 1)
+            loop = block[off + 1] | (block[off + 2] << 8)
         }
       } else readSub()
       continue

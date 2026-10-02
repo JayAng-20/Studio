@@ -21,7 +21,10 @@ declare module 'gifenc' {
     readonly buffer: ArrayBuffer
     readonly stream: { readonly length?: number; writeByte(b: number): void }
   }
-  export function GIFEncoder(opts?: { auto?: boolean; initialCapacity?: number }): GifEncoderInstance
+  export function GIFEncoder(opts?: {
+    auto?: boolean
+    initialCapacity?: number
+  }): GifEncoderInstance
   export function quantize(
     rgba: Uint8Array | Uint8ClampedArray,
     maxColors: number,

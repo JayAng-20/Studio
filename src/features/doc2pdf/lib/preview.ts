@@ -55,7 +55,11 @@ export async function openPreview(bytes: Uint8Array): Promise<PreviewDoc> {
 }
 
 /** 渲染一頁成圖片網址（寬度 widthPx，依裝置像素比放大） */
-export async function renderPage(p: PreviewDoc, pageNo: number, widthPx: number): Promise<{ url: string; ratio: number }> {
+export async function renderPage(
+  p: PreviewDoc,
+  pageNo: number,
+  widthPx: number,
+): Promise<{ url: string; ratio: number }> {
   const page = await p.doc.getPage(pageNo)
   try {
     const vp1 = page.getViewport({ scale: 1 })

@@ -33,7 +33,10 @@ export function LevelMeter({
     const smooth = new Array<number>(bars).fill(0)
     let raf = 0
     const loop = () => {
-      const levels = analyser && data && !muted ? (analyser.getByteFrequencyData(data), bandLevels(data, bars)) : null
+      const levels =
+        analyser && data && !muted
+          ? (analyser.getByteFrequencyData(data), bandLevels(data, bars))
+          : null
       for (let i = 0; i < bars; i++) {
         // 放大中低音量，讓說話時明顯跳動
         const target = levels ? Math.min(1, Math.pow(levels[i], 0.8) * 1.35) : 0

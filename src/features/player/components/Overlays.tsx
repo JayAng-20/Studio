@@ -20,9 +20,14 @@ export function CenterFlash() {
             className="stage-glass grid size-[72px] place-items-center rounded-full"
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: [0, 1, 1, 0], scale: [0.6, 1, 1.04, 1.18] }}
-            transition={{ duration: sec(duration.slower), ease: 'easeOut', times: [0, 0.25, 0.6, 1] }}
+            transition={{
+              duration: sec(duration.slower),
+              ease: 'easeOut',
+              times: [0, 0.25, 0.6, 1],
+            }}
             onAnimationComplete={() => {
-              if (usePlayer.getState().flash?.n === flash.n) usePlayer.getState().set({ flash: null })
+              if (usePlayer.getState().flash?.n === flash.n)
+                usePlayer.getState().set({ flash: null })
             }}
           >
             <FlashIcon playing={flash.kind === 'play'} />
@@ -135,7 +140,9 @@ export function Osd() {
             role="status"
             aria-live="polite"
             className="stage-glass rounded-full px-4 py-1.5 text-small font-semibold tabular-nums"
-            style={osd.warn ? { color: 'color-mix(in srgb, var(--warning) 70%, white)' } : undefined}
+            style={
+              osd.warn ? { color: 'color-mix(in srgb, var(--warning) 70%, white)' } : undefined
+            }
             initial={{ opacity: 0, y: -8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, transition: { duration: sec(duration.fast) } }}

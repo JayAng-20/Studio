@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { Suspense, useEffect, useLayoutEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router'
 import { modules, moduleFromPath, type ModuleDef } from '@/config/modules'
 import { Ambient } from '@/design/Ambient'
@@ -12,11 +12,15 @@ import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
 import { MobileTabBar } from './MobileTabBar'
 import { TaskCenter } from './TaskCenter'
-import { CommandPalette } from './CommandPalette'
 import { ShortcutsDialog } from './ShortcutsDialog'
 import { useGlobalKeys } from './useGlobalKeys'
+import { useUi } from '@/stores/ui'
+
+// 不在首屏的部分延後載入：指令面板第一次開啟（或閒置時）才載入，設定頁進入時才載入
+const loadPalette = () => import('./CommandPalette')
+const CommandPalette = lazy(() => loadPalette().then((m) => ({ default: m.CommandPalette })))
+const Settings = lazy(() => import('./pages/Settings'))
 import Home from './pages/Home'
-import Settings from './pages/Settings'
 import NotFound from './pages/NotFound'
 
 /** 主捲動容器 id（各頁捲動到頂端、sticky 參考用） */
@@ -29,6 +33,13 @@ export function Shell() {
   const isDesktop = useMedia('(min-width: 1024px)')
   const scroller = useRef<HTMLDivElement>(null)
   useGlobalKeys()
+  const paletteWanted = useUi((s) => s.commandOpen)
+  const [paletteReady, setPaletteReady] = useState(false)
+  if (paletteWanted && !paletteReady) setPaletteReady(true)
+  useEffect(() => {
+    const id = setTimeout(() => loadPalette(), 3000)
+    return () => clearTimeout(id)
+  }, [])
 
   // 強調色換成模組色（tokens.css 以 @property 平滑過渡 400 ms）
   useEffect(() => {
@@ -104,7 +115,14 @@ export function Shell() {
             >
               <Routes location={location}>
                 <Route path="/" element={<Home />} />
-                <Route path="/settings" element={<Settings />} />
+                <Route
+                  path="/settings"
+                  element={
+                    <Suspense fallback={<ModuleSkeleton />}>
+                      <Settings />
+                    </Suspense>
+                  }
+                />
                 {modules.map((m) => (
                   <Route key={m.id} path={`${m.path}/*`} element={<ModuleRoute m={m} />} />
                 ))}
@@ -116,7 +134,11 @@ export function Shell() {
       </div>
       <MobileTabBar />
       <TaskCenter />
-      <CommandPalette />
+      {paletteReady && (
+        <Suspense fallback={null}>
+          <CommandPalette />
+        </Suspense>
+      )}
       <ShortcutsDialog />
     </div>
   )

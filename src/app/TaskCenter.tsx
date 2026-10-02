@@ -14,7 +14,6 @@ import {
 import { isActive, useTasks, type Task } from '@/stores/tasks'
 import { useIsMobile } from '@/lib/useMedia'
 import { downloadBlob } from '@/lib/download'
-import { createZip } from '@/lib/zip'
 import { spring } from '@/design/motion'
 import { cn } from '@/lib/cn'
 import { useT } from '@/i18n'
@@ -209,12 +208,12 @@ function TaskRow({ task }: { task: Task }) {
   const download = async () => {
     const r = task.results
     if (!r?.length) return
-    if (r.length === 1) downloadBlob(r[0].blob, r[0].name)
-    else
-      downloadBlob(
-        await createZip(r.map((x) => ({ name: x.name, data: x.blob }))),
-        `${task.name}.zip`,
-      )
+    if (r.length === 1) return downloadBlob(r[0].blob, r[0].name)
+    const { createZip } = await import('@/lib/zip')
+    downloadBlob(
+      await createZip(r.map((x) => ({ name: x.name, data: x.blob }))),
+      `${task.name}.zip`,
+    )
   }
   return (
     <div className="rounded-md border border-border bg-surface p-3">

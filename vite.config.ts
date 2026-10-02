@@ -63,7 +63,10 @@ export default defineConfig({
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   worker: { format: 'es' },
-  optimizeDeps: { exclude: ['@ffmpeg/ffmpeg', '@ffmpeg/util'] },
+  optimizeDeps: {
+    exclude: ['@ffmpeg/ffmpeg', '@ffmpeg/util'],
+    include: ['@jsquash/webp/encode.js'],
+  },
   build: {
     target: 'es2022',
     chunkSizeWarningLimit: 2000,

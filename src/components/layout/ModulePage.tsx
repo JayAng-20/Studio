@@ -41,7 +41,8 @@ export function ModulePage({
     >
       <header className="mb-6 flex flex-wrap items-center gap-4 lg:mb-8">
         <IconTile module={module} size="lg" layoutId={`tile-${module}`} />
-        <div className="min-w-0 flex-1">
+        {/* 標題至少保留 16rem；空間不夠時狀態（步驟指示）換到下一行，不擠壓標題 */}
+        <div className="min-w-0 flex-1 basis-[16rem]">
           <motion.h1
             layoutId={`title-${module}`}
             transition={spring.smooth}
@@ -51,7 +52,7 @@ export function ModulePage({
           </motion.h1>
           <p className="mt-0.5 text-body text-text-2">{t(m.descKey)}</p>
         </div>
-        {status && <div className="flex shrink-0 items-center gap-2">{status}</div>}
+        {status && <div className="flex max-w-full shrink-0 items-center gap-2">{status}</div>}
       </header>
       {children}
     </div>

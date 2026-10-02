@@ -73,7 +73,6 @@ export const en: DeepString<typeof zhTW> = {
   common: {
     offline: 'Works offline',
     local: 'On-device',
-    inDevelopment: 'In development',
     loading: 'Loading…',
     processing: 'Processing…',
     done: 'Done',
@@ -323,10 +322,6 @@ export const en: DeepString<typeof zhTW> = {
     updateDesc: 'Reload to update.',
     updateAction: 'Reload',
     offlineReady: 'Ready to work offline',
-  },
-  dev: {
-    title: 'In development',
-    desc: 'This tool is almost ready. Try one of the others in the meantime.',
   },
   a11y: {
     progress: 'Progress',

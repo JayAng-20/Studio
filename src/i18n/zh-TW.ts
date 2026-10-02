@@ -71,7 +71,6 @@ export const zhTW = {
   common: {
     offline: '可離線使用',
     local: '本機處理',
-    inDevelopment: '開發中',
     loading: '載入中…',
     processing: '處理中…',
     done: '完成',
@@ -317,10 +316,6 @@ export const zhTW = {
     updateDesc: '重新整理即可更新。',
     updateAction: '重新整理',
     offlineReady: '已可離線使用',
-  },
-  dev: {
-    title: '正在開發中',
-    desc: '這個工具很快就會完成，先看看其他工具吧。',
   },
   a11y: {
     progress: '進度',

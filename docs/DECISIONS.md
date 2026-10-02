@@ -44,3 +44,4 @@
 - 不提供「為 PDF 加上密碼」｜瀏覽器端沒有可靠的加密寫入方式｜不完整的自製加密
 - pdf.js 的 CMap、標準字型、WASM 以 import.meta.glob 打包進站；CMYK ICC 色彩檔未打包｜不外連｜CDN
 - 檔案類型新增「文字檔」（md／txt／rtf），首頁拖放會建議 PDF 工具（文字轉 PDF）｜使用者新增文字轉 PDF 功能｜歸類為其他
+- 首頁 JS 約 300 KB（gzip），主要是 motion、react-router、Radix 與八個模組的中英文字串｜使用者指示品質優先；重量級函式庫（pdf.js、pdf-lib、ffmpeg、HEIC、WASM 編碼器、字型）都已延後載入｜將字典依語言與模組拆分延後載入（增加複雜度與切換語言時的閃爍）

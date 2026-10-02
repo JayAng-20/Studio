@@ -42,6 +42,30 @@
     "url": "https://github.com/fontsource/font-files"
   },
   {
+    "name": "@jsquash/avif",
+    "version": "2.1.1",
+    "license": "Apache-2.0",
+    "url": "jamsinclair/jSquash"
+  },
+  {
+    "name": "@jsquash/jpeg",
+    "version": "1.6.0",
+    "license": "Apache-2.0",
+    "url": "jamsinclair/jSquash"
+  },
+  {
+    "name": "@jsquash/oxipng",
+    "version": "2.3.0",
+    "license": "Apache-2.0",
+    "url": "jamsinclair/jSquash/packages/oxipng"
+  },
+  {
+    "name": "@jsquash/webp",
+    "version": "1.5.0",
+    "license": "Apache-2.0",
+    "url": "jamsinclair/jSquash"
+  },
+  {
     "name": "cmdk",
     "version": "1.1.1",
     "license": "MIT",
@@ -76,6 +100,12 @@
     "version": "1.6.5",
     "license": "LGPL-3.0",
     "url": "https://github.com/hoppergee/heic-to"
+  },
+  {
+    "name": "hls.js",
+    "version": "1.7.3",
+    "license": "Apache-2.0",
+    "url": "https://github.com/video-dev/hls.js"
   },
   {
     "name": "idb-keyval",

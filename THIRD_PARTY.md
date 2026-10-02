@@ -11,12 +11,17 @@
 | [@ffmpeg/ffmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm) | 0.12.15 | MIT |
 | [@ffmpeg/util](https://github.com/ffmpegwasm/ffmpeg.wasm) | 0.12.2 | MIT |
 | [@fontsource-variable/inter](https://github.com/fontsource/font-files) | 5.3.0 | OFL-1.1 |
+| [@jsquash/avif](jamsinclair/jSquash) | 2.1.1 | Apache-2.0 |
+| [@jsquash/jpeg](jamsinclair/jSquash) | 1.6.0 | Apache-2.0 |
+| [@jsquash/oxipng](jamsinclair/jSquash/packages/oxipng) | 2.3.0 | Apache-2.0 |
+| [@jsquash/webp](jamsinclair/jSquash) | 1.5.0 | Apache-2.0 |
 | [cmdk](https://github.com/pacocoursey/cmdk) | 1.1.1 | MIT |
 | [exifr](https://github.com/MikeKovarik/exifr) | 7.1.3 | MIT |
 | [fflate](https://github.com/101arrowz/fflate) | 0.8.3 | MIT |
 | [fix-webm-duration](https://github.com/yusitnikov/fix-webm-duration) | 1.0.6 | MIT |
 | [gifenc](git://github.com/mattdesl/gifenc) | 1.0.3 | MIT |
 | [heic-to](https://github.com/hoppergee/heic-to) | 1.6.5 | LGPL-3.0 |
+| [hls.js](https://github.com/video-dev/hls.js) | 1.7.3 | Apache-2.0 |
 | [idb-keyval](https://github.com/jakearchibald/idb-keyval) | 6.3.0 | Apache-2.0 |
 | [jsqr](https://github.com/cozmo/jsQR) | 1.4.0 | Apache-2.0 |
 | [lucide-react](https://github.com/lucide-icons/lucide) | 1.50.0 | ISC |

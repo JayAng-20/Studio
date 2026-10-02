@@ -109,8 +109,10 @@
   --panel-w: 320px;
   --content-max: 1200px;
 
+  /* 中文：蘋果裝置用原生蘋方；其他裝置用自架的思源黑體（Noto Sans TC，最接近蘋方的開源字型），依字元範圍分段下載 */
   --font-sans:
-    'Inter Variable', 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', system-ui, sans-serif;
+    'Inter Variable', 'PingFang TC', 'Noto Sans TC Variable', 'Noto Sans TC', 'Microsoft JhengHei',
+    system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 }
 

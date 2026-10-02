@@ -12,6 +12,7 @@
 | [@ffmpeg/ffmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm) | 0.12.15 | MIT |
 | [@ffmpeg/util](https://github.com/ffmpegwasm/ffmpeg.wasm) | 0.12.2 | MIT |
 | [@fontsource-variable/inter](https://github.com/fontsource/font-files) | 5.3.0 | OFL-1.1 |
+| [@fontsource-variable/noto-sans-tc](https://github.com/fontsource/font-files) | 5.3.0 | OFL-1.1 |
 | [@jsquash/avif](jamsinclair/jSquash) | 2.1.1 | Apache-2.0 |
 | [@jsquash/jpeg](jamsinclair/jSquash) | 1.6.0 | Apache-2.0 |
 | [@jsquash/oxipng](jamsinclair/jSquash/packages/oxipng) | 2.3.0 | Apache-2.0 |

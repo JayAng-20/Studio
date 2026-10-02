@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/noto-sans-tc/wght.css';
 @import './design/tokens.css';
 @import './components/ui/ui.css';
 

@@ -38,7 +38,12 @@ export default defineConfig({
       },
       workbox: {
         // 外殼預快取；大型 WASM／模組 chunk 走執行階段快取
-        globPatterns: ['index.html', 'assets/index-*.{js,css}', '*.{svg,png}', 'assets/*.woff2'],
+        globPatterns: [
+          'index.html',
+          'assets/index-*.{js,css}',
+          '*.{svg,png}',
+          'assets/inter-latin-*.woff2',
+        ],
         maximumFileSizeToCacheInBytes: 40 * 1024 * 1024,
         navigateFallback: 'index.html',
         runtimeCaching: [

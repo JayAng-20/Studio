@@ -7,6 +7,7 @@
 | [@dnd-kit/core](https://github.com/clauderic/dnd-kit) | 6.3.1 | MIT |
 | [@dnd-kit/sortable](https://github.com/clauderic/dnd-kit) | 10.0.0 | MIT |
 | [@dnd-kit/utilities](https://github.com/clauderic/dnd-kit) | 3.2.2 | MIT |
+| [@expo-google-fonts/noto-sans-tc](https://github.com/expo/google-fonts) | 0.4.3 | MIT AND OFL-1.1 |
 | [@ffmpeg/core](https://github.com/ffmpegwasm/ffmpeg.wasm) | 0.12.10 | GPL-2.0-or-later |
 | [@ffmpeg/ffmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm) | 0.12.15 | MIT |
 | [@ffmpeg/util](https://github.com/ffmpegwasm/ffmpeg.wasm) | 0.12.2 | MIT |
@@ -15,6 +16,7 @@
 | [@jsquash/jpeg](jamsinclair/jSquash) | 1.6.0 | Apache-2.0 |
 | [@jsquash/oxipng](jamsinclair/jSquash/packages/oxipng) | 2.3.0 | Apache-2.0 |
 | [@jsquash/webp](jamsinclair/jSquash) | 1.5.0 | Apache-2.0 |
+| [@pdf-lib/fontkit](git://github.com/Hopding/fontkit) | 1.1.1 | MIT |
 | [cmdk](https://github.com/pacocoursey/cmdk) | 1.1.1 | MIT |
 | [exifr](https://github.com/MikeKovarik/exifr) | 7.1.3 | MIT |
 | [fflate](https://github.com/101arrowz/fflate) | 0.8.3 | MIT |
@@ -25,6 +27,7 @@
 | [idb-keyval](https://github.com/jakearchibald/idb-keyval) | 6.3.0 | Apache-2.0 |
 | [jsqr](https://github.com/cozmo/jsQR) | 1.4.0 | Apache-2.0 |
 | [lucide-react](https://github.com/lucide-icons/lucide) | 1.50.0 | ISC |
+| [marked](https://github.com/markedjs/marked) | 18.0.14 | MIT |
 | [motion](https://github.com/motiondivision/motion) | 14.0.0 | MIT |
 | [pdf-lib](https://github.com/Hopding/pdf-lib) | 1.17.1 | MIT |
 | [pdfjs-dist](https://github.com/mozilla/pdf.js) | 6.3.289 | Apache-2.0 |

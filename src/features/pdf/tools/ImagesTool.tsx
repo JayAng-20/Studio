@@ -130,7 +130,7 @@ export function ImagesTool() {
 
   if (!items.length)
     return (
-      <div className="card overflow-hidden p-2">
+      <div>
         <DropZone
           onFiles={(f) => void addImageFiles(f)}
           accept={IMAGE_ACCEPT}

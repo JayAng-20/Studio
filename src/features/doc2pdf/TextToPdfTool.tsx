@@ -245,7 +245,7 @@ export function TextToPdfTool({ initialFiles }: { initialFiles?: File[] }) {
     <div className="doc2pdf">
       <StageContainer stage={stage}>
         {stage === 'empty' && (
-          <div className="card overflow-hidden p-2">
+          <div>
             <DropZone
               onFiles={accept}
               accept={ACCEPT}

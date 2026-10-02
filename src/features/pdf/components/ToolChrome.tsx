@@ -20,7 +20,7 @@ export function ToolHome({
   const t = useT()
   return (
     <div className="flex flex-col gap-8">
-      <div className="card overflow-hidden p-2">
+      <div>
         <DropZone
           onFiles={onFiles}
           accept={`${PDF_ACCEPT},${IMAGE_ACCEPT},${TEXT_ACCEPT}`}

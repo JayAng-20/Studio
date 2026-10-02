@@ -61,7 +61,7 @@ export function useGoTool() {
 export function PdfDrop({ title, multiple = false }: { title?: string; multiple?: boolean }) {
   const t = useT()
   return (
-    <div className="card overflow-hidden p-2">
+    <div>
       <DropZone
         onFiles={(files) => void addPdfFiles(files)}
         accept={PDF_ACCEPT}
@@ -69,7 +69,6 @@ export function PdfDrop({ title, multiple = false }: { title?: string; multiple?
         formats="PDF"
         title={title ?? t('pdf.drop.pdfTitle')}
         illustration={<EmptyIllustration module="pdf" />}
-        className="border-0 shadow-none"
       />
     </div>
   )

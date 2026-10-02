@@ -1,0 +1,117 @@
+/* QR Code 模組專屬樣式。時間與曲線由元件以 CSS 變數（取自 design/motion.ts）帶入。 */
+
+/* 漣漪浮現：每個模組以自身中心縮放 */
+.qr-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: qr-dot-in;
+  animation-duration: var(--qr-dur);
+  animation-timing-function: var(--qr-ease);
+  animation-fill-mode: both;
+}
+@keyframes qr-dot-in {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* 模組很多時改成一圈一圈浮現（效能） */
+.qr-ring {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation-name: qr-ring-in;
+  animation-duration: var(--qr-dur);
+  animation-timing-function: var(--qr-ease);
+  animation-fill-mode: both;
+}
+@keyframes qr-ring-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes qr-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* 精簡：只保留淡入 */
+:root[data-motion='lite'] .qr-dot,
+:root[data-motion='lite'] .qr-ring {
+  animation-name: qr-fade-in;
+}
+
+/* 透明背景的棋盤格 */
+.qr-checker {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(45deg, var(--surface-3) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--surface-3) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--surface-3) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--surface-3) 75%);
+  background-size: 16px 16px;
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+}
+
+/* 掃描框四角：緩慢呼吸（往中心靠攏再回來） */
+.qr-bracket-breathe {
+  animation: qr-breathe var(--qr-breathe) var(--ease-standard) infinite;
+}
+@keyframes qr-breathe {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(var(--bx), var(--by));
+    opacity: 0.72;
+  }
+}
+
+/* 掃描線上下掃動 */
+.qr-scanline {
+  animation: qr-scan var(--qr-scan) var(--ease-standard) infinite alternate;
+}
+@keyframes qr-scan {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(var(--travel));
+  }
+}
+:root[data-motion='lite'] .qr-scanline,
+:root[data-motion='off'] .qr-scanline {
+  opacity: 0;
+}
+
+/* 相機畫面外圍壓暗，突顯掃描框 */
+.qr-vignette {
+  box-shadow: 0 0 0 200vmax rgba(10, 12, 16, 0.38);
+}
+
+/* 等待輸入時的佔位 QR：極淡的呼吸 */
+.qr-ghost {
+  animation: breathe var(--qr-breathe) var(--ease-standard) infinite;
+}
+
+/* 狀態圓點與載入圖示的輕微脈動 */
+.qr-pulse {
+  animation: breathe calc(var(--qr-breathe) / 2) var(--ease-standard) infinite;
+}

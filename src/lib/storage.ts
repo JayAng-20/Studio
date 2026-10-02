@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
   qrHistory: 'jayang:qr-history',
   qrTemplates: 'jayang:qr-templates',
   playlists: 'jayang:playlists',
+  recorder: 'jayang:recorder',
 } as const
 
 let recStore: ReturnType<typeof createStore> | null = null

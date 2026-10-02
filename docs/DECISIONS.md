@@ -18,3 +18,13 @@
 - 部署也從工作分支觸發｜使用者要求直接部署，不經 PR 合併｜只在 main 觸發
 - Logo 葉片尺寸改為 34×12（四角對齊 8／56）｜原 32 長度使四角不齊｜保留 32
 - 中文字型：蘋果裝置用原生蘋方（PingFang TC），其他裝置用自架的 Noto Sans TC Variable（思源黑體，最接近蘋方的開源字型，依 unicode-range 分段只下載用到的字）；PDF 內嵌同樣用 Noto Sans TC｜使用者要求字型最像蘋方；蘋方授權不允許網頁散布或嵌入 PDF｜只用系統字型（Windows 會顯示微軟正黑體，風格差異大）
+- QR 產生用 `qrcode` 只取矩陣、自繪 SVG｜漣漪動畫需逐模組元素；同一幾何供 SVG 與 canvas 共用，輸出一致；可在 node 測試｜qr-code-styling
+- QR 簡訊用 ZXing 的 `SMSTO:號碼:內容` 格式（解析也支援 `sms:`）｜相容性最廣｜只用 sms: URI
+- QR 產生器內容只存在記憶體｜避免 Wi‑Fi 密碼留在裝置；使用者主動存成範本才寫入｜自動保存草稿
+- QR 掃描先用 BarcodeDetector，否則 jsQR 在 Worker 內多尺寸重試｜樣式化 QR 縮小後才解得出｜zxing-wasm（多一個 WASM）
+- 錄影的計時與倒數用 Worker ticker｜分頁在背景時主執行緒計時器會被節流｜setInterval
+- 錄影「未儲存」旗標由錄影引擎自己登記，外殼依旗標延遲載入全域 HUD｜錄影頁卸載後旗標仍需存在｜由頁面登記（離開頁面即消失）
+- GIF 抖色（Floyd–Steinberg 蛇形、Bayer 8×8）自行實作；APNG 與 Animated WebP 自行封裝｜gifenc 不含抖色；沒有可靠的純前端動畫 WebP 封裝套件｜只輸出 GIF
+- 圖片互轉：BMP 有透明時輸出 32 位元 V4 標頭；另外提供 GIF 輸出；處理名稱固定為 converted｜保留透明度；使用者常需要 GIF｜只輸出 24 位元 BMP
+- HEIC 解碼器以 `heic-to?url` 搭配 fetch 取得下載進度，再從 Blob URL 載入｜可顯示首次載入進度｜直接 import（無進度）
+- 進階編碼器（MozJPEG／libwebp／libavif／oxipng）預設與 Canvas 編碼比較、取較小者｜品質優先、檔案更小｜只用 Canvas

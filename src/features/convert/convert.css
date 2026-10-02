@@ -1,0 +1,40 @@
+/* 圖片互轉：模組專屬效果（只動 transform／opacity） */
+
+/* 縮圖底下的透明棋盤格 */
+.cv-checker {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(45deg, var(--surface-3) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--surface-3) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--surface-3) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--surface-3) 75%);
+  background-size: 12px 12px;
+  background-position:
+    0 0,
+    0 6px,
+    6px -6px,
+    -6px 0;
+}
+
+/* 轉換中的卡片：流動色光（ui.css 的 .flow-ring）稍微加粗，並加上柔和光暈 */
+.cv-card .flow-ring {
+  padding: 2px;
+}
+.cv-card[data-running='true'] {
+  box-shadow:
+    var(--e2),
+    0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent),
+    0 10px 30px -14px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+/* 動畫精簡／關閉：色光停止旋轉，改成靜態的強調色外框 */
+:root[data-motion='lite'] .cv-card .flow-ring::before,
+:root[data-motion='off'] .cv-card .flow-ring::before {
+  animation: none;
+  background: color-mix(in srgb, var(--accent) 65%, transparent);
+}
+
+/* 對比視窗：放大檢視時像素清楚 */
+.cv-pixelated img {
+  image-rendering: pixelated;
+}

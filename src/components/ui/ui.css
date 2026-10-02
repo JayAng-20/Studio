@@ -157,6 +157,12 @@
   animation: conic-spin 1.6s linear infinite;
 }
 
+:root[data-motion='lite'] .flow-ring::before,
+:root[data-motion='off'] .flow-ring::before {
+  animation: none;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+}
+
 /* 抖動（錯誤） */
 .shake {
   animation: shake-x var(--dur-base) var(--ease-standard);

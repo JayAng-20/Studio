@@ -10,6 +10,8 @@ export const STORAGE_KEYS = {
   playlists: 'jayang:playlists',
   recorder: 'jayang:recorder',
   gifSettings: 'jayang:gif-settings',
+  convertOptions: 'jayang:convert-options',
+  convertAdvanced: 'jayang:convert-advanced-open',
 } as const
 
 let recStore: ReturnType<typeof createStore> | null = null

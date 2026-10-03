@@ -29,7 +29,7 @@ export async function sniffFile(file: Blob & { name?: string }): Promise<Contain
 
 /** HEIC 轉成瀏覽器可解碼的 JPEG（首次使用才載入解碼器） */
 async function heicToJpeg(file: Blob): Promise<Blob> {
-  const { heicTo } = await import('heic-to')
+  const { heicTo } = await (await import('@/lib/heic')).loadHeic()
   return heicTo({ blob: file, type: 'image/jpeg', quality: 0.96 })
 }
 

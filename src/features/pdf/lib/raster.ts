@@ -88,7 +88,7 @@ const isHeicFile = (f: File) => /image\/hei[cf]/i.test(f.type) || /\.(heic|heif)
 /** 解碼任何支援的圖片（HEIC 首次使用才載入解碼器） */
 export async function decodeAny(file: File): Promise<ImageBitmap> {
   if (isHeicFile(file)) {
-    const { heicTo } = await import('heic-to')
+    const { heicTo } = await (await import('@/lib/heic')).loadHeic()
     return heicTo({ blob: file, type: 'bitmap' })
   }
   return decodeImage(file)

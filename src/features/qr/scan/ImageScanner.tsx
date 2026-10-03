@@ -23,12 +23,14 @@ type State = 'scanning' | 'found' | 'none' | 'error'
 const ACCEPT = 'image/*,.heic,.heif'
 
 /** HEIC 在多數瀏覽器無法直接解碼：失敗時改用 heic-to（使用時才載入） */
+const isHeic = (file: File) => /hei[cf]/i.test(file.type) || /\.(heic|heif)$/i.test(file.name)
+
 async function decodeAny(file: File): Promise<ImageBitmap> {
   try {
     return await decodeImage(file)
   } catch (e) {
     if (!/hei[cf]/i.test(file.type) && !/\.(heic|heif)$/i.test(file.name)) throw e
-    const { heicTo } = await import('heic-to')
+    const { heicTo } = await (await import('@/lib/heic')).loadHeic()
     return heicTo({ blob: file, type: 'bitmap' })
   }
 }
@@ -67,7 +69,8 @@ export function ImageScanner({
     const my = ++seq.current
     pool.current.revokeAll()
     setFile(f)
-    setUrl(pool.current.create(f))
+    // HEIC 多數瀏覽器無法直接顯示，解碼後再改用轉好的預覽圖
+    setUrl(isHeic(f) ? null : pool.current.create(f))
     setFound(null)
     setState('scanning')
     props.current.onStatus('scanning')
@@ -76,6 +79,16 @@ export function ImageScanner({
     try {
       bmp = await decodeAny(f)
       if (my !== seq.current) return
+      if (isHeic(f)) {
+        const c = document.createElement('canvas')
+        c.width = bmp.width
+        c.height = bmp.height
+        c.getContext('2d')?.drawImage(bmp, 0, 0)
+        const png = await new Promise<Blob | null>((r) => c.toBlob(r, 'image/png'))
+        c.width = c.height = 0
+        if (my !== seq.current) return
+        if (png) setUrl(pool.current.create(png))
+      }
       decoderRef.current ??= await QrDecoder.create()
       props.current.onEngine(decoderRef.current.engine)
       // 讓掃描線至少跑一小段，辨識太快時畫面不會只閃一下
@@ -194,11 +207,13 @@ export function ImageScanner({
         ref={boxRef}
         className="relative aspect-[4/3] max-h-[min(62vh,560px)] w-full overflow-hidden rounded-2xl bg-surface-2 shadow-e1"
       >
-        <img
-          src={url}
-          alt={t('qr.image.preview', { name: file.name })}
-          className="absolute inset-0 size-full object-contain"
-        />
+        {url && (
+          <img
+            src={url}
+            alt={t('qr.image.preview', { name: file.name })}
+            className="absolute inset-0 size-full object-contain"
+          />
+        )}
         {(state === 'scanning' || state === 'found') && (
           <ScanOverlay
             box={box}

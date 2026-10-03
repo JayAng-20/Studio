@@ -3,71 +3,17 @@
  * - HEIC／HEIF：heic-to（libheif WASM，約 3 MB），第一次使用才下載，並回報下載進度。
  * - SVG：只能用 <img> 點陣化；直接以目標尺寸繪製，保持向量清晰。
  */
-import heicUrl from 'heic-to?url'
 import { EngineError } from '../types'
+import { loadHeic as loadHeicShared } from '@/lib/heic'
 
-type HeicModule = typeof import('heic-to')
+export { onHeicProgress, heicLoaded } from '@/lib/heic'
+export type { HeicProgress } from '@/lib/heic'
 
-export type HeicProgress = (
-  state: 'loading' | 'ready' | 'error',
-  loaded: number,
-  total: number,
-) => void
-
-let heicMod: Promise<HeicModule> | null = null
-const heicListeners = new Set<HeicProgress>()
-
-/** 訂閱 HEIC 解碼器的載入進度 */
-export function onHeicProgress(fn: HeicProgress) {
-  heicListeners.add(fn)
-  return () => heicListeners.delete(fn)
-}
-const emit = (s: 'loading' | 'ready' | 'error', l: number, t: number) =>
-  heicListeners.forEach((fn) => fn(s, l, t))
-
-/** 下載解碼器（含進度），再從記憶體中的 Blob URL 載入模組，避免重複下載 */
-export function loadHeic(): Promise<HeicModule> {
-  heicMod ??= (async () => {
-    // 先通知「載入中」，連線建立前也看得到進度條
-    emit('loading', 0, 0)
-    const res = await fetch(heicUrl)
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const total = Number(res.headers.get('content-length')) || 0
-    const chunks: Uint8Array[] = []
-    let loaded = 0
-    emit('loading', 0, total)
-    if (res.body && typeof res.body.getReader === 'function') {
-      const reader = res.body.getReader()
-      for (;;) {
-        const { done, value } = await reader.read()
-        if (done) break
-        chunks.push(value)
-        loaded += value.length
-        emit('loading', loaded, total)
-      }
-    } else {
-      const buf = new Uint8Array(await res.arrayBuffer())
-      chunks.push(buf)
-      loaded = buf.length
-    }
-    const url = URL.createObjectURL(new Blob(chunks as BlobPart[], { type: 'text/javascript' }))
-    try {
-      const mod = (await import(/* @vite-ignore */ url)) as HeicModule
-      emit('ready', loaded, loaded)
-      return mod
-    } finally {
-      URL.revokeObjectURL(url)
-    }
-  })().catch((e) => {
-    console.error(e)
-    heicMod = null
-    emit('error', 0, 0)
+/** 載入共用的 HEIC 解碼器；失敗時轉成本模組的錯誤型別 */
+export const loadHeic = () =>
+  loadHeicShared().catch((e) => {
     throw new EngineError('heic-load', String(e))
   })
-  return heicMod
-}
-
-export const heicLoaded = () => heicMod !== null
 
 /** 解碼 HEIC：先試瀏覽器原生（例如 Safari），失敗才用 heic-to */
 export async function decodeHeic(file: Blob): Promise<ImageBitmap> {

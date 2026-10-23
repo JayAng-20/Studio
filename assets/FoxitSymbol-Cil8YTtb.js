@@ -1,0 +1,1 @@
+var e=new URL(`FoxitSymbol-BVtbc20u.pfb`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`Adobe-GB1-UCS2-BA083yIo.bcmap`,import.meta.url).href;export{e as default};

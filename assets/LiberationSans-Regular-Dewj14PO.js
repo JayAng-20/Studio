@@ -1,0 +1,1 @@
+var e=new URL(`LiberationSans-Regular-cbskN6YR.ttf`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`FoxitSerifBold-DZZ4CclT.pfb`,import.meta.url).href;export{e as default};

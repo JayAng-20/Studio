@@ -1,0 +1,1 @@
+var e=new URL(`LiberationSans-BoldItalic-Bj53-jFw.ttf`,import.meta.url).href;export{e as default};

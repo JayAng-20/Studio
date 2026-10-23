@@ -1,0 +1,1 @@
+var e=new URL(`webp_enc-BpZvKflB.wasm`,import.meta.url).href;export{e as default};

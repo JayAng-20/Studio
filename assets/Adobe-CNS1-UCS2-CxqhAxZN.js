@@ -1,0 +1,1 @@
+var e=new URL(`Adobe-CNS1-UCS2-fO900upv.bcmap`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`qcms_bg-3PJi_GXR.wasm`,import.meta.url).href;export{e as default};

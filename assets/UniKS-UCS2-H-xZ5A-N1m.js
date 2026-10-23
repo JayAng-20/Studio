@@ -1,0 +1,1 @@
+var e=new URL(`UniKS-UCS2-H-YeUc7k1L.bcmap`,import.meta.url).href;export{e as default};

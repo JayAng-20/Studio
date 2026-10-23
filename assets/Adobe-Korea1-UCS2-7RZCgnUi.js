@@ -1,0 +1,1 @@
+var e=new URL(`Adobe-Korea1-UCS2-BEQZuOdo.bcmap`,import.meta.url).href;export{e as default};

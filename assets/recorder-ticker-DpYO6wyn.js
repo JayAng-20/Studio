@@ -1,0 +1,1 @@
+let e,t=!1;self.onmessage=n=>{let r=n.data;if(r.type===`ack`){t=!1;return}if(e!==void 0&&clearInterval(e),e=void 0,t=!1,r.type===`start`){let n=Math.max(8,Math.min(1e3,r.interval));e=setInterval(()=>{t||(t=!0,self.postMessage(0))},n)}};

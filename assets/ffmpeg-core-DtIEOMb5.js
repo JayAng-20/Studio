@@ -1,0 +1,1 @@
+var e=new URL(`ffmpeg-core-CgUfceKH.wasm`,import.meta.url).href;export{e as default};

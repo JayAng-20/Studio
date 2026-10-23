@@ -1,0 +1,1 @@
+var e=new URL(`KSC-Johab-H-CGtV3MPT.bcmap`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`quickjs-eval-zJSp5SB4.wasm`,import.meta.url).href;export{e as default};

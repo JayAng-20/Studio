@@ -1,10 +1,4 @@
-node_modules
-dist
-dev-dist
-*.tsbuildinfo
-.DS_Store
-coverage
-test-results
-playwright-report
-.vite
-.scratch
+source/node_modules
+source/dist
+source/dev-dist
+source/.scratch

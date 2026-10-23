@@ -1,0 +1,1 @@
+var e=new URL(`FoxitSerifBoldItalic-DSQtwd_X.pfb`,import.meta.url).href;export{e as default};

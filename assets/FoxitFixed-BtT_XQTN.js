@@ -1,0 +1,1 @@
+var e=new URL(`FoxitFixed-Dyd5Nipw.pfb`,import.meta.url).href;export{e as default};

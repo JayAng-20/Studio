@@ -1,0 +1,1 @@
+var e=new URL(`FoxitFixedBoldItalic-BqlXQ_Yv.pfb`,import.meta.url).href;export{e as default};

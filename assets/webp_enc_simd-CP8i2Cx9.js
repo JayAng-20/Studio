@@ -1,0 +1,1 @@
+var e=new URL(`webp_enc_simd-CFvKQ_80.wasm`,import.meta.url).href;export{e as default};

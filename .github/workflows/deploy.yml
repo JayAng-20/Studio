@@ -1,10 +1,9 @@
+# 直接發布最外層已建置好的網站（不需要在雲端重新建置）
 name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-      - claude/friendly-brahmagupta-vm6gxs
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -17,29 +16,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run build
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: dist
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v5
+      - name: 準備網站檔案（排除原始碼與本機伺服器資料夾）
+        run: |
+          mkdir _site
+          tar --exclude=./.git --exclude=./.github --exclude=./source --exclude=./local-server --exclude=./README.md --exclude=./_site -cf - . | tar -xf - -C _site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4

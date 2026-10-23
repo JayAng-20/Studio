@@ -1,0 +1,1 @@
+var e=new URL(`FoxitSerifItalic-CQs5lx9Y.pfb`,import.meta.url).href;export{e as default};

@@ -275,7 +275,7 @@ export function SettingsPanel({
           value={o.baseSize}
           onChange={(v) => setOption('baseSize', v)}
           min={10}
-          max={14}
+          max={20}
           step={0.5}
           format={(v) => `${v} pt`}
         />

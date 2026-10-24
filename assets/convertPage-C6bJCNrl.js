@@ -1,1 +1,0 @@
-import{wr as e}from"./ui-Dn9kid0R.js";import{PdfModule as t}from"./pdf-D4-6vNv9.js";var n=e();function r(){return(0,n.jsx)(t,{scope:`pdfconvert`})}export{r as default};

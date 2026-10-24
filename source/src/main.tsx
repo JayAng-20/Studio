@@ -3,10 +3,11 @@ import { createRoot } from 'react-dom/client'
 import { MotionGlobalConfig } from 'motion/react'
 import './index.css'
 import { App } from './app/App'
-import { applyDocumentAttrs } from './app/theme'
+import { applyDocumentAttrs, installPressTracker } from './app/theme'
 import { registerPwa } from './app/pwa'
 import { useSettings } from './stores/settings'
 
+installPressTracker()
 applyDocumentAttrs()
 
 // 動畫強度「關閉」：所有 motion 動畫直接跳到終點

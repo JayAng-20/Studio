@@ -109,10 +109,7 @@ export function TopBar() {
             icon
             aria-label={dark ? t('theme.toLight') : t('theme.toDark')}
             data-tour="theme"
-            onClick={(e) => {
-              const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
-              toggleTheme({ x: r.left + r.width / 2, y: r.top + r.height / 2 })
-            }}
+            onClick={() => toggleTheme()}
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
